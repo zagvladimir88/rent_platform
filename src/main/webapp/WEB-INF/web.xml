@@ -1,0 +1,97 @@
+<web-app id="WebApp_ID" version="2.4"
+         xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+   http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index2.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+    <listener>
+        <listener-class>com.zagvladimir.listener.StartupApplicationListener</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>MainServlet</servlet-name>
+        <servlet-class>com.zagvladimir.controller.FrontController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MainServlet</servlet-name>
+        <url-pattern>/FrontController</url-pattern>
+    </servlet-mapping>
+
+    <!--    localhost:8080/application/FrontController-->
+
+    <servlet>
+        <servlet-name>HelloWeb</servlet-name>
+        <jsp-file>/WEB-INF/jsp/hello.jsp</jsp-file>
+    </servlet>
+
+    <servlet>
+        <servlet-name>StartPage</servlet-name>
+        <jsp-file>/index.jsp</jsp-file>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ByeByeWeb</servlet-name>
+        <jsp-file>/WEB-INF/jsp/bye.jsp</jsp-file>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>HelloWeb</servlet-name>
+        <url-pattern>/hello</url-pattern>
+    </servlet-mapping>
+
+    <!--    localhost:8080/application/hello-->
+
+    <servlet-mapping>
+        <servlet-name>ByeByeWeb</servlet-name>
+        <url-pattern>/bye</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>StartPage</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>CharsetFilter</filter-name>
+        <filter-class>com.zagvladimir.filter.CharsetFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>CharsetFilter</filter-name>
+        <url-pattern>/bye/*</url-pattern>
+    </filter-mapping>
+
+    <filter-mapping>
+        <filter-name>CharsetFilter</filter-name>
+        <url-pattern>/qwe/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>HeaderFilter</filter-name>
+        <filter-class>com.zagvladimir.filter.AuthHeaderFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>HeaderFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <session-config>
+        <session-timeout>10</session-timeout>
+    </session-config>
+
+</web-app>
+
+        <!--Tomcat -> webapp -> myapp.war -> myapp ->-->
+        <!--META-INF-->
+        <!--WEB-INF (закрытый доступ, напрямую не вытянуть) -> web.xml -> localhost:8080/myapp/hello-->
+        <!--index.html || index.jsp-->
+
+        <!--Serlet = class that operate with http-->
+        <!--Servlet = java class || jsp (.jsp -> .java -> .class -> executing)-->

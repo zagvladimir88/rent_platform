@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--    @ComponentScan -->
+    <context:component-scan base-package="com.zagvladimir"/>
+
+    <!--    <import resource="datasource.xml"/>-->
+    <bean id="user1" class="com.zagvladimir.domain.User">
+        <!--        <constructor-arg index="0" value="10" type="java.lang.Long"/>-->
+        <!--        <constructor-arg index="1" value="SpringUserName"/>-->
+        <!--        <constructor-arg index="2" value="SpringUserSurname"/>-->
+    </bean>
+
+    <bean id="user2" class="com.zagvladimir.domain.User">
+        <!--        <constructor-arg index="0" value="11" type="java.lang.Long"/>-->
+        <!--        <constructor-arg index="1" value="SpringUserName2"/>-->
+        <!--        <constructor-arg index="2" value="SpringUserSurname2"/>-->
+    </bean>
+
+</beans>
