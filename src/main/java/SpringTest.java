@@ -69,7 +69,19 @@ public class SpringTest {
 
         System.out.println("--------------------------------------------------");
 
+        List<Item> searchItems = itemService.getItemsByCategory(4);
+        for (Item item : searchItems) {
+            System.out.println(item);
+        }
 
+        System.out.println("--------------------------------------------------");
+
+        List<Item> searchItemsByName = itemService.searchItemsByName("bosch");
+        for (Item item : searchItemsByName) {
+            System.out.println(item);
+        }
+
+        System.out.println("--------------------------------------------------");
 //        user1.setEmail("olegpopkov@gmail.com");
 //        System.out.println(userService.update(user1));
 

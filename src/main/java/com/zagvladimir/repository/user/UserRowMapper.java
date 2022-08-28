@@ -1,4 +1,4 @@
-package com.zagvladimir.repository.jdbctemplate;
+package com.zagvladimir.repository.user;
 
 import com.zagvladimir.domain.User;
 import org.apache.log4j.Logger;

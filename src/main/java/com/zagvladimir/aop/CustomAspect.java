@@ -14,26 +14,15 @@ public class CustomAspect {
 private static int count;
     private static final Logger log = Logger.getLogger(CustomAspect.class);
 
-//    @Before("aroundRepositoryPointcut()")
-//    public void logBefore(JoinPoint joinPoint) {
-//        log.info("Method " + joinPoint.getSignature().getName() + " start");
-//    }
-//
-//    @AfterReturning(pointcut = "aroundRepositoryPointcut()")
-//    public void doAccessCheck(JoinPoint joinPoint) {
-//        log.info("Method " + joinPoint.getSignature().getName() + " finished");
-//    }
-
-    @Pointcut("execution(* com.zagvladimir.repository.jdbctemplate.JdbcTemplateUserRepository.*(..))")
-    public void aroundRepositoryPointcut() {
+    @Pointcut("execution(* com.zagvladimir.service.*.*(..))")
+    public void aroundServicePointcut() {
     }
 
-
-    @Around("aroundRepositoryPointcut()")
+    @Around("aroundServicePointcut()")
     public Object logAroundMethods(ProceedingJoinPoint joinPoint) throws Throwable {
         StopWatch stwatch = new StopWatch(getClass().getSimpleName());
         System.out.println(joinPoint.getArgs().length);
-        log.info("Method " + joinPoint.getSignature().getName() + " start");
+        log.info("Method " + joinPoint.getSignature().getName() + " in " + joinPoint.getSignature().getDeclaringTypeName() + " start");
 
         stwatch.start(joinPoint.getSignature().getName());
         Object proceed = joinPoint.proceed();
@@ -43,16 +32,4 @@ private static int count;
                 stwatch.prettyPrint()+ " " + count);
         return proceed;
     }
-
-
-
-//    @Around("aroundRepositoryPointcut()")
-//    public Object countCallAroundMethods(ProceedingJoinPoint joinPoint) throws Throwable {
-//        log.info("Method " + joinPoint.getSignature().getName() + " start");
-//        Object proceed = joinPoint.proceed();
-//
-//        log.info("Method " + joinPoint.getSignature().getName() + " finished");
-//        return proceed;
-//    }
-
 }

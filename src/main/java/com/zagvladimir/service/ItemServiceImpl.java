@@ -39,4 +39,14 @@ public class ItemServiceImpl implements ItemService{
     public Long delete(Long itemId) {
         return itemRepository.delete(itemId);
     }
+
+    @Override
+    public List<Item> getItemsByCategory(int itemTypeId) {
+        return itemRepository.getItemsByCategory(itemTypeId);
+    }
+
+    @Override
+    public List<Item> searchItemsByName(String name) {
+        return itemRepository.searchItemsByName(name);
+    }
 }

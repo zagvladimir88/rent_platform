@@ -2,6 +2,7 @@ package com.zagvladimir.repository.item;
 
 import com.zagvladimir.domain.Item;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.java.Log;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -103,5 +104,15 @@ public class ItemRepository implements ItemRepositoryInterface{
     public Long delete(Long id) {
         jdbcTemplate.update("delete from items where id = " + id);
         return id;
+    }
+
+    @Override
+    public List<Item> getItemsByCategory(int itemTypeId) {
+        return jdbcTemplate.query("select * from items where item_type_id = " + itemTypeId, itemRowMapper);
+    }
+
+    @Override
+    public List<Item> searchItemsByName(String name) {
+        return jdbcTemplate.query("select * from items where item_name ilike '%" + name +"%'", itemRowMapper);
     }
 }

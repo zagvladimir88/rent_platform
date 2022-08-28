@@ -1,8 +1,7 @@
-package com.zagvladimir.repository.jdbctemplate;
+package com.zagvladimir.repository.user;
 
 
 import com.zagvladimir.domain.User;
-import com.zagvladimir.repository.user.UserRepositoryInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;

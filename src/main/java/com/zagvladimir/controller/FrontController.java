@@ -2,6 +2,7 @@ package com.zagvladimir.controller;
 import com.zagvladimir.configuration.DatabaseProperties;
 import com.zagvladimir.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

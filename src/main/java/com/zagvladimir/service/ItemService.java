@@ -18,4 +18,7 @@ public interface ItemService {
 
     Long delete(Long itemId);
 
+    List<Item> getItemsByCategory(int itemTypeId);
+
+    List<Item> searchItemsByName(String name);
 }
