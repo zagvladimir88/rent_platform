@@ -78,7 +78,7 @@ public class JdbcTemplateUserRepository implements UserRepositoryInterface {
     public User update(User object) {
         final String updateQuery =
                 "UPDATE users set username = :username, user_password = :user_password, location_id = :location_id, location_details = :location_details" +
-                        ", phone_number = :phone_number, mobile_number = :mobile_number, email = :email, registration_date = :registration_date,creation_date = :creation_date,modification_date = :modification_date where id = :id";
+                        ", phone_number = :phone_number, mobile_number = :mobile_number, email = :email,modification_date = :modification_date where id = :id";
 
 
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -90,8 +90,6 @@ public class JdbcTemplateUserRepository implements UserRepositoryInterface {
         mapSqlParameterSource.addValue("phone_number", object.getPhone_number());
         mapSqlParameterSource.addValue("mobile_number", object.getMobile_number());
         mapSqlParameterSource.addValue("email", object.getEmail());
-        mapSqlParameterSource.addValue("registration_date", object.getRegistration_date());
-        mapSqlParameterSource.addValue("creation_date", object.getCreation_date());
         mapSqlParameterSource.addValue("modification_date", new Timestamp(new Date().getTime()));
 
         namedParameterJdbcTemplate.update(updateQuery, mapSqlParameterSource);

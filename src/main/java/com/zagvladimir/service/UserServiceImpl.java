@@ -13,17 +13,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-//    @Autowired
-//    @Qualifier("userRepository")
-
-    //    @Inject
-//    @Named("userRepository")
-//JSR-330
     private final UserRepositoryInterface userRepository;
-
-//    public UserServiceImpl(@Qualifier("userRepository") UserRepositoryInterface userRepository) {
-//        this.userRepository = userRepository;
-//    }
 
     @Override
     public List<User> findAll() {
@@ -55,11 +45,4 @@ public class UserServiceImpl implements UserService {
     public Long delete(Long id) {
         return userRepository.delete(id);
     }
-
-
-//    @Autowired
-//    //@Inject
-//    public void setUserRepository(@Qualifier("userRepository") UserRepositoryInterface userRepository) {
-//        this.userRepository = userRepository;
-//    }
 }

@@ -1,8 +1,7 @@
 package com.zagvladimir.controller;
-
-
-import com.zagvladimir.repository.user.UserRepository;
 import com.zagvladimir.configuration.DatabaseProperties;
+import com.zagvladimir.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class FrontController extends HttpServlet {
-
+    UserService userService;
 //    public FrontController() {
 //        super();
 //    }
@@ -34,9 +33,8 @@ public class FrontController extends HttpServlet {
 
             req.setAttribute("user", "Slava");
 
-            UserRepository userRepository = new UserRepository(new DatabaseProperties());
 
-            req.setAttribute("users", userRepository.findAll());
+            req.setAttribute("users", userService.findAll());
 
             dispatcher.forward(req, resp);
         }

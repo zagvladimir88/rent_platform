@@ -1,5 +1,5 @@
 import com.zagvladimir.domain.User;
-import com.zagvladimir.repository.user.UserRepository;
+
 import com.zagvladimir.configuration.DatabaseProperties;
 
 import java.sql.Timestamp;

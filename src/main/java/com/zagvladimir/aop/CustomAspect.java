@@ -28,6 +28,7 @@ private static int count;
     public void aroundRepositoryPointcut() {
     }
 
+
     @Around("aroundRepositoryPointcut()")
     public Object logAroundMethods(ProceedingJoinPoint joinPoint) throws Throwable {
         StopWatch stwatch = new StopWatch(getClass().getSimpleName());
@@ -42,6 +43,8 @@ private static int count;
                 stwatch.prettyPrint()+ " " + count);
         return proceed;
     }
+
+
 
 //    @Around("aroundRepositoryPointcut()")
 //    public Object countCallAroundMethods(ProceedingJoinPoint joinPoint) throws Throwable {
