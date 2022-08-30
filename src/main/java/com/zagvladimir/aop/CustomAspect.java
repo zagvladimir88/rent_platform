@@ -11,7 +11,6 @@ import org.springframework.util.StopWatch;
 @Component
 @Aspect
 public class CustomAspect {
-private static int count;
     private static final Logger log = Logger.getLogger(CustomAspect.class);
 
     @Pointcut("execution(* com.zagvladimir.service.*.*(..))")
@@ -26,10 +25,10 @@ private static int count;
 
         stwatch.start(joinPoint.getSignature().getName());
         Object proceed = joinPoint.proceed();
-        count++;
+
         stwatch.stop();
         log.info("Method " + joinPoint.getSignature().getName() + " finished\n" +
-                stwatch.prettyPrint()+ " " + count);
+                stwatch.prettyPrint());
         return proceed;
     }
 }

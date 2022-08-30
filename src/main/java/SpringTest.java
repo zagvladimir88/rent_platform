@@ -1,3 +1,4 @@
+import com.zagvladimir.aop.StatisticAspect;
 import com.zagvladimir.domain.Item;
 import com.zagvladimir.domain.User;
 import com.zagvladimir.repository.user.UserRepositoryInterface;
@@ -101,5 +102,8 @@ public class SpringTest {
 
 //        System.out.println(userService.delete(10L));
 
+        StatisticAspect count = annotationConfigApplicationContext.getBean(StatisticAspect.class);
+        count.getCounter().forEach((k,v) -> System.out.println((k + ":" + v)));
+
+        }
     }
-}
