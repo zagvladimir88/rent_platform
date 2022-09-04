@@ -5,9 +5,7 @@ import com.zagvladimir.controller.requests.UserSearchRequest;
 import com.zagvladimir.domain.User;
 import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,7 +15,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class UserController {
+public class UserMVCController {
 
     private final UserService userService;
 
@@ -72,13 +70,16 @@ public class UserController {
     public ModelAndView createUser(@RequestBody UserCreateRequest createRequest) {
 
         User user = new User();
-//       User user.setUsername(createRequest.getUserName());
-//        user.setUser_password(createRequest.getSurname());
-//        user.set(new Timestamp(new Date().getTime()));
-//        user.setCreationDate(new Timestamp(new Date().getTime()));
-//        user.setModificationDate(new Timestamp(new Date().getTime()));
-//        user.setIsDeleted(false);
-//        user.setWeight(createRequest.getWeight());
+        user.setUsername(createRequest.getUsername());
+        user.setUser_password(createRequest.getUser_password());
+        user.setLocation_id(createRequest.getLocation_id());
+        user.setLocation_details(createRequest.getLocation_details());
+        user.setPhone_number(createRequest.getPhone_number());
+        user.setMobile_number(createRequest.getMobile_number());
+        user.setEmail(createRequest.getEmail());
+        user.setRegistration_date(new Timestamp(new Date().getTime()));
+        user.setCreation_date(new Timestamp(new Date().getTime()));
+        user.setModification_date(new Timestamp(new Date().getTime()));
 
         userService.create(user);
 
