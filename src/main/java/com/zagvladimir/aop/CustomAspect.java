@@ -20,7 +20,6 @@ public class CustomAspect {
     @Around("aroundServicePointcut()")
     public Object logAroundMethods(ProceedingJoinPoint joinPoint) throws Throwable {
         StopWatch stwatch = new StopWatch(getClass().getSimpleName());
-        System.out.println(joinPoint.getArgs().length);
         log.info("Method " + joinPoint.getSignature().getName() + " in " + joinPoint.getSignature().getDeclaringTypeName() + " start");
 
         stwatch.start(joinPoint.getSignature().getName());

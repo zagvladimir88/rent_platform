@@ -1,10 +1,7 @@
 package com.zagvladimir.repository.item;
-
 import com.zagvladimir.domain.Item;
-import org.apache.log4j.Logger;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -13,14 +10,10 @@ import static com.zagvladimir.repository.item.ItemTableColumns.*;
 @Component
 public class ItemRowMapper implements RowMapper<Item> {
 
-    private final Logger log = Logger.getLogger(ItemRowMapper.class);
-
     @Override
     public Item mapRow(ResultSet rs, int i) throws SQLException {
-        log.info("Item row mapping start");
 
         Item item = new Item();
-
         item.setId(rs.getLong(ID));
         item.setItem_name(rs.getString(ITEM_NAME));
         item.setItem_type_id(rs.getInt(ITEM_TYPE_ID));
@@ -33,7 +26,6 @@ public class ItemRowMapper implements RowMapper<Item> {
         item.setCreation_date(rs.getTimestamp(CREATION_DATE));
         item.setModification_date(rs.getTimestamp(MODIFICATION_DATE));
 
-        log.info("Item row mapping end");
         return item;
     }
 }

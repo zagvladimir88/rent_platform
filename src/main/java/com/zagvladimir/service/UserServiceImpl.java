@@ -45,4 +45,9 @@ public class UserServiceImpl implements UserService {
     public Long delete(Long id) {
         return userRepository.delete(id);
     }
+
+    @Override
+    public List<User> search(int limit, int offset) {
+        return userRepository.findAll(limit, offset);
+    }
 }

@@ -131,6 +131,14 @@
             <version>${aspectj.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>${spring.release}</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

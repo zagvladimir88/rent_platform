@@ -18,4 +18,6 @@ public interface UserService {
     User update(User object);
 
     Long delete(Long id);
+
+    List<User> search(int limit, int offset);
 }
