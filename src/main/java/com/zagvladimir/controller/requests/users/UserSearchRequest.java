@@ -1,4 +1,4 @@
-package com.zagvladimir.controller.requests;
+package com.zagvladimir.controller.requests.users;
 
 import lombok.Data;
 

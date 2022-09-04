@@ -21,4 +21,6 @@ public interface ItemService {
     List<Item> getItemsByCategory(int itemTypeId);
 
     List<Item> searchItemsByName(String name);
+
+    List<Item> search(int limit, int offset);
 }

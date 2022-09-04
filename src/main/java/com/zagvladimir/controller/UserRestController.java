@@ -1,9 +1,8 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.controller.requests.UserCreateRequest;
-import com.zagvladimir.controller.requests.UserSearchRequest;
+import com.zagvladimir.controller.requests.users.UserCreateRequest;
+import com.zagvladimir.controller.requests.users.UserSearchRequest;
 import com.zagvladimir.domain.User;
-import com.zagvladimir.repository.user.UserRepositoryInterface;
 import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

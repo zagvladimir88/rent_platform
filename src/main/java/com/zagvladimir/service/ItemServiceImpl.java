@@ -1,6 +1,7 @@
 package com.zagvladimir.service;
 
 import com.zagvladimir.domain.Item;
+import com.zagvladimir.domain.User;
 import com.zagvladimir.repository.item.ItemRepositoryInterface;
 import com.zagvladimir.repository.user.UserRepositoryInterface;
 import lombok.RequiredArgsConstructor;
@@ -48,5 +49,10 @@ public class ItemServiceImpl implements ItemService{
     @Override
     public List<Item> searchItemsByName(String name) {
         return itemRepository.searchItemsByName(name);
+    }
+
+    @Override
+    public List<Item> search(int limit, int offset) {
+        return itemRepository.findAll(limit, offset);
     }
 }
