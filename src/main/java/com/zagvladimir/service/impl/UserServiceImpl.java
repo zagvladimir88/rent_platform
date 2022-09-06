@@ -1,7 +1,8 @@
-package com.zagvladimir.service;
+package com.zagvladimir.service.impl;
 
 import com.zagvladimir.domain.User;
 import com.zagvladimir.repository.user.UserRepositoryInterface;
+import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

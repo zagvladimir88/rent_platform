@@ -1,9 +1,10 @@
-package com.zagvladimir.service;
+package com.zagvladimir.service.impl;
 
 import com.zagvladimir.domain.Item;
 import com.zagvladimir.domain.User;
 import com.zagvladimir.repository.item.ItemRepositoryInterface;
 import com.zagvladimir.repository.user.UserRepositoryInterface;
+import com.zagvladimir.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ItemServiceImpl implements ItemService{
+public class ItemServiceImpl implements ItemService {
     private final ItemRepositoryInterface itemRepository;
 
     @Override

@@ -1,22 +1,21 @@
 import com.zagvladimir.aop.StatisticAspect;
 import com.zagvladimir.domain.Item;
+import com.zagvladimir.domain.ItemLeased;
 import com.zagvladimir.domain.User;
-import com.zagvladimir.repository.user.UserRepositoryInterface;
+import com.zagvladimir.service.ItemLeasedService;
 import com.zagvladimir.service.ItemService;
 import com.zagvladimir.service.UserService;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public class SpringTest {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext("com.zagvladimir");
+
         UserService userService = annotationConfigApplicationContext.getBean(UserService.class);
         ItemService itemService = annotationConfigApplicationContext.getBean(ItemService.class);
+        ItemLeasedService itemLeasedService = annotationConfigApplicationContext.getBean(ItemLeasedService.class);
 
 
         List<User> all = userService.findAll();
@@ -105,5 +104,10 @@ public class SpringTest {
         StatisticAspect count = annotationConfigApplicationContext.getBean(StatisticAspect.class);
         count.getCounter().forEach((k,v) -> System.out.println((k + ":" + v)));
 
-        }
+        List<ItemLeased> allItemLeased = itemLeasedService.findAll();
+
+    for (ItemLeased itemLeased : allItemLeased) {
+      System.out.println(itemLeased);
     }
+    }
+}
