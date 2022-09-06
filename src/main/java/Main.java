@@ -1,6 +1,6 @@
 import com.zagvladimir.domain.User;
 
-import com.zagvladimir.configuration.DatabaseProperties;
+
 
 import java.sql.Timestamp;
 import java.util.Date;

@@ -1,7 +1,7 @@
 package com.zagvladimir.aop;
 
 
-import lombok.extern.java.Log;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;

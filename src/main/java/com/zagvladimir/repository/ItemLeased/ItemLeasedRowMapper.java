@@ -1,9 +1,8 @@
 package com.zagvladimir.repository.ItemLeased;
 
 
-import com.zagvladimir.domain.Item;
+
 import com.zagvladimir.domain.ItemLeased;
-import com.zagvladimir.domain.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
