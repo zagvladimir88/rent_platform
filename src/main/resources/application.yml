@@ -7,5 +7,12 @@ spring:
     username: postgres
     password: 1111
     url: "jdbc:postgresql://localhost:5432/rent_db"
+
+  flyway:
+    baseline-on-migrate: true
+    baseline-version: 3
+
+
 server:
   port: 8081
+
