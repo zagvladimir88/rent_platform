@@ -49,8 +49,8 @@ public class ItemRepository implements ItemRepositoryInterface{
     @Override
     public Item create(Item object) {
         final String insertQuery =
-                "insert into items (item_name, item_type_id, location_id, item_location, description, owner_id, price_per_hour,available,creation_date,modification_date) " +
-                        " values (:item_name, :item_type_id, :location_id, :item_location, :description, :owner_id, :price_per_hour, :available, :creation_date, :modification_date);";
+                "insert into items (item_name, item_type_id, location_id, item_location, description, owner_id, price_per_hour,available,creation_date,modification_date, status) " +
+                        " values (:item_name, :item_type_id, :location_id, :item_location, :description, :owner_id, :price_per_hour, :available, :creation_date, :modification_date, :status);";
 
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("id", object.getId());
@@ -64,6 +64,7 @@ public class ItemRepository implements ItemRepositoryInterface{
         mapSqlParameterSource.addValue("available", object.getAvailable());
         mapSqlParameterSource.addValue("creation_date", object.getCreation_date());
         mapSqlParameterSource.addValue("modification_date", object.getModification_date());
+        mapSqlParameterSource.addValue("status", String.valueOf(object.getStatus()));
 
         namedParameterJdbcTemplate.update(insertQuery, mapSqlParameterSource);
 
@@ -80,7 +81,7 @@ public class ItemRepository implements ItemRepositoryInterface{
     public Item update(Item object) {
         final String updateQuery =
                 "UPDATE users set item_name = :item_name, item_type_id = :item_type_id, location_id = :location_id, item_location = :item_location" +
-                        ", description = :description, owner_id = :owner_id, price_per_hour = :price_per_hour, available = :available, modification_date = :modification_date where id = :id";
+                        ", description = :description, owner_id = :owner_id, price_per_hour = :price_per_hour, available = :available, modification_date = :modification_date, status = :status where id = :id";
 
 
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
@@ -94,6 +95,7 @@ public class ItemRepository implements ItemRepositoryInterface{
         mapSqlParameterSource.addValue("price_per_hour", object.getPrice_per_hour());
         mapSqlParameterSource.addValue("available", object.getCreation_date());
         mapSqlParameterSource.addValue("modification_date", new Timestamp(new Date().getTime()));
+        mapSqlParameterSource.addValue("status", object.getStatus());
 
         namedParameterJdbcTemplate.update(updateQuery, mapSqlParameterSource);
 

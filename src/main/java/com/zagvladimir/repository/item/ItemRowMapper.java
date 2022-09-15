@@ -1,5 +1,6 @@
 package com.zagvladimir.repository.item;
 import com.zagvladimir.domain.Item;
+import com.zagvladimir.domain.Status;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import java.sql.ResultSet;
@@ -25,6 +26,7 @@ public class ItemRowMapper implements RowMapper<Item> {
         item.setAvailable(rs.getBoolean(AVAILABLE));
         item.setCreation_date(rs.getTimestamp(CREATION_DATE));
         item.setModification_date(rs.getTimestamp(MODIFICATION_DATE));
+        item.setStatus(Status.valueOf(rs.getString(STATUS)));
 
         return item;
     }

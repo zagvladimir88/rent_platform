@@ -13,13 +13,13 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ItemLeased {
+public class ItemLeased extends BaseEntity{
 
-    private int id;
 
-    private int item_id;
 
-    private int renter_id;
+    private long item_id;
+
+    private long renter_id;
 
     private Timestamp time_from;
 
@@ -37,9 +37,7 @@ public class ItemLeased {
 
     private String renter_grade_description;
 
-    private Timestamp creation_date;
 
-    private Timestamp modification_date;
 
     @Override
     public String toString() {

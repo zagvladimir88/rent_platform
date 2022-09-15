@@ -21,7 +21,7 @@ public class ItemLeasedServiceImpl implements ItemLeasedService {
 
     @Override
     public ItemLeased create(ItemLeased object) {
-        return null;
+        return itemLeasedRepository.create(object);
     }
 
     @Override

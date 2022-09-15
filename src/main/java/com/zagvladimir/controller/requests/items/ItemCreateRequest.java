@@ -1,5 +1,6 @@
 package com.zagvladimir.controller.requests.items;
 
+import com.zagvladimir.domain.Status;
 import lombok.Data;
 
 @Data
@@ -20,5 +21,7 @@ public class ItemCreateRequest {
     private int price_per_hour;
 
     private Boolean available;
+
+    private Status status;
 
 }

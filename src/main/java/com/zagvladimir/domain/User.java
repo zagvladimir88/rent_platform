@@ -13,11 +13,12 @@ import java.sql.Timestamp;
 //@ToString(exclude = {"userName"})
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class User extends BaseEntity{
 
-    private Long id;
 
     private String username;
+
+    private String user_login;
 
     private String user_password;
 
@@ -33,9 +34,6 @@ public class User {
 
     private Timestamp registration_date;
 
-    private Timestamp creation_date;
-
-    private Timestamp modification_date;
 
     @Override
     public String toString() {

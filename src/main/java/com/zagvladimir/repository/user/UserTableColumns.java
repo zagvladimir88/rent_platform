@@ -24,4 +24,8 @@ public interface UserTableColumns {
 
      String MODIFICATION_DATE = "modification_date";
 
+     String STATUS = "status";
+
+     String LOGIN = "user_login";
+
 }

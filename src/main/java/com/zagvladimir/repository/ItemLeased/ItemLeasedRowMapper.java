@@ -3,6 +3,7 @@ package com.zagvladimir.repository.ItemLeased;
 
 
 import com.zagvladimir.domain.ItemLeased;
+import com.zagvladimir.domain.Status;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,7 @@ public class ItemLeasedRowMapper implements RowMapper<ItemLeased> {
     @Override
     public ItemLeased mapRow(ResultSet rs, int i) throws SQLException {
         ItemLeased itemLeased = new ItemLeased();
-        itemLeased.setId(rs.getInt(ID));
+        itemLeased.setId(rs.getLong(ID));
         itemLeased.setItem_id(rs.getInt(ITEM_ID));
         itemLeased.setRenter_id(rs.getInt(RENTER_ID));
         itemLeased.setTime_from(rs.getTimestamp(TIME_FROM));
@@ -30,6 +31,7 @@ public class ItemLeasedRowMapper implements RowMapper<ItemLeased> {
         itemLeased.setRenter_grade_description(rs.getString(RENTER_GRADE_DESCRIPTION));
         itemLeased.setCreation_date(rs.getTimestamp(CREATION_DATE));
         itemLeased.setModification_date(rs.getTimestamp(MODIFICATION_DATE));
+        itemLeased.setStatus(Status.valueOf(rs.getString(STATUS)));
 
         return itemLeased;
     }

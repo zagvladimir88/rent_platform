@@ -1,11 +1,14 @@
 package com.zagvladimir.controller.requests.users;
 
+import com.zagvladimir.domain.Status;
 import lombok.Data;
 
 @Data
 public class UserCreateRequest {
 
     private String username;
+
+    private String user_login;
 
     private String user_password;
 
@@ -18,6 +21,8 @@ public class UserCreateRequest {
     private String mobile_number;
 
     private String email;
+
+    private Status status;
 
 
 }

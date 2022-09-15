@@ -62,6 +62,7 @@ public class ItemRestController {
         item.setAvailable(createRequest.getAvailable());
         item.setCreation_date(new Timestamp(new Date().getTime()));
         item.setModification_date(new Timestamp(new Date().getTime()));
+        item.setStatus(createRequest.getStatus());
 
         itemService.create(item);
 

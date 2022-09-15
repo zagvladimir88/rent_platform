@@ -23,4 +23,6 @@ public interface ItemTableColumns {
     String CREATION_DATE = "creation_date";
 
     String MODIFICATION_DATE = "modification_date";
+
+    String STATUS = "status";
 }

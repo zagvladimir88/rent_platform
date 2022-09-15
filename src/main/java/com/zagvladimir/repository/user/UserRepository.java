@@ -1,6 +1,7 @@
 package com.zagvladimir.repository.user;
 
 
+import com.zagvladimir.domain.Status;
 import com.zagvladimir.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -45,9 +46,9 @@ public class UserRepository implements UserRepositoryInterface {
 
     @Override
     public User create(User object) {
-        final String insertQuery =
-                "insert into users (username, user_password, location_id, location_details, phone_number, mobile_number, email,registration_date,creation_date,modification_date) " +
-                        " values (:username, :user_password, :location_id, :location_details, :phone_number, :mobile_number, :email,:registration_date ,:creation_date ,:modification_date);";
+    final String insertQuery =
+        "insert into public.users (username, user_password, location_id, location_details, phone_number, mobile_number, email, registration_date, creation_date, modification_date, status, user_login) "
+            + " values (:username, :user_password, :location_id, :location_details, :phone_number, :mobile_number, :email,:registration_date ,:creation_date ,:modification_date, :status, :user_login);";
 
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("id", object.getId());
@@ -61,6 +62,9 @@ public class UserRepository implements UserRepositoryInterface {
         mapSqlParameterSource.addValue("registration_date", object.getRegistration_date());
         mapSqlParameterSource.addValue("creation_date", object.getCreation_date());
         mapSqlParameterSource.addValue("modification_date", object.getModification_date());
+        mapSqlParameterSource.addValue("status", String.valueOf(object.getStatus()));
+        mapSqlParameterSource.addValue("user_login", object.getUser_login());
+
 
         namedParameterJdbcTemplate.update(insertQuery, mapSqlParameterSource);
 
@@ -77,20 +81,22 @@ public class UserRepository implements UserRepositoryInterface {
     public User update(User object) {
         final String updateQuery =
                 "UPDATE users set username = :username, user_password = :user_password, location_id = :location_id, location_details = :location_details" +
-                        ", phone_number = :phone_number, mobile_number = :mobile_number, email = :email,modification_date = :modification_date where id = :id";
+                        ", phone_number = :phone_number, mobile_number = :mobile_number, email = :email,modification_date = :modification_date,user_login = :user_login, status = :status where id = :id";
 
 
         MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
         mapSqlParameterSource.addValue("id", object.getId());
         mapSqlParameterSource.addValue("username", object.getUsername());
         mapSqlParameterSource.addValue("user_password", object.getUser_password());
+        mapSqlParameterSource.addValue("user_login", object.getUser_login());
         mapSqlParameterSource.addValue("location_id", object.getLocation_id());
         mapSqlParameterSource.addValue("location_details", object.getLocation_details());
         mapSqlParameterSource.addValue("phone_number", object.getPhone_number());
         mapSqlParameterSource.addValue("mobile_number", object.getMobile_number());
         mapSqlParameterSource.addValue("email", object.getEmail());
         mapSqlParameterSource.addValue("modification_date", new Timestamp(new Date().getTime()));
-
+        mapSqlParameterSource.addValue("status", object.getStatus());
+        mapSqlParameterSource.addValue("user_login", object.getUser_login());
         namedParameterJdbcTemplate.update(updateQuery, mapSqlParameterSource);
 
         return findById(object.getId());

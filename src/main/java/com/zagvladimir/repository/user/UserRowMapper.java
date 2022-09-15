@@ -1,4 +1,5 @@
 package com.zagvladimir.repository.user;
+import com.zagvladimir.domain.Status;
 import com.zagvladimir.domain.User;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ public class UserRowMapper implements RowMapper<User> {
         User user = new User();
         user.setId(rs.getLong(ID));
         user.setUsername(rs.getString(NAME));
+        user.setUser_login(rs.getString(LOGIN));
         user.setUser_password(rs.getString(PASSWORD));
         user.setLocation_id(rs.getInt(LOCATION_ID));
         user.setLocation_details(rs.getString(LOCATION_DETAILS));
@@ -25,6 +27,7 @@ public class UserRowMapper implements RowMapper<User> {
         user.setRegistration_date(rs.getTimestamp(REGISTER_DATE));
         user.setCreation_date(rs.getTimestamp(CREATION_DATE));
         user.setModification_date(rs.getTimestamp(MODIFICATION_DATE));
+        user.setStatus(Status.valueOf(rs.getString(STATUS)));
         return user;
     }
 }

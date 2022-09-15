@@ -13,9 +13,7 @@ import java.sql.Timestamp;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Item {
-
-    private Long id;
+public class Item extends BaseEntity{
 
     private String item_name;
 
@@ -33,9 +31,6 @@ public class Item {
 
     private Boolean available;
 
-    private Timestamp creation_date;
-
-    private Timestamp modification_date;
 
     @Override
     public String toString() {
