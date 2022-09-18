@@ -7,35 +7,46 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity
+@Table(name = "items_leased")
 public class ItemLeased extends BaseEntity{
 
 
+    @Column(name = "item_id")
+    private long itemId;
 
-    private long item_id;
+    @Column(name = "renter_id")
+    private long renterId;
 
-    private long renter_id;
+    @Column(name = "time_from")
+    private Timestamp timeFrom;
 
-    private Timestamp time_from;
+    @Column(name = "time_to")
+    private Timestamp timeTo;
 
-    private Timestamp time_to;
+    @Column(name = "price_per_hour")
+    private double pricePerHour;
 
-    private double price_per_hour;
-
+    @Column
     private double discount;
 
+    @Column
     private double fee;
 
-    private double price_total;
+    @Column(name = "price_total")
+    private double priceTotal;
 
-    private String rentier_grade_description;
+    @Column(name = "rentier_grade_description")
+    private String rentierGradeDescription;
 
-    private String renter_grade_description;
+    @Column(name = "renter_grade_description")
+    private String renterGradeDescription;
 
 
 

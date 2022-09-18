@@ -1,6 +1,5 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.controller.requests.items.ItemCreateRequest;
 import com.zagvladimir.controller.requests.itemsLeased.ItemLeasedCreateRequest;
 import com.zagvladimir.domain.ItemLeased;
 import com.zagvladimir.service.ItemLeasedService;
@@ -29,18 +28,18 @@ public class ItemLeasedRestController {
     public ResponseEntity<Object> createItem(@RequestBody ItemLeasedCreateRequest createRequest) {
 
         ItemLeased itemLeased = new ItemLeased();
-        itemLeased.setItem_id(createRequest.getItem_id());
-        itemLeased.setRenter_id(createRequest.getRenter_id());
-        itemLeased.setTime_from(createRequest.getTime_from());
-        itemLeased.setTime_to(createRequest.getTime_to());
-        itemLeased.setPrice_per_hour(createRequest.getPrice_per_hour());
+        itemLeased.setItemId(createRequest.getItemId());
+        itemLeased.setRenterId(createRequest.getRenterId());
+        itemLeased.setTimeTo(createRequest.getTimeTo());
+        itemLeased.setTimeFrom(createRequest.getTimeFrom());
+        itemLeased.setPricePerHour(createRequest.getPricePerHour());
         itemLeased.setDiscount(createRequest.getDiscount());
         itemLeased.setFee(createRequest.getFee());
-        itemLeased.setPrice_total(createRequest.getPrice_total());
-        itemLeased.setRenter_grade_description(createRequest.getRenter_grade_description());
-        itemLeased.setRentier_grade_description(createRequest.getRentier_grade_description());
-        itemLeased.setCreation_date(new Timestamp(new Date().getTime()));
-        itemLeased.setModification_date(new Timestamp(new Date().getTime()));
+        itemLeased.setPriceTotal(createRequest.getPriceTotal());
+        itemLeased.setRenterGradeDescription(createRequest.getRenterGradeDescription());
+        itemLeased.setRentierGradeDescription(createRequest.getRentierGradeDescription());
+        itemLeased.setCreationDate(new Timestamp(new Date().getTime()));
+        itemLeased.setModificationDate(new Timestamp(new Date().getTime()));
         itemLeased.setStatus(createRequest.getStatus());
 
         itemLeasedService.create(itemLeased);
@@ -62,14 +61,13 @@ public class ItemLeasedRestController {
     }
 
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteItemLeasedById(@PathVariable Long id){
 
         itemLeasedService.delete(id);
 
-        List<ItemLeased> items = itemLeasedService.findAll();
         Map<String, Object> model = new HashMap<>();
-        model.put("items", items);
+        model.put("id", id);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 

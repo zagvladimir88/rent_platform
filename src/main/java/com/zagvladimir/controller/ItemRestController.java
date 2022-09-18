@@ -52,16 +52,16 @@ public class ItemRestController {
     public ResponseEntity<Object> createItem(@RequestBody ItemCreateRequest createRequest) {
 
         Item item = new Item();
-        item.setItem_name(createRequest.getItem_name());
-        item.setItem_type_id(createRequest.getItem_type_id());
-        item.setLocation_id(createRequest.getLocation_id());
-        item.setItem_location(createRequest.getItem_location());
+        item.setItemName(createRequest.getItemName());
+        item.setItemTypeId(createRequest.getItemTypeId());
+        item.setLocationId(createRequest.getLocationId());
+        item.setItemLocation(createRequest.getItemLocation());
         item.setDescription(createRequest.getDescription());
-        item.setOwner_id(createRequest.getItem_type_id());
-        item.setPrice_per_hour(createRequest.getPrice_per_hour());
+        item.setOwnerId(createRequest.getItemTypeId());
+        item.setPricePerHour(createRequest.getPricePerHour());
         item.setAvailable(createRequest.getAvailable());
-        item.setCreation_date(new Timestamp(new Date().getTime()));
-        item.setModification_date(new Timestamp(new Date().getTime()));
+        item.setCreationDate(new Timestamp(new Date().getTime()));
+        item.setModificationDate(new Timestamp(new Date().getTime()));
         item.setStatus(createRequest.getStatus());
 
         itemService.create(item);
@@ -69,21 +69,19 @@ public class ItemRestController {
         List<Item> items = itemService.findAll();
 
         Map<String, Object> model = new HashMap<>();
-        model.put("item", item.getItem_name());
+        model.put("item", item.getItemName());
         model.put("items", items);
 
         return new ResponseEntity<>(model, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteItemsById(@PathVariable Long id){
 
         itemService.delete(id);
 
-        List<Item> items = itemService.findAll();
         Map<String, Object> model = new HashMap<>();
-        model.put("items", items);
+        model.put("delete item id = ", id);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
-
 }

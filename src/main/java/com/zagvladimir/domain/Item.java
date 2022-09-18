@@ -7,28 +7,38 @@ import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@Entity
+@Table(name = "items")
 public class Item extends BaseEntity{
 
-    private String item_name;
+    @Column(name = "item_name")
+    private String itemName;
 
-    private int item_type_id;
+    @Column(name = "item_type_id")
+    private int itemTypeId;
 
-    private int location_id;
+    @Column(name = "location_id")
+    private int locationId;
 
-    private String item_location;
+    @Column(name = "item_location")
+    private String itemLocation;
 
+    @Column(name = "description")
     private String description;
 
-    private long owner_id;
+    @Column(name = "owner_id")
+    private long ownerId;
 
-    private double price_per_hour;
+    @Column(name = "price_per_hour")
+    private double pricePerHour;
 
+    @Column(name = "available")
     private Boolean available;
 
 

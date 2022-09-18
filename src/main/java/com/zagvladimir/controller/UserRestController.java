@@ -2,7 +2,6 @@ package com.zagvladimir.controller;
 
 import com.zagvladimir.controller.requests.users.UserCreateRequest;
 import com.zagvladimir.controller.requests.users.UserSearchRequest;
-import com.zagvladimir.domain.Status;
 import com.zagvladimir.domain.User;
 import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -54,16 +53,16 @@ public class UserRestController {
 
         User user = new User();
         user.setUsername(createRequest.getUsername());
-        user.setUser_password(createRequest.getUser_password());
-        user.setUser_login(createRequest.getUser_login());
-        user.setLocation_id(createRequest.getLocation_id());
-        user.setLocation_details(createRequest.getLocation_details());
-        user.setPhone_number(createRequest.getPhone_number());
-        user.setMobile_number(createRequest.getMobile_number());
+        user.setUserPassword(createRequest.getUserPassword());
+        user.setUserLogin(createRequest.getUserLogin());
+        user.setLocationId(createRequest.getLocationId());
+        user.setLocationDetails(createRequest.getLocationDetails());
+        user.setPhoneNumber(createRequest.getPhoneNumber());
+        user.setMobileNumber(createRequest.getMobileNumber());
         user.setEmail(createRequest.getEmail());
-        user.setRegistration_date(new Timestamp(new Date().getTime()));
-        user.setCreation_date(new Timestamp(new Date().getTime()));
-        user.setModification_date(new Timestamp(new Date().getTime()));
+        user.setRegistrationDate(new Timestamp(new Date().getTime()));
+        user.setCreationDate(new Timestamp(new Date().getTime()));
+        user.setModificationDate(new Timestamp(new Date().getTime()));
         user.setStatus(createRequest.getStatus());
 
         userService.create(user);
@@ -77,14 +76,13 @@ public class UserRestController {
         return new ResponseEntity<>(model, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteUsersById(@PathVariable Long id){
 
-        userService.delete(id);
+        long deleteId = userService.delete(id);
 
-        List<User> users = userService.findAll();
         Map<String, Object> model = new HashMap<>();
-        model.put("users", users);
+        model.put("id", id);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
