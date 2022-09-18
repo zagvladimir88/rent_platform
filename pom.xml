@@ -14,15 +14,7 @@
     <groupId>com.zagvladimir</groupId>
     <artifactId>rent_platform</artifactId>
     <version>1.0-SNAPSHOT</version>
-<!--    <version>1.0.1</version>-->
-<!--    <version>1.0.20220714205800000</version>-->
-<!--    <version>1.0.003d72c2bb2f</version>-->
 
-<!--    1.1.2 or 1.0-SNAPSHOT-->
-<!--    1 - major version of artifact-->
-<!--    1 - minor update of artifact-->
-<!--    2 - minor update of minor update artifact-->
-<!--    SNAPSHOT - not for production usage-->
     <packaging>jar</packaging>
 
     <properties>
@@ -34,11 +26,12 @@
         <log4j.version>1.2.17</log4j.version>
         <spring.boot.version>2.7.3</spring.boot.version>
         <lombok.version.custom>1.18.22</lombok.version.custom>
+        <springdoc.version>1.6.4</springdoc.version>
+        <flyway.version>9.3.0</flyway.version>
+        <postgreSQL.version>42.4.1</postgreSQL.version>
+        <apache.commons.version>3.12.0</apache.commons.version>
     </properties>
 
-<!--    <packaging>war</packaging>-->
-<!--    <packaging>ear</packaging>-->
-<!--    <packaging>tar</packaging>-->
 
     <dependencies>
 
@@ -66,7 +59,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
+            <version>${apache.commons.version}</version>
             <scope>compile</scope>
         </dependency>
 
@@ -93,22 +86,16 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.4.1</version>
+            <version>${postgreSQL.version}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>9.3.0</version>
+            <version>${flyway.version}</version>
         </dependency>
 
-
-        <!--        <dependency>-->
-        <!--            <groupId>com.zaxxer</groupId>-->
-        <!--            <artifactId>HikariCP</artifactId>-->
-        <!--            <version>${hikaricp.version}</version>-->
-        <!--        </dependency>-->
 
         <dependency>
             <groupId>log4j</groupId>
@@ -119,7 +106,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.6.4</version>
+            <version>${springdoc.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -136,6 +123,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+
 
 
     </dependencies>

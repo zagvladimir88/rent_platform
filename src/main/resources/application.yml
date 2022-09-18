@@ -14,6 +14,8 @@ spring:
     baseline-version: 1.003
 
 
+
+
 server:
-  port: 8081
+  port: 8080
 
