@@ -1,13 +1,17 @@
 package com.zagvladimir.repository.item;
 
 import com.zagvladimir.domain.Item;
+import com.zagvladimir.domain.ItemLeased;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -19,21 +23,21 @@ import java.util.Optional;
 @Primary
 public class ItemRepository implements ItemRepositoryInterface{
 
-    private final JdbcTemplate jdbcTemplate;
+    private final SessionFactory sessionFactory;
 
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private final ItemRowMapper itemRowMapper;
 
     @Override
     public Item findById(Long id) {
-        return jdbcTemplate.queryForObject("select * from items where id = " + id, itemRowMapper);
+        Session session = sessionFactory.openSession();
+        return session.get(Item.class,id);
     }
 
     @Override
     public Optional<Item> findOne(Long id) {
         return Optional.of(findById(id));
     }
+
 
     @Override
     public List<Item> findAll() {
@@ -42,79 +46,48 @@ public class ItemRepository implements ItemRepositoryInterface{
 
     @Override
     public List<Item> findAll(int limit, int offset) {
-        return jdbcTemplate.query("select * from items limit " + limit + " offset " + offset, itemRowMapper);
-
+        Session session = sessionFactory.openSession();
+        return session.createQuery("select i from Item i", Item.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
     }
 
     @Override
     public Item create(Item object) {
-        final String insertQuery =
-                "insert into items (item_name, item_type_id, location_id, item_location, description, owner_id, price_per_hour,available,creation_date,modification_date, status) " +
-                        " values (:item_name, :item_type_id, :location_id, :item_location, :description, :owner_id, :price_per_hour, :available, :creation_date, :modification_date, :status);";
-
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("id", object.getId());
-        mapSqlParameterSource.addValue("item_name", object.getItem_name());
-        mapSqlParameterSource.addValue("item_type_id", object.getItem_type_id());
-        mapSqlParameterSource.addValue("location_id", object.getLocation_id());
-        mapSqlParameterSource.addValue("item_location", object.getItem_location());
-        mapSqlParameterSource.addValue("description", object.getDescription());
-        mapSqlParameterSource.addValue("owner_id", object.getOwner_id());
-        mapSqlParameterSource.addValue("price_per_hour", object.getPrice_per_hour());
-        mapSqlParameterSource.addValue("available", object.getAvailable());
-        mapSqlParameterSource.addValue("creation_date", object.getCreation_date());
-        mapSqlParameterSource.addValue("modification_date", object.getModification_date());
-        mapSqlParameterSource.addValue("status", String.valueOf(object.getStatus()));
-
-        namedParameterJdbcTemplate.update(insertQuery, mapSqlParameterSource);
-
-        Long lastInsertId = namedParameterJdbcTemplate.query("SELECT currval('rental_items_id_seq') as last_id",
-                resultSet -> {
-                    resultSet.next();
-                    return resultSet.getLong("last_id");
-                });
-
-        return findById(lastInsertId);
+        Session session = sessionFactory.openSession();
+        session.saveOrUpdate(object);
+        return findById(object.getId());
     }
 
     @Override
     public Item update(Item object) {
-        final String updateQuery =
-                "UPDATE users set item_name = :item_name, item_type_id = :item_type_id, location_id = :location_id, item_location = :item_location" +
-                        ", description = :description, owner_id = :owner_id, price_per_hour = :price_per_hour, available = :available, modification_date = :modification_date, status = :status where id = :id";
-
-
-        MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-        mapSqlParameterSource.addValue("id", object.getId());
-        mapSqlParameterSource.addValue("item_name", object.getItem_name());
-        mapSqlParameterSource.addValue("item_type_id", object.getItem_type_id());
-        mapSqlParameterSource.addValue("location_id", object.getLocation_id());
-        mapSqlParameterSource.addValue("item_location", object.getItem_location());
-        mapSqlParameterSource.addValue("description", object.getDescription());
-        mapSqlParameterSource.addValue("owner_id", object.getOwner_id());
-        mapSqlParameterSource.addValue("price_per_hour", object.getPrice_per_hour());
-        mapSqlParameterSource.addValue("available", object.getCreation_date());
-        mapSqlParameterSource.addValue("modification_date", new Timestamp(new Date().getTime()));
-        mapSqlParameterSource.addValue("status", object.getStatus());
-
-        namedParameterJdbcTemplate.update(updateQuery, mapSqlParameterSource);
-
+        Session session = sessionFactory.openSession();
+        session.saveOrUpdate(object);
         return findById(object.getId());
     }
 
     @Override
     public Long delete(Long id) {
-        jdbcTemplate.update("delete from items where id = " + id);
+        Session session = sessionFactory.getCurrentSession();
+        Item deleteItem = session.get(Item.class, id);
+        session.delete(deleteItem);
         return id;
     }
 
     @Override
     public List<Item> getItemsByCategory(int itemTypeId) {
-        return jdbcTemplate.query("select * from items where item_type_id = " + itemTypeId, itemRowMapper);
+        //return jdbcTemplate.query("select * from items where item_type_id = " + itemTypeId, itemRowMapper);
+
+        Session session = sessionFactory.openSession();
+        return session.createQuery("select i from Item i where i.itemTypeId =" + itemTypeId, Item.class)
+                .getResultList();
+
     }
 
     @Override
     public List<Item> searchItemsByName(String name) {
-        return jdbcTemplate.query("select * from items where item_name ilike '%" + name +"%'", itemRowMapper);
+        Session session = sessionFactory.openSession();
+        return session.createQuery("select i from Item i where i.itemName = " + name,Item.class).getResultList();
     }
 }

@@ -8,17 +8,17 @@ public class UserCreateRequest {
 
     private String username;
 
-    private String user_login;
+    private String userLogin;
 
-    private String user_password;
+    private String userPassword;
 
-    private int location_id;
+    private int locationId;
 
-    private String location_details;
+    private String locationDetails;
 
-    private String phone_number;
+    private String phoneNumber;
 
-    private String mobile_number;
+    private String mobileNumber;
 
     private String email;
 

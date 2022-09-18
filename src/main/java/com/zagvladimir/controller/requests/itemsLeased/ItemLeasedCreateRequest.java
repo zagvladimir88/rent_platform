@@ -9,25 +9,25 @@ import java.sql.Timestamp;
 public class ItemLeasedCreateRequest {
 
 
-        private long item_id;
+        private long itemId;
 
-        private long renter_id;
+        private long renterId;
 
-        private Timestamp time_from;
+        private Timestamp timeFrom;
 
-        private Timestamp time_to;
+        private Timestamp timeTo;
 
-        private double price_per_hour;
+        private double pricePerHour;
 
         private double discount;
 
         private double fee;
 
-        private double price_total;
+        private double priceTotal;
 
-        private String  rentier_grade_description;
+        private String  rentierGradeDescription;
 
-        private String  renter_grade_description;
+        private String  renterGradeDescription;
 
         private Status status;
 

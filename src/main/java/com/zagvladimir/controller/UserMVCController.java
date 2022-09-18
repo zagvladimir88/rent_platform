@@ -71,15 +71,15 @@ public class UserMVCController {
 
         User user = new User();
         user.setUsername(createRequest.getUsername());
-        user.setUser_password(createRequest.getUser_password());
-        user.setLocation_id(createRequest.getLocation_id());
-        user.setLocation_details(createRequest.getLocation_details());
-        user.setPhone_number(createRequest.getPhone_number());
-        user.setMobile_number(createRequest.getMobile_number());
+        user.setUserPassword(createRequest.getUserPassword());
+        user.setLocationId(createRequest.getLocationId());
+        user.setLocationDetails(createRequest.getLocationDetails());
+        user.setPhoneNumber(createRequest.getPhoneNumber());
+        user.setMobileNumber(createRequest.getMobileNumber());
         user.setEmail(createRequest.getEmail());
-        user.setRegistration_date(new Timestamp(new Date().getTime()));
-        user.setCreation_date(new Timestamp(new Date().getTime()));
-        user.setModification_date(new Timestamp(new Date().getTime()));
+        user.setRegistrationDate(new Timestamp(new Date().getTime()));
+        user.setCreationDate(new Timestamp(new Date().getTime()));
+        user.setModificationDate(new Timestamp(new Date().getTime()));
 
         userService.create(user);
 
