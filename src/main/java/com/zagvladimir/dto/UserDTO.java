@@ -1,6 +1,6 @@
 package com.zagvladimir.dto;
 
-import com.zagvladimir.domain.Role;
+
 import com.zagvladimir.domain.Status;
 import lombok.*;
 

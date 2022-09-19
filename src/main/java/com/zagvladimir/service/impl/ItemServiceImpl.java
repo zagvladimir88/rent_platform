@@ -1,12 +1,9 @@
 package com.zagvladimir.service.impl;
 
 import com.zagvladimir.domain.Item;
-import com.zagvladimir.domain.User;
 import com.zagvladimir.repository.item.ItemRepositoryInterface;
-import com.zagvladimir.repository.user.UserRepositoryInterface;
 import com.zagvladimir.service.ItemService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

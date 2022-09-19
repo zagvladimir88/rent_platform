@@ -2,7 +2,6 @@ package com.zagvladimir.service.impl;
 
 import com.zagvladimir.domain.ItemLeased;
 import com.zagvladimir.repository.ItemLeased.ItemLeasedRepositoryInterface;
-import com.zagvladimir.repository.item.ItemRepositoryInterface;
 import com.zagvladimir.service.ItemLeasedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -1,7 +1,5 @@
 package com.zagvladimir.repository;
 
-import com.zagvladimir.domain.User;
-
 import java.util.List;
 import java.util.Optional;
 

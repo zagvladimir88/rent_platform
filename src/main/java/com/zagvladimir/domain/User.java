@@ -1,12 +1,9 @@
 package com.zagvladimir.domain;
 
 import lombok.*;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
+
 import java.util.List;
 
 
@@ -34,15 +31,10 @@ public class User extends BaseEntity{
     @Column(name = "registration_date")
     private Timestamp registrationDate;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles;
 
-
-//    @Override
-//    public String toString() {
-//        return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-//    }
 }
