@@ -2,7 +2,12 @@ package com.zagvladimir.controller;
 
 import com.zagvladimir.controller.requests.users.UserCreateRequest;
 import com.zagvladimir.controller.requests.users.UserSearchRequest;
+import com.zagvladimir.domain.Role;
 import com.zagvladimir.domain.User;
+import com.zagvladimir.dto.RoleDTO;
+import com.zagvladimir.dto.UserDTO;
+import com.zagvladimir.mappers.UserListMapper;
+import com.zagvladimir.mappers.UserMapper;
 import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -11,16 +16,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/rest/users")
 public class UserRestController {
+
+    private final UserMapper userMapper;
+    private final UserListMapper userListMapper;
     private final UserService userService;
 
     @GetMapping
     public ResponseEntity<Object> findAllUsers() {
-        return new ResponseEntity<>(Collections.singletonMap("result", userService.findAll()),
+        List<User> userList = userService.findAll();
+        return new ResponseEntity<>(Collections.singletonMap("result", userListMapper.toDTOs(userList)),
                 HttpStatus.OK);
     }
 
@@ -34,18 +44,16 @@ public class UserRestController {
 
         Map<String, Object> model = new HashMap<>();
         model.put("user", "Slava");
-        model.put("users", users);
+        model.put("users",userListMapper.toDTOs(users));
 
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> findUserById(@PathVariable String id) {
-
-        //We have added id parsing and number format checking
         long userId = Long.parseLong(id);
-
-        return new ResponseEntity<>(Collections.singletonMap("user", userService.findById(userId)), HttpStatus.OK);
+        User user = userService.findById(userId);
+        return new ResponseEntity<>(Collections.singletonMap("user", userMapper.toDTO(user)), HttpStatus.OK);
     }
 
     @PostMapping
@@ -85,5 +93,6 @@ public class UserRestController {
         model.put("id", id);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
+
 
 }

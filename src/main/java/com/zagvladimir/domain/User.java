@@ -4,19 +4,16 @@ import lombok.*;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.sql.Timestamp;
-
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
 @Entity
 @Table(name = "users")
 public class User extends BaseEntity{
-
-
 
     @Column(name = "username")
     private String username;
@@ -37,9 +34,15 @@ public class User extends BaseEntity{
     @Column(name = "registration_date")
     private Timestamp registrationDate;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "user_roles",
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+    private List<Role> roles;
 
-    @Override
-    public String toString() {
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-    }
+
+//    @Override
+//    public String toString() {
+//        return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
+//    }
 }
