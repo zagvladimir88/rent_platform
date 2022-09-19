@@ -9,6 +9,8 @@ import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
@@ -23,7 +25,9 @@ public class UserRestController {
     private final UserMapper userMapper;
     private final UserListMapper userListMapper;
     private final UserService userService;
+    private final BCryptPasswordEncoder passwordEncoder;
 
+    @Secured("ROLE_ADMIN")
     @GetMapping
     public ResponseEntity<Object> findAllUsers() {
         List<User> userList = userService.findAll();
@@ -53,12 +57,18 @@ public class UserRestController {
         return new ResponseEntity<>(Collections.singletonMap("user", userMapper.toDTO(user)), HttpStatus.OK);
     }
 
+    @GetMapping("/login/{login}")
+    public ResponseEntity<Map<String, Object>> findByLogin(@PathVariable String login) {
+        User user = userService.findByLogin(login).get();
+        return new ResponseEntity<>(Collections.singletonMap("user", userMapper.toDTO(user)), HttpStatus.OK);
+    }
+
     @PostMapping
     public ResponseEntity<Object> createUser(@RequestBody UserCreateRequest createRequest) {
 
         User user = new User();
         user.setUsername(createRequest.getUsername());
-        user.setUserPassword(createRequest.getUserPassword());
+        user.setUserPassword(passwordEncoder.encode(createRequest.getUserPassword()));
         user.setUserLogin(createRequest.getUserLogin());
         user.setLocationId(createRequest.getLocationId());
         user.setLocationDetails(createRequest.getLocationDetails());

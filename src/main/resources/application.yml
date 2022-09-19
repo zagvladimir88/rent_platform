@@ -14,8 +14,11 @@ spring:
     baseline-version: 1.003
 
 
-
-
 server:
   port: 8080
 
+---
+
+jwt:
+  secret: qwepuisdhfaksdjflsdfn12321___**
+  expiration: 3600000

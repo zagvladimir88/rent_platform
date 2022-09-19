@@ -75,4 +75,11 @@ public class UserRepository implements UserRepositoryInterface {
   public Map<String, Object> getUserStats() {
     return new HashMap<>();
   }
+
+  @Override
+  public Optional<User> findByLogin(String login) {
+    try (Session session = sessionFactory.openSession()) {
+      return Optional.of(session.createQuery("select u from User u where u.userLogin = '" + login +"'", User.class).getSingleResult());
+    }
+  }
 }

@@ -4,6 +4,7 @@ import com.zagvladimir.domain.User;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -20,4 +21,6 @@ public interface UserService {
     Long delete(Long id);
 
     List<User> search(int limit, int offset);
+
+    Optional<User> findByLogin(String login);
 }
