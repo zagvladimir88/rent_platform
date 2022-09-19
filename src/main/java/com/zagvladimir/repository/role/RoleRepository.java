@@ -28,7 +28,6 @@ public class RoleRepository implements RoleRepositoryInterface {
     }
   }
 
-
   @Override
   public Role findById(Long id) {
     try (Session session = sessionFactory.openSession()) {
@@ -49,7 +48,6 @@ public class RoleRepository implements RoleRepositoryInterface {
   @Override
   public List<Role> findAll(int limit, int offset) {
     try (Session session = sessionFactory.openSession()) {
-
       return session
           .createQuery("select r from Role r", Role.class)
           .setFirstResult(offset)
@@ -80,7 +78,7 @@ public class RoleRepository implements RoleRepositoryInterface {
       Role deleteRole = session.get(Role.class, id);
       session.delete(deleteRole);
       session.beginTransaction().commit();
-    return id;
+      return id;
     }
   }
 }

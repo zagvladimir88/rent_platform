@@ -9,6 +9,7 @@ import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
@@ -24,6 +25,7 @@ public class UserRestController {
     private final UserListMapper userListMapper;
     private final UserService userService;
 
+    @Secured("ROLE_ADMIN")
     @GetMapping
     public ResponseEntity<Object> findAllUsers() {
         List<User> userList = userService.findAll();
@@ -50,6 +52,12 @@ public class UserRestController {
     public ResponseEntity<Map<String, Object>> findUserById(@PathVariable String id) {
         long userId = Long.parseLong(id);
         User user = userService.findById(userId);
+        return new ResponseEntity<>(Collections.singletonMap("user", userMapper.toDTO(user)), HttpStatus.OK);
+    }
+
+    @GetMapping("/login/{login}")
+    public ResponseEntity<Map<String, Object>> findByLogin(@PathVariable String login) {
+        User user = userService.findByLogin(login).get();
         return new ResponseEntity<>(Collections.singletonMap("user", userMapper.toDTO(user)), HttpStatus.OK);
     }
 
