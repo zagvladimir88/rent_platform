@@ -57,7 +57,7 @@ public class ItemRestController {
         item.setLocationId(createRequest.getLocationId());
         item.setItemLocation(createRequest.getItemLocation());
         item.setDescription(createRequest.getDescription());
-        item.setOwnerId(createRequest.getItemTypeId());
+        item.setOwner(createRequest.getOwner());
         item.setPricePerHour(createRequest.getPricePerHour());
         item.setAvailable(createRequest.getAvailable());
         item.setCreationDate(new Timestamp(new Date().getTime()));

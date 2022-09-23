@@ -29,7 +29,7 @@ public class ItemLeasedRestController {
 
         ItemLeased itemLeased = new ItemLeased();
         itemLeased.setItemId(createRequest.getItemId());
-        itemLeased.setRenterId(createRequest.getRenterId());
+        itemLeased.setRenter(createRequest.getRenter());
         itemLeased.setTimeTo(createRequest.getTimeTo());
         itemLeased.setTimeFrom(createRequest.getTimeFrom());
         itemLeased.setPricePerHour(createRequest.getPricePerHour());

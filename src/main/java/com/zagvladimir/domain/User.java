@@ -1,6 +1,7 @@
 package com.zagvladimir.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -10,7 +11,7 @@ import java.util.Set;
 
 @Data
 @Entity
-@EqualsAndHashCode(exclude = {"roles"})
+@EqualsAndHashCode(exclude = {"roles","items","itemsleased"})
 @Table(name = "users")
 public class User extends BaseEntity {
 
@@ -41,8 +42,15 @@ public class User extends BaseEntity {
   @Column(name = "registration_date")
   private Timestamp registrationDate;
 
-
   @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
   @JsonIgnoreProperties("users")
   private Set<Role> roles;
+
+  @OneToMany(mappedBy="owner", fetch = FetchType.EAGER)
+  @JsonManagedReference
+  private Set<Item> items;
+
+  @OneToMany(mappedBy="renter", fetch = FetchType.EAGER)
+  @JsonManagedReference
+  private Set<ItemLeased> itemsleased;
 }

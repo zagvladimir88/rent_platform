@@ -1,6 +1,7 @@
 package com.zagvladimir.controller.requests.itemsLeased;
 
 import com.zagvladimir.domain.Status;
+import com.zagvladimir.domain.User;
 import lombok.Data;
 
 import java.sql.Timestamp;
@@ -11,7 +12,7 @@ public class ItemLeasedCreateRequest {
 
         private long itemId;
 
-        private long renterId;
+        private User renter;
 
         private Timestamp timeFrom;
 

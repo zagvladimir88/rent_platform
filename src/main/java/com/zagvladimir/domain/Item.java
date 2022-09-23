@@ -1,13 +1,10 @@
 package com.zagvladimir.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
 @Entity
@@ -29,19 +26,14 @@ public class Item extends BaseEntity{
     @Column(name = "description")
     private String description;
 
-    @Column(name = "owner_id")
-    private long ownerId;
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    @JsonBackReference
+    private User owner;
 
     @Column(name = "price_per_hour")
     private double pricePerHour;
 
     @Column(name = "available")
     private Boolean available;
-
-
-    @Override
-    public String toString() {
-        return ReflectionToStringBuilder.toString(this, ToStringStyle.JSON_STYLE);
-    }
-
 }
