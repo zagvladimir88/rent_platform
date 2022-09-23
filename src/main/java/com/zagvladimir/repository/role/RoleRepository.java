@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Log4j2
 @Repository
@@ -21,7 +22,7 @@ public class RoleRepository implements RoleRepositoryInterface {
   private final SessionFactory sessionFactory;
 
   @Override
-  public List<Role> findRolesByUserId(Long userId) {
+  public Set<Role> findRolesByUserId(Long userId) {
     try (Session session = sessionFactory.openSession()) {
       User user = session.get(User.class, userId);
       return user.getRoles();

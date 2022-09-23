@@ -3,8 +3,7 @@ package com.zagvladimir.controller;
 import com.zagvladimir.controller.requests.users.UserCreateRequest;
 import com.zagvladimir.controller.requests.users.UserSearchRequest;
 import com.zagvladimir.domain.User;
-import com.zagvladimir.mappers.UserListMapper;
-import com.zagvladimir.mappers.UserMapper;
+
 import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,16 +21,13 @@ import java.util.*;
 @RequestMapping("/rest/users")
 public class UserRestController {
 
-    private final UserMapper userMapper;
-    private final UserListMapper userListMapper;
     private final UserService userService;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Secured("ROLE_ADMIN")
     @GetMapping
     public ResponseEntity<Object> findAllUsers() {
-        List<User> userList = userService.findAll();
-        return new ResponseEntity<>(Collections.singletonMap("result", userListMapper.toDTOs(userList)),
+        return new ResponseEntity<>(Collections.singletonMap("result", userService.findAll()),
                 HttpStatus.OK);
     }
 
@@ -45,7 +41,7 @@ public class UserRestController {
 
         Map<String, Object> model = new HashMap<>();
         model.put("user", "Slava");
-        model.put("users",userListMapper.toDTOs(users));
+        model.put("users",users);
 
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
@@ -53,14 +49,12 @@ public class UserRestController {
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> findUserById(@PathVariable String id) {
         long userId = Long.parseLong(id);
-        User user = userService.findById(userId);
-        return new ResponseEntity<>(Collections.singletonMap("user", userMapper.toDTO(user)), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap("user", userService.findById(userId)), HttpStatus.OK);
     }
 
     @GetMapping("/login/{login}")
     public ResponseEntity<Map<String, Object>> findByLogin(@PathVariable String login) {
-        User user = userService.findByLogin(login).get();
-        return new ResponseEntity<>(Collections.singletonMap("user", userMapper.toDTO(user)), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap("user", userService.findByLogin(login)), HttpStatus.OK);
     }
 
     @PostMapping
@@ -86,7 +80,7 @@ public class UserRestController {
 
         Map<String, Object> model = new HashMap<>();
         model.put("user", user.getUsername());
-        model.put("users", userListMapper.toDTOs(users));
+        model.put("users", users);
 
         return new ResponseEntity<>(model, HttpStatus.CREATED);
     }

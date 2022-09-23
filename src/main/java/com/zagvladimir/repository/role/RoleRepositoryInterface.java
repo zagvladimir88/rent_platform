@@ -3,8 +3,9 @@ package com.zagvladimir.repository.role;
 import com.zagvladimir.domain.Role;
 import com.zagvladimir.repository.CRUDRepository;
 
-import java.util.List;
+
+import java.util.Set;
 
 public interface RoleRepositoryInterface extends CRUDRepository<Long, Role> {
-    List<Role> findRolesByUserId(Long userId);
+    Set<Role> findRolesByUserId(Long userId);
 }

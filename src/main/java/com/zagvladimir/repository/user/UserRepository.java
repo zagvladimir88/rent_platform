@@ -67,6 +67,7 @@ public class UserRepository implements UserRepositoryInterface {
     try (Session session = sessionFactory.openSession()) {
       User deleteUser = session.get(User.class, id);
       session.delete(deleteUser);
+      session.beginTransaction().commit();
       return id;
     }
   }

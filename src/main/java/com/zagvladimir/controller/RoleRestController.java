@@ -2,8 +2,6 @@ package com.zagvladimir.controller;
 
 import com.zagvladimir.controller.requests.role.RoleCreateRequest;
 import com.zagvladimir.domain.Role;
-import com.zagvladimir.mappers.RoleListMapper;
-import com.zagvladimir.mappers.RoleMapper;
 import com.zagvladimir.repository.role.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,28 +17,24 @@ import java.util.*;
 public class RoleRestController {
 
     private final RoleRepository roleRepository;
-    private final RoleMapper roleMapper;
-    private final RoleListMapper roleListMapper;
+
 
     @GetMapping
     public ResponseEntity<Object> findAllRoles() {
-        List<Role> roleList = roleRepository.findAll();
-        return new ResponseEntity<>(Collections.singletonMap("result", roleListMapper.toDTOs(roleList)),
+        return new ResponseEntity<>(Collections.singletonMap("result", roleRepository.findAll()),
                 HttpStatus.OK);
     }
 
     @GetMapping("users/{id}")
     public ResponseEntity<Object> findRolesByUserId(@PathVariable Long id){
-        List<Role> roleList = roleRepository.findRolesByUserId(id);
-        return new ResponseEntity<>(Collections.singletonMap("result", roleListMapper.toDTOs(roleList)),
+        return new ResponseEntity<>(Collections.singletonMap("result", roleRepository.findRolesByUserId(id)),
                 HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> findRoleById(@PathVariable String id) {
         long userId = Long.parseLong(id);
-        Role role = roleRepository.findById(userId);
-        return new ResponseEntity<>(Collections.singletonMap("role", roleMapper.toDTO(role)), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap("role", roleRepository.findById(userId)), HttpStatus.OK);
     }
 
     @PostMapping
@@ -56,7 +50,7 @@ public class RoleRestController {
 
         List<Role> roles = roleRepository.findAll();
         Map<String, Object> model = new HashMap<>();
-        model.put("roles", roleListMapper.toDTOs(roles));
+        model.put("roles",roles);
 
         return new ResponseEntity<>(model, HttpStatus.CREATED);
     }
