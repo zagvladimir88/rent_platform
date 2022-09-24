@@ -3,8 +3,8 @@ package com.zagvladimir.security;
 
 import com.zagvladimir.domain.Role;
 import com.zagvladimir.domain.User;
-import com.zagvladimir.repository.role.RoleRepositoryInterface;
-import com.zagvladimir.repository.user.UserRepositoryInterface;
+import com.zagvladimir.repository.RoleRepository;
+import com.zagvladimir.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -19,15 +19,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserSecurityService implements UserDetailsService {
 
-    private final UserRepositoryInterface userRepository;
+    private final UserRepository userRepository;
 
-    private final RoleRepositoryInterface roleRepository;
+    private final RoleRepository roleRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
             /*Find user in DB*/
-            Optional<User> searchResult = userRepository.findByLogin(username);
+            Optional<User> searchResult = userRepository.findByUserLogin(username);
 
             if (searchResult.isPresent()) {
                 User user = searchResult.get();
@@ -39,7 +39,7 @@ public class UserSecurityService implements UserDetailsService {
                         user.getUserPassword(),
 //                        ["ROLE_USER", "ROLE_ADMIN"]
                         AuthorityUtils.commaSeparatedStringToAuthorityList(
-                                roleRepository.findRolesByUserId(user.getId())
+                                roleRepository.findRolesByUserid(user.getId())
                                         .stream()
                                         .map(Role::getName)
                                         //.map(SystemRoles::name)

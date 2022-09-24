@@ -2,7 +2,8 @@ package com.zagvladimir.controller;
 
 import com.zagvladimir.controller.requests.role.RoleCreateRequest;
 import com.zagvladimir.domain.Role;
-import com.zagvladimir.repository.role.RoleRepository;
+
+import com.zagvladimir.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class RoleRestController {
 
     @GetMapping("users/{id}")
     public ResponseEntity<Object> findRolesByUserId(@PathVariable Long id){
-        return new ResponseEntity<>(Collections.singletonMap("result", roleRepository.findRolesByUserId(id)),
+        return new ResponseEntity<>(Collections.singletonMap("result", roleRepository.findRolesByUserid(id)),
                 HttpStatus.OK);
     }
 
@@ -46,7 +47,7 @@ public class RoleRestController {
         role.setModificationDate(new Timestamp(new Date().getTime()));
         role.setStatus(createRequest.getStatus());
 
-        roleRepository.create(role);
+        //roleRepository.create(role);
 
         List<Role> roles = roleRepository.findAll();
         Map<String, Object> model = new HashMap<>();
@@ -58,7 +59,7 @@ public class RoleRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteRoleById(@PathVariable Long id){
 
-        roleRepository.delete(id);
+        roleRepository.deleteById(id);
 
         Map<String, Object> model = new HashMap<>();
         model.put("role has been deleted id:", id);

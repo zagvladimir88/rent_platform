@@ -4,11 +4,11 @@ import com.zagvladimir.controller.requests.users.UserCreateRequest;
 import com.zagvladimir.controller.requests.users.UserSearchRequest;
 import com.zagvladimir.domain.User;
 
+import com.zagvladimir.repository.RoleRepository;
 import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +22,10 @@ import java.util.*;
 public class UserRestController {
 
     private final UserService userService;
+    private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    @Secured("ROLE_ADMIN")
+
     @GetMapping
     public ResponseEntity<Object> findAllUsers() {
         return new ResponseEntity<>(Collections.singletonMap("result", userService.findAll()),

@@ -1,10 +1,8 @@
 package com.zagvladimir.service;
 
 import com.zagvladimir.domain.Item;
-import com.zagvladimir.domain.User;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ItemService {
 
@@ -18,9 +16,9 @@ public interface ItemService {
 
     Long delete(Long itemId);
 
-    List<Item> getItemsByCategory(int itemTypeId);
+    List<Item> findItemsByCategoryId(Long itemTypeId);
 
-    List<Item> searchItemsByName(String name);
+    List<Item> findItemsByItemName(String name);
 
     List<Item> search(int limit, int offset);
 }

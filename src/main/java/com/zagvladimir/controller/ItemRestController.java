@@ -41,7 +41,7 @@ public class ItemRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> findUserById(@PathVariable String id) {
+    public ResponseEntity<Map<String, Object>> findByItemId(@PathVariable String id) {
 
         long itemId = Long.parseLong(id);
 

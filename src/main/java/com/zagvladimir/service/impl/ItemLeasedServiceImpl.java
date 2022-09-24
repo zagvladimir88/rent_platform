@@ -1,7 +1,7 @@
 package com.zagvladimir.service.impl;
 
 import com.zagvladimir.domain.ItemLeased;
-import com.zagvladimir.repository.ItemLeased.ItemLeasedRepositoryInterface;
+import com.zagvladimir.repository.ItemLeasedRepository;
 import com.zagvladimir.service.ItemLeasedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ItemLeasedServiceImpl implements ItemLeasedService {
 
-    private final ItemLeasedRepositoryInterface itemLeasedRepository;
+    private final ItemLeasedRepository itemLeasedRepository;
 
     @Transactional
     @Override
@@ -24,24 +24,25 @@ public class ItemLeasedServiceImpl implements ItemLeasedService {
     @Transactional
     @Override
     public ItemLeased create(ItemLeased object) {
-        return itemLeasedRepository.create(object);
+        return itemLeasedRepository.save(object);
     }
 
     @Transactional
     @Override
     public ItemLeased findById(Long itemLeasedId) {
-        return itemLeasedRepository.findById(itemLeasedId);
+        return itemLeasedRepository.findById(itemLeasedId).get();
     }
 
     @Transactional
     @Override
     public ItemLeased update(ItemLeased object) {
-        return itemLeasedRepository.update(object);
+        return itemLeasedRepository.save(object);
     }
 
     @Transactional
     @Override
     public Long delete(Long itemLeasedId) {
-        return itemLeasedRepository.delete(itemLeasedId);
+        itemLeasedRepository.deleteById(itemLeasedId);
+        return itemLeasedId;
     }
 }
