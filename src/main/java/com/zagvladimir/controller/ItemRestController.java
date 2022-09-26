@@ -22,7 +22,7 @@ public class ItemRestController {
 
     @GetMapping
     public ResponseEntity<Object> findAllItems() {
-        return new ResponseEntity<>(Collections.singletonMap("result", itemService.findAll()),
+        return new ResponseEntity<>(itemService.findAll(),
                 HttpStatus.OK);
     }
 

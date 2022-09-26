@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
@@ -59,28 +60,32 @@ public class UserRestController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<Object> createUser(@RequestBody UserCreateRequest createRequest) {
 
-        User user = new User();
-        user.setUsername(createRequest.getUsername());
-        user.setUserPassword(passwordEncoder.encode(createRequest.getUserPassword()));
-        user.setUserLogin(createRequest.getUserLogin());
-        user.setLocationId(createRequest.getLocationId());
-        user.setLocationDetails(createRequest.getLocationDetails());
-        user.setPhoneNumber(createRequest.getPhoneNumber());
-        user.setMobileNumber(createRequest.getMobileNumber());
-        user.setEmail(createRequest.getEmail());
-        user.setRegistrationDate(new Timestamp(new Date().getTime()));
-        user.setCreationDate(new Timestamp(new Date().getTime()));
-        user.setModificationDate(new Timestamp(new Date().getTime()));
-        user.setStatus(createRequest.getStatus());
+        User newUser = new User();
+        newUser.setUsername(createRequest.getUsername());
+        newUser.setUserPassword(passwordEncoder.encode(createRequest.getUserPassword()));
+        newUser.setUserLogin(createRequest.getUserLogin());
+        newUser.setLocationId(createRequest.getLocationId());
+        newUser.setLocationDetails(createRequest.getLocationDetails());
+        newUser.setPhoneNumber(createRequest.getPhoneNumber());
+        newUser.setMobileNumber(createRequest.getMobileNumber());
+        newUser.setEmail(createRequest.getEmail());
+        newUser.setRegistrationDate(new Timestamp(new Date().getTime()));
+        newUser.setCreationDate(new Timestamp(new Date().getTime()));
+        newUser.setModificationDate(new Timestamp(new Date().getTime()));
+        newUser.setStatus(createRequest.getStatus());
 
-        userService.create(user);
+        userService.create(newUser);
+
+        userService.createRoleRow(newUser.getId(), roleRepository.findRoleByName("ROLE_USER").getId());
+
 
         List<User> users = userService.findAll();
 
         Map<String, Object> model = new HashMap<>();
-        model.put("user", user.getUsername());
+        model.put("user", newUser.getUsername());
         model.put("users", users);
 
         return new ResponseEntity<>(model, HttpStatus.CREATED);

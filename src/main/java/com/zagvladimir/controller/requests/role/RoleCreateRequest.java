@@ -10,6 +10,6 @@ public class RoleCreateRequest {
 
     private String name;
 
-    private Status status;
+    private Status status = Status.ACTIVE;
 
 }

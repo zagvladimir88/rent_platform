@@ -23,4 +23,6 @@ public interface UserService {
     List<User> search(int limit, int offset);
 
     Optional<User> findByLogin(String login);
+
+    int createRoleRow(Long userId, Long roleId);
 }

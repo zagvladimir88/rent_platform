@@ -40,11 +40,11 @@
                 <td>${user.getId()}</td>
                 <td>${user.getUsername()}</td>
                 <td>${user.getEmail()}</td>
-                <td>${user.getRegistration_date()}</td>
-                <td>${user.getPhone_number()}</td>
-                <td><fmt:formatDate value="${user.getCreation_date()}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-                <td><fmt:formatDate value="${user.getModification_date()}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
-                <td><fmt:formatNumber type="number" maxFractionDigits="2" value="${user.getLocation_id()}"/></td>
+                <td>${user.getRegistrationDate()}</td>
+                <td>${user.getPhoneNumber()}</td>
+                <td><fmt:formatDate value="${user.getCreationDate()}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                <td><fmt:formatDate value="${user.getModificationDate()}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+                <td><fmt:formatNumber type="number" maxFractionDigits="2" value="${user.getLocationId()}"/></td>
                 <td>
                     <button>Edit</button>
                 </td>

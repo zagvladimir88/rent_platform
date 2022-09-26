@@ -30,7 +30,7 @@ public class ItemLeasedCreateRequest {
 
         private String  renterGradeDescription;
 
-        private Status status;
+        private Status status = Status.ACTIVE;
 
 
 }

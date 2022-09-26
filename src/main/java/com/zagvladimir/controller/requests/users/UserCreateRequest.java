@@ -22,7 +22,7 @@ public class UserCreateRequest {
 
     private String email;
 
-    private Status status;
+    private Status status = Status.ACTIVE;
 
 
 }

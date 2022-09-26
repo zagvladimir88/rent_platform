@@ -23,6 +23,6 @@ public class ItemCreateRequest {
 
     private Boolean available;
 
-    private Status status;
+    private Status status = Status.ACTIVE;
 
 }
