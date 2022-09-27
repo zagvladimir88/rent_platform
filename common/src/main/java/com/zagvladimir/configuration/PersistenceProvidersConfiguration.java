@@ -49,7 +49,6 @@ public class PersistenceProvidersConfiguration {
         Properties properties = new Properties();
 
         properties.put("hibernate.show_sql", "true");
-//        properties.put("hibernate.default_schema", "public");
         properties.put("current_session_context_class", "org.springframework.orm.hibernate5.SpringSessionContext");
         return properties;
 
