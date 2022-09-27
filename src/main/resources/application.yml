@@ -23,15 +23,3 @@ jwt:
 
 ---
 
-logging:
-  level:
-    root: INFO
-  file:
-    name: loging-info.log
-    path: /
-
-  logback:
-    rollingpolicy:
-      max-history: 10
-      file-name-pattern: "${LOG_FILE}.%d{yyyy-MM-dd}.%i.log"
-

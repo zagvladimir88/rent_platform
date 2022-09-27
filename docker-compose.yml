@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  postgres:
+    image: 'postgres:14.5'
+    container_name: 'java-rent-postgres'
+    environment:
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_PASSWORD=1111'
+      - 'POSTGRES_DB=rent_db'
+
+  app:
+    build: ./
+    container_name: 'java-rent-app'
+    ports:
+      - 8080:8080
+
