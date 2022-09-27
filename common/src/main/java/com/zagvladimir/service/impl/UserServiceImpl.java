@@ -4,11 +4,9 @@ import com.zagvladimir.domain.User;
 import com.zagvladimir.repository.UserRepository;
 import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
