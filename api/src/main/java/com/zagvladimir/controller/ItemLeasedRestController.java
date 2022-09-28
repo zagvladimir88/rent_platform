@@ -1,6 +1,6 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.controller.requests.itemsLeased.ItemLeasedCreateRequest;
+import com.zagvladimir.controller.requests.items_leased.ItemLeasedCreateRequest;
 import com.zagvladimir.domain.ItemLeased;
 import com.zagvladimir.service.ItemLeasedService;
 import lombok.RequiredArgsConstructor;

@@ -53,4 +53,12 @@ public class User extends BaseEntity {
   @OneToMany(mappedBy="renter", fetch = FetchType.EAGER)
   @JsonManagedReference
   private Set<ItemLeased> itemsleased;
+
+  @OneToMany(mappedBy="userTo", fetch = FetchType.EAGER)
+  @JsonManagedReference
+  private Set<Grade> gradesToSet;
+
+  @OneToMany(mappedBy="userFrom", fetch = FetchType.EAGER)
+  @JsonManagedReference
+  private Set<Grade> gradesFromSet;
 }

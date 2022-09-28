@@ -19,7 +19,6 @@ public class RoleRestController {
 
     private final RoleRepository roleRepository;
 
-
     @GetMapping
     public ResponseEntity<Object> findAllRoles() {
         return new ResponseEntity<>(Collections.singletonMap("result", roleRepository.findAll()),
@@ -47,7 +46,7 @@ public class RoleRestController {
         role.setModificationDate(new Timestamp(new Date().getTime()));
         role.setStatus(createRequest.getStatus());
 
-        //roleRepository.create(role);
+        roleRepository.save(role);
 
         List<Role> roles = roleRepository.findAll();
         Map<String, Object> model = new HashMap<>();

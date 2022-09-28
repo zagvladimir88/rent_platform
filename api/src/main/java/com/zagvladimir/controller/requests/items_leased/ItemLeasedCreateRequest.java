@@ -1,4 +1,4 @@
-package com.zagvladimir.controller.requests.itemsLeased;
+package com.zagvladimir.controller.requests.items_leased;
 
 import com.zagvladimir.domain.Status;
 import com.zagvladimir.domain.User;

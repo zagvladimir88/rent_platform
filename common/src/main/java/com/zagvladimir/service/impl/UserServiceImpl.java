@@ -15,61 +15,56 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    @Transactional
-    @Override
-    public List<User> findAll() {
+  @Transactional
+  @Override
+  public List<User> findAll() {
+    return userRepository.findAll();
+  }
 
-        return userRepository.findAll();
+  @Transactional
+  @Override
+  public User create(User object) {
+    return userRepository.save(object);
+  }
+
+  @Transactional
+  @Override
+  public User findById(Long userId) {
+    Optional<User> user = userRepository.findById(userId);
+    if (user.isPresent()) {
+      return user.get();
     }
+    return null;
+  }
 
-    @Override
-    public Map<String, Object> getUserStats() {
-        return null;
-    }
+  @Transactional
+  @Override
+  public User update(User object) {
+    return userRepository.save(object);
+  }
 
-    @Transactional
-    @Override
-    public User create(User object) {
-        return userRepository.save(object);
-    }
+  @Transactional
+  @Override
+  public Long delete(Long id) {
+    userRepository.deleteById(id);
+    return id;
+  }
 
-    @Transactional
-    @Override
-    public User findById(Long userId) {
-        Optional<User> user = userRepository.findById(userId);
-        if (user.isPresent()) {
-            return user.get();
-        } return null ;
-    }
+  @Transactional
+  @Override
+  public List<User> search(int limit, int offset) {
+    return userRepository.findAll();
+  }
 
-    @Transactional
-    @Override
-    public User update(User object) {
-        return userRepository.save(object);
-    }
+  @Override
+  public Optional<User> findByLogin(String login) {
+    return userRepository.findByUserLogin(login);
+  }
 
-    @Transactional
-    @Override
-    public Long delete(Long id) {
-        userRepository.deleteById(id);
-        return id;
-    }
-
-    @Transactional
-    @Override
-    public List<User> search(int limit, int offset) {
-        return userRepository.findAll();
-    }
-
-    @Override
-    public Optional<User> findByLogin(String login) {
-        return userRepository.findByUserLogin(login);
-    }
-
-    @Override
-    public int createRoleRow(Long userId, Long roleId) {
-        return userRepository.createRoleRow(userId, roleId);
-    }
+  @Override
+  public int createRoleRow(Long userId, Long roleId) {
+    return userRepository.createRoleRow(userId, roleId);
+  }
 }

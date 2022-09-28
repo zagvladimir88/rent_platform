@@ -4,8 +4,8 @@ package com.zagvladimir.controller;
 
 
 
+import com.zagvladimir.controller.requests.SearchRequest;
 import com.zagvladimir.controller.requests.users.UserCreateRequest;
-import com.zagvladimir.controller.requests.users.UserSearchRequest;
 import com.zagvladimir.controller.requests.users.UserUpdateRequest;
 import com.zagvladimir.domain.User;
 import com.zagvladimir.repository.RoleRepository;
@@ -38,10 +38,10 @@ public class UserRestController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Object> findAllUsersWithParams(@ModelAttribute UserSearchRequest userSearchRequest) {
+    public ResponseEntity<Object> findAllUsersWithParams(@ModelAttribute SearchRequest searchRequest) {
 
-        int verifiedLimit = Integer.parseInt(userSearchRequest.getLimit());
-        int verifiedOffset = Integer.parseInt(userSearchRequest.getOffset());
+        int verifiedLimit = Integer.parseInt(searchRequest.getLimit());
+        int verifiedOffset = Integer.parseInt(searchRequest.getOffset());
 
         List<User> users = userService.search(verifiedLimit, verifiedOffset);
 

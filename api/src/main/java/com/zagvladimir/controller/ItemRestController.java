@@ -1,8 +1,8 @@
 package com.zagvladimir.controller;
 
 
+import com.zagvladimir.controller.requests.SearchRequest;
 import com.zagvladimir.controller.requests.items.ItemCreateRequest;
-import com.zagvladimir.controller.requests.items.ItemSearchRequest;
 import com.zagvladimir.domain.Item;
 import com.zagvladimir.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +27,10 @@ public class ItemRestController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Object> findAllItemsWithParams(@ModelAttribute ItemSearchRequest itemSearchRequest) {
+    public ResponseEntity<Object> findAllItemsWithParams(@ModelAttribute SearchRequest searchRequest) {
 
-        int verifiedLimit = Integer.parseInt(itemSearchRequest.getLimit());
-        int verifiedOffset = Integer.parseInt(itemSearchRequest.getOffset());
+        int verifiedLimit = Integer.parseInt(searchRequest.getLimit());
+        int verifiedOffset = Integer.parseInt(searchRequest.getOffset());
 
         List<Item> items = itemService.search(verifiedLimit, verifiedOffset);
 
