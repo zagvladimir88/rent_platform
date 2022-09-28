@@ -6,6 +6,7 @@ package com.zagvladimir.controller;
 
 import com.zagvladimir.controller.requests.users.UserCreateRequest;
 import com.zagvladimir.controller.requests.users.UserSearchRequest;
+import com.zagvladimir.controller.requests.users.UserUpdateRequest;
 import com.zagvladimir.domain.User;
 import com.zagvladimir.repository.RoleRepository;
 import com.zagvladimir.service.UserService;
@@ -105,4 +106,23 @@ public class UserRestController {
     }
 
 
+    @PutMapping(value = "/{id}")
+    @Transactional
+    public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody  UserUpdateRequest userUpdateRequest){
+        User updatedUser = userService.findById(id);
+        updatedUser.setUsername(userUpdateRequest.getUsername());
+        updatedUser.setUserPassword(passwordEncoder.encode(userUpdateRequest.getUserPassword()));
+        updatedUser.setUserLogin(userUpdateRequest.getUserLogin());
+        updatedUser.setLocationId(userUpdateRequest.getLocationId());
+        updatedUser.setLocationDetails(userUpdateRequest.getLocationDetails());
+        updatedUser.setPhoneNumber(userUpdateRequest.getPhoneNumber());
+        updatedUser.setMobileNumber(userUpdateRequest.getMobileNumber());
+        updatedUser.setEmail(userUpdateRequest.getEmail());
+        updatedUser.setModificationDate(new Timestamp(new Date().getTime()));
+        updatedUser.setStatus(userUpdateRequest.getStatus());
+
+        userService.create(updatedUser);
+
+        return new ResponseEntity<>("Updated user with ID: " + id, HttpStatus.OK);
+    }
 }
