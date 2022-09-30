@@ -122,6 +122,9 @@ public class UserRestController {
 
         userService.create(updatedUser);
 
-        return new ResponseEntity<>("Updated user with ID: " + id, HttpStatus.OK);
+        Map<String, Object> model = new HashMap<>();
+        model.put("user", userService.findById(updatedUser.getId()));
+
+        return new ResponseEntity<>(model, HttpStatus.OK);
     }
 }
