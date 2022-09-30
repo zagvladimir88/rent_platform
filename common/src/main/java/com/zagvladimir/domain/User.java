@@ -24,8 +24,10 @@ public class User extends BaseEntity {
   @Column(name = "user_password")
   private String userPassword;
 
-  @Column(name = "location_id")
-  private int locationId;
+  @ManyToOne
+  @JoinColumn(name = "location_id")
+  @JsonManagedReference
+  private Location location;
 
   @Column(name = "location_details")
   private String locationDetails;

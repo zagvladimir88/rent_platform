@@ -1,6 +1,6 @@
 package com.zagvladimir.controller.requests.users;
 
-import com.zagvladimir.domain.Status;
+import com.zagvladimir.domain.enums.Status;
 import lombok.Data;
 
 @Data
@@ -12,7 +12,7 @@ public class UserCreateRequest {
 
     private String userPassword;
 
-    private int locationId;
+    private long locationId;
 
     private String locationDetails;
 

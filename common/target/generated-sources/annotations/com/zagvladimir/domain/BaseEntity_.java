@@ -1,5 +1,6 @@
 package com.zagvladimir.domain;
 
+import com.zagvladimir.domain.enums.Status;
 import java.sql.Timestamp;
 import javax.annotation.Generated;
 import javax.persistence.metamodel.SingularAttribute;

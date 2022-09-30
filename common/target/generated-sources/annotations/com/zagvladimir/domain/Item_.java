@@ -10,20 +10,20 @@ public abstract class Item_ extends com.zagvladimir.domain.BaseEntity_ {
 
 	public static volatile SingularAttribute<Item, User> owner;
 	public static volatile SingularAttribute<Item, String> itemName;
-	public static volatile SingularAttribute<Item, Integer> locationId;
+	public static volatile SingularAttribute<Item, SubItemType> subItemType;
 	public static volatile SingularAttribute<Item, Boolean> available;
 	public static volatile SingularAttribute<Item, String> description;
 	public static volatile SingularAttribute<Item, Double> pricePerHour;
-	public static volatile SingularAttribute<Item, Integer> itemTypeId;
+	public static volatile SingularAttribute<Item, Location> location;
 	public static volatile SingularAttribute<Item, String> itemLocation;
 
 	public static final String OWNER = "owner";
 	public static final String ITEM_NAME = "itemName";
-	public static final String LOCATION_ID = "locationId";
+	public static final String SUB_ITEM_TYPE = "subItemType";
 	public static final String AVAILABLE = "available";
 	public static final String DESCRIPTION = "description";
 	public static final String PRICE_PER_HOUR = "pricePerHour";
-	public static final String ITEM_TYPE_ID = "itemTypeId";
+	public static final String LOCATION = "location";
 	public static final String ITEM_LOCATION = "itemLocation";
 
 }

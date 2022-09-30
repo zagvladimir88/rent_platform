@@ -2,6 +2,7 @@ package com.zagvladimir.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zagvladimir.domain.enums.Status;
 import lombok.Data;
 
 import javax.persistence.*;

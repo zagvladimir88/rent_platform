@@ -14,7 +14,7 @@ import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/rest/item-categories")
+@RequestMapping("/api/item-categories")
 public class ItemCategoryRestController {
 
   private final ItemCategoryRepository itemCategoryRepository;

@@ -3,15 +3,12 @@ package com.zagvladimir.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.ToString;
-
 import javax.persistence.*;
 
 @Data
 @Entity
 @EqualsAndHashCode(exclude = {"userFrom","userTo","itemLeased"})
 @Table(name = "grades")
-@ToString(exclude = {"userFrom","userTo","itemLeased"})
 public class Grade extends BaseEntity{
 
     @ManyToOne

@@ -1,6 +1,6 @@
 package com.zagvladimir.controller.requests.role;
 
-import com.zagvladimir.domain.Status;
+import com.zagvladimir.domain.enums.Status;
 import lombok.Getter;
 import lombok.Setter;
 

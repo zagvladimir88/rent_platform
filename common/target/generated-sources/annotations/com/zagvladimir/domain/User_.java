@@ -18,9 +18,9 @@ public abstract class User_ extends com.zagvladimir.domain.BaseEntity_ {
 	public static volatile SetAttribute<User, Grade> gradesToSet;
 	public static volatile SingularAttribute<User, String> userLogin;
 	public static volatile SingularAttribute<User, String> phoneNumber;
-	public static volatile SingularAttribute<User, Integer> locationId;
 	public static volatile SingularAttribute<User, String> locationDetails;
 	public static volatile SingularAttribute<User, Timestamp> registrationDate;
+	public static volatile SingularAttribute<User, Location> location;
 	public static volatile SetAttribute<User, Item> items;
 	public static volatile SingularAttribute<User, String> email;
 	public static volatile SingularAttribute<User, String> username;
@@ -33,9 +33,9 @@ public abstract class User_ extends com.zagvladimir.domain.BaseEntity_ {
 	public static final String GRADES_TO_SET = "gradesToSet";
 	public static final String USER_LOGIN = "userLogin";
 	public static final String PHONE_NUMBER = "phoneNumber";
-	public static final String LOCATION_ID = "locationId";
 	public static final String LOCATION_DETAILS = "locationDetails";
 	public static final String REGISTRATION_DATE = "registrationDate";
+	public static final String LOCATION = "location";
 	public static final String ITEMS = "items";
 	public static final String EMAIL = "email";
 	public static final String USERNAME = "username";

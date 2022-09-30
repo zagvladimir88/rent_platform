@@ -1,6 +1,6 @@
 package com.zagvladimir.controller.requests.items_leased;
 
-import com.zagvladimir.domain.Status;
+import com.zagvladimir.domain.enums.Status;
 import com.zagvladimir.domain.User;
 import lombok.Data;
 

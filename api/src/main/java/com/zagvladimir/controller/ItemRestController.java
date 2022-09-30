@@ -4,7 +4,9 @@ package com.zagvladimir.controller;
 import com.zagvladimir.controller.requests.SearchRequest;
 import com.zagvladimir.controller.requests.items.ItemCreateRequest;
 import com.zagvladimir.domain.Item;
+import com.zagvladimir.repository.SubItemTypeRepository;
 import com.zagvladimir.service.ItemService;
+import com.zagvladimir.service.LocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +17,12 @@ import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/rest/items")
+@RequestMapping("/api/items")
 public class ItemRestController {
 
     private final ItemService itemService;
+    private final LocationService locationService;
+    private final SubItemTypeRepository subItemTypeRepository;
 
     @GetMapping
     public ResponseEntity<Object> findAllItems() {
@@ -53,8 +57,8 @@ public class ItemRestController {
 
         Item item = new Item();
         item.setItemName(createRequest.getItemName());
-        item.setItemTypeId(createRequest.getItemTypeId());
-        item.setLocationId(createRequest.getLocationId());
+        item.setSubItemType(subItemTypeRepository.findById(createRequest.getItemTypeId()).get());
+        item.setLocation(locationService.findById(createRequest.getLocationId()).get());
         item.setItemLocation(createRequest.getItemLocation());
         item.setDescription(createRequest.getDescription());
         item.setOwner(createRequest.getOwner());

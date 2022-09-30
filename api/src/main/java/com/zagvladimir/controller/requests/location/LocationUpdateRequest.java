@@ -1,7 +1,7 @@
 package com.zagvladimir.controller.requests.location;
 
 import com.zagvladimir.domain.Country;
-import com.zagvladimir.domain.Status;
+import com.zagvladimir.domain.enums.Status;
 import lombok.Data;
 
 @Data

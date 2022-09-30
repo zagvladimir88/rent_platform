@@ -9,6 +9,7 @@ import com.zagvladimir.controller.requests.users.UserCreateRequest;
 import com.zagvladimir.controller.requests.users.UserUpdateRequest;
 import com.zagvladimir.domain.User;
 import com.zagvladimir.repository.RoleRepository;
+import com.zagvladimir.service.LocationService;
 import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,11 +24,12 @@ import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/rest/users")
+@RequestMapping("/api/users")
 public class UserRestController {
 
     private final UserService userService;
     private final RoleRepository roleRepository;
+    private final LocationService locationService;
     private final BCryptPasswordEncoder passwordEncoder;
 
 
@@ -71,7 +73,7 @@ public class UserRestController {
         newUser.setUsername(createRequest.getUsername());
         newUser.setUserPassword(passwordEncoder.encode(createRequest.getUserPassword()));
         newUser.setUserLogin(createRequest.getUserLogin());
-        newUser.setLocationId(createRequest.getLocationId());
+        newUser.setLocation(locationService.findById(createRequest.getLocationId()).get());
         newUser.setLocationDetails(createRequest.getLocationDetails());
         newUser.setPhoneNumber(createRequest.getPhoneNumber());
         newUser.setMobileNumber(createRequest.getMobileNumber());
@@ -86,11 +88,8 @@ public class UserRestController {
         userService.createRoleRow(newUser.getId(), roleRepository.findRoleByName("ROLE_USER").getId());
 
 
-        List<User> users = userService.findAll();
-
         Map<String, Object> model = new HashMap<>();
-        model.put("user", newUser.getUsername());
-        model.put("users", users);
+        model.put("user", userService.findById(newUser.getId()));
 
         return new ResponseEntity<>(model, HttpStatus.CREATED);
     }
@@ -113,7 +112,7 @@ public class UserRestController {
         updatedUser.setUsername(userUpdateRequest.getUsername());
         updatedUser.setUserPassword(passwordEncoder.encode(userUpdateRequest.getUserPassword()));
         updatedUser.setUserLogin(userUpdateRequest.getUserLogin());
-        updatedUser.setLocationId(userUpdateRequest.getLocationId());
+        updatedUser.setLocation(locationService.findById(userUpdateRequest.getLocationId()).get());
         updatedUser.setLocationDetails(userUpdateRequest.getLocationDetails());
         updatedUser.setPhoneNumber(userUpdateRequest.getPhoneNumber());
         updatedUser.setMobileNumber(userUpdateRequest.getMobileNumber());

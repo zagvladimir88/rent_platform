@@ -3,6 +3,7 @@ package com.zagvladimir.controller;
 
 import com.zagvladimir.controller.requests.sub_item_type.SubItemTypeCreateRequest;
 import com.zagvladimir.domain.SubItemType;
+import com.zagvladimir.repository.ItemCategoryRepository;
 import com.zagvladimir.repository.SubItemTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,10 +16,11 @@ import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/rest/sub-item-types")
+@RequestMapping("/api/sub-item-types")
 public class SubItemTypeRestController {
 
     private final SubItemTypeRepository subItemTypeRepository;
+    private final ItemCategoryRepository itemCategoryRepository;
 
     @GetMapping
     public ResponseEntity<Object> findAllISubItemTypes() {
@@ -38,16 +40,16 @@ public class SubItemTypeRestController {
         SubItemType subItemType = new SubItemType();
 
         subItemType.setSubCategoryName(subItemTypeCreateRequest.getSubCategoryName());
-        subItemType.setItemCategory(subItemTypeCreateRequest.getItemCategory());
+        subItemType.setItemCategory(itemCategoryRepository.findById(subItemTypeCreateRequest.getCategoryId()).get());
         subItemType.setCreationDate(new Timestamp(new Date().getTime()));
-        subItemType.setModificationDate(new Timestamp(new Date().getTime()));
+        subItemType.setModificationDate(subItemType.getCreationDate());
         subItemType.setStatus(subItemTypeCreateRequest.getStatus());
 
         subItemTypeRepository.save(subItemType);
 
-        List<SubItemType> subItemsTypeList = subItemTypeRepository.findAll();
+
         Map<String, Object> model = new HashMap<>();
-        model.put("Sub_item_types",subItemsTypeList);
+        model.put("Sub_item_types",subItemTypeRepository.findById(subItemType.getId()).get());
 
         return new ResponseEntity<>(model, HttpStatus.CREATED);
     }

@@ -1,6 +1,6 @@
 package com.zagvladimir.controller.requests.items;
 
-import com.zagvladimir.domain.Status;
+import com.zagvladimir.domain.enums.Status;
 import com.zagvladimir.domain.User;
 import lombok.Data;
 
@@ -9,9 +9,9 @@ public class ItemCreateRequest {
 
     private String itemName;
 
-    private int itemTypeId;
+    private long itemTypeId;
 
-    private int locationId;
+    private Long locationId;
 
     private String itemLocation;
 

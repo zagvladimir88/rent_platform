@@ -50,7 +50,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public List<Item> findItemsByCategoryId(Long itemTypeId) {
-        return itemRepository.findItemsByItemTypeId(itemTypeId);
+        return itemRepository.findItemBySubItemTypeId(itemTypeId);
     }
 
     @Transactional
