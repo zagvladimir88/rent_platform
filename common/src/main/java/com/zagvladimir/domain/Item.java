@@ -2,7 +2,6 @@ package com.zagvladimir.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -16,12 +15,12 @@ public class Item extends BaseEntity{
     private String itemName;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference(value = "subItemType")
     @JoinColumn(name = "item_type_id")
     private SubItemType subItemType;
 
     @ManyToOne
-    @JsonManagedReference
+    @JsonBackReference(value="item-location")
     @JoinColumn(name = "location_id")
     private Location location;
 
@@ -32,7 +31,7 @@ public class Item extends BaseEntity{
     private String description;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonBackReference(value="owner")
     @JoinColumn(name = "owner_id")
     private User owner;
 

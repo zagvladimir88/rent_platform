@@ -1,7 +1,6 @@
 package com.zagvladimir.controller.requests.items;
 
 import com.zagvladimir.domain.enums.Status;
-import com.zagvladimir.domain.User;
 import lombok.Data;
 
 @Data
@@ -17,7 +16,7 @@ public class ItemCreateRequest {
 
     private String description;
 
-    private User owner;
+    private long ownerId;
 
     private int pricePerHour;
 

@@ -7,9 +7,11 @@ import com.zagvladimir.domain.Item;
 import com.zagvladimir.repository.SubItemTypeRepository;
 import com.zagvladimir.service.ItemService;
 import com.zagvladimir.service.LocationService;
+import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
@@ -23,6 +25,7 @@ public class ItemRestController {
     private final ItemService itemService;
     private final LocationService locationService;
     private final SubItemTypeRepository subItemTypeRepository;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<Object> findAllItems() {
@@ -33,8 +36,8 @@ public class ItemRestController {
     @GetMapping("/search")
     public ResponseEntity<Object> findAllItemsWithParams(@ModelAttribute SearchRequest searchRequest) {
 
-        int verifiedLimit = Integer.parseInt(searchRequest.getLimit());
-        int verifiedOffset = Integer.parseInt(searchRequest.getOffset());
+        int verifiedLimit = Integer.parseInt(searchRequest.getPage());
+        int verifiedOffset = Integer.parseInt(searchRequest.getSize());
 
         List<Item> items = itemService.search(verifiedLimit, verifiedOffset);
 
@@ -53,6 +56,7 @@ public class ItemRestController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<Object> createItem(@RequestBody ItemCreateRequest createRequest) {
 
         Item item = new Item();
@@ -61,7 +65,7 @@ public class ItemRestController {
         item.setLocation(locationService.findById(createRequest.getLocationId()).get());
         item.setItemLocation(createRequest.getItemLocation());
         item.setDescription(createRequest.getDescription());
-        item.setOwner(createRequest.getOwner());
+        item.setOwner(userService.findById(createRequest.getOwnerId()));
         item.setPricePerHour(createRequest.getPricePerHour());
         item.setAvailable(createRequest.getAvailable());
         item.setCreationDate(new Timestamp(new Date().getTime()));

@@ -11,7 +11,18 @@ import com.zagvladimir.domain.User;
 import com.zagvladimir.repository.RoleRepository;
 import com.zagvladimir.service.LocationService;
 import com.zagvladimir.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,7 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.util.*;
 
-
+@Tag(name = "User", description = "The Rent-platform API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
@@ -33,6 +44,17 @@ public class UserRestController {
     private final BCryptPasswordEncoder passwordEncoder;
 
 
+    @Operation(summary = "Gets all users", tags = "user")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Found the users",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = User.class)))
+                    })
+    })
     @GetMapping
     public ResponseEntity<Object> findAllUsers() {
         return new ResponseEntity<>(Collections.singletonMap("result", userService.findAll()),
@@ -42,18 +64,30 @@ public class UserRestController {
     @GetMapping("/search")
     public ResponseEntity<Object> findAllUsersWithParams(@ModelAttribute SearchRequest searchRequest) {
 
-        int verifiedLimit = Integer.parseInt(searchRequest.getLimit());
-        int verifiedOffset = Integer.parseInt(searchRequest.getOffset());
+        int verifiedLimit = Integer.parseInt(searchRequest.getPage());
+        int verifiedOffset = Integer.parseInt(searchRequest.getSize());
+        Pageable page = PageRequest.of(verifiedLimit, verifiedOffset, Sort.by("id").ascending());
 
-        List<User> users = userService.search(verifiedLimit, verifiedOffset);
+        Page<User> users = userService.search(page);
 
         Map<String, Object> model = new HashMap<>();
-        model.put("user", "Slava");
-        model.put("users",users);
 
+        model.put("users",users);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
+
+    @Operation(summary = "Gets user by ID", tags = "user")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Found the user by id",
+                    content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = User.class)))
+                    })
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> findUserById(@PathVariable String id) {
         long userId = Long.parseLong(id);
@@ -109,6 +143,7 @@ public class UserRestController {
     @Transactional
     public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody  UserUpdateRequest userUpdateRequest){
         User updatedUser = userService.findById(id);
+
         updatedUser.setUsername(userUpdateRequest.getUsername());
         updatedUser.setUserPassword(passwordEncoder.encode(userUpdateRequest.getUserPassword()));
         updatedUser.setUserLogin(userUpdateRequest.getUserLogin());

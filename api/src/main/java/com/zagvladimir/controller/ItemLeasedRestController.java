@@ -3,6 +3,7 @@ package com.zagvladimir.controller;
 import com.zagvladimir.controller.requests.items_leased.ItemLeasedCreateRequest;
 import com.zagvladimir.domain.ItemLeased;
 import com.zagvladimir.service.ItemLeasedService;
+import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.*;
 public class ItemLeasedRestController {
 
     private final ItemLeasedService itemLeasedService;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<Object> findAllItems() {
@@ -29,7 +31,7 @@ public class ItemLeasedRestController {
 
         ItemLeased itemLeased = new ItemLeased();
         itemLeased.setItemId(createRequest.getItemId());
-        itemLeased.setRenter(createRequest.getRenter());
+        itemLeased.setRenter(userService.findById(createRequest.getRenterId()));
         itemLeased.setTimeTo(createRequest.getTimeTo());
         itemLeased.setTimeFrom(createRequest.getTimeFrom());
         itemLeased.setPricePerHour(createRequest.getPricePerHour());

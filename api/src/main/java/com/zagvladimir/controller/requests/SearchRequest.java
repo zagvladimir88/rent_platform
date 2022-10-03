@@ -5,9 +5,9 @@ import lombok.Data;
 @Data
 public class SearchRequest {
 
-    private String limit;
+    private String page;
 
-    private String offset;
+    private String size;
 
     private String searchQuery;
 }

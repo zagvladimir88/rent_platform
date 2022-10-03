@@ -19,6 +19,6 @@ public class Country extends BaseEntity{
     private String countryName;
 
     @OneToMany(mappedBy="country", fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference(value="country")
     private Set<Location> locationSet;
 }

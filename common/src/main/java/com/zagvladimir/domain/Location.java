@@ -2,6 +2,7 @@ package com.zagvladimir.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -25,15 +26,15 @@ public class Location extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "country_id")
-    @JsonBackReference
+    @JsonBackReference(value="country")
     private Country country;
 
     @OneToMany(mappedBy="location", fetch = FetchType.EAGER)
-    @JsonBackReference
+    @JsonManagedReference(value="item-location")
     private Set<Item> items;
 
     @OneToMany(mappedBy="location", fetch = FetchType.EAGER)
-    @JsonBackReference
+    @JsonManagedReference(value = "user-location")
     private Set<User> users;
 
 }

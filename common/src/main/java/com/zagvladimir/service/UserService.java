@@ -1,6 +1,9 @@
 package com.zagvladimir.service;
 
 import com.zagvladimir.domain.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +20,7 @@ public interface UserService {
 
     Long delete(Long id);
 
-    List<User> search(int limit, int offset);
+    Page<User> search(Pageable page);
 
     Optional<User> findByLogin(String login);
 

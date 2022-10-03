@@ -1,7 +1,6 @@
 package com.zagvladimir.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,10 +21,9 @@ public class SubItemType extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    @JsonBackReference
     private ItemCategory itemCategory;
 
     @OneToMany(mappedBy="subItemType", fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @JsonManagedReference(value="subItemType")
     Set<Item> items;
 }

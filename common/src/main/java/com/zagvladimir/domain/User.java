@@ -1,31 +1,21 @@
 package com.zagvladimir.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.zagvladimir.domain.enums.Status;
 import lombok.*;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 
-import java.util.Date;
+
 import java.util.Set;
 
 @Data
 @Entity
-@EqualsAndHashCode(exclude = {"roles","items","itemsleased"})
+@EqualsAndHashCode(exclude = {"roles","items","itemsleased","gradesToSet","gradesFromSet"})
 @Table(name = "users")
-@AllArgsConstructor
 public class User extends BaseEntity {
-
-  public User() {
-  }
-
-  @Id
-  @Column(name = "id")
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
 
   @Column(name = "username")
   private String username;
@@ -38,7 +28,7 @@ public class User extends BaseEntity {
 
   @ManyToOne
   @JoinColumn(name = "location_id")
-  @JsonManagedReference
+  @JsonBackReference(value = "user-location")
   private Location location;
 
   @Column(name = "location_details")
@@ -58,28 +48,12 @@ public class User extends BaseEntity {
 
 
 
-
-  @Column(name = "creation_date")
-  @JsonIgnore
-  private Timestamp creationDate;
-
-  @Column(name = "modification_date")
-  @JsonIgnore
-  private Timestamp modificationDate;
-
-  @Column(name = "status")
-  @Enumerated(value = EnumType.STRING)
-  private Status status = Status.ACTIVE;
-
-
-
-
   @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
   @JsonIgnoreProperties("users")
   private Set<Role> roles;
 
   @OneToMany(mappedBy="owner", fetch = FetchType.EAGER)
-  @JsonManagedReference
+  @JsonManagedReference(value="owner")
   private Set<Item> items;
 
   @OneToMany(mappedBy="renter", fetch = FetchType.EAGER)

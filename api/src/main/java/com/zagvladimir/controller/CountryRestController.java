@@ -31,8 +31,8 @@ public class CountryRestController {
   public ResponseEntity<Object> findAllCountriesWithParams(
       @ModelAttribute SearchRequest searchRequest) {
 
-    int verifiedLimit = Integer.parseInt(searchRequest.getLimit());
-    int verifiedOffset = Integer.parseInt(searchRequest.getOffset());
+    int verifiedLimit = Integer.parseInt(searchRequest.getPage());
+    int verifiedOffset = Integer.parseInt(searchRequest.getSize());
 
     List<Country> countryList =
         countryRepository.findAllCountriesWithParams(verifiedLimit, verifiedOffset);
