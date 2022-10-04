@@ -26,15 +26,15 @@ public class Location extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "country_id")
-    @JsonBackReference(value="country")
+    @JsonBackReference
     private Country country;
 
     @OneToMany(mappedBy="location", fetch = FetchType.EAGER)
-    @JsonManagedReference(value="item-location")
+    @JsonManagedReference
     private Set<Item> items;
 
     @OneToMany(mappedBy="location", fetch = FetchType.EAGER)
-    @JsonManagedReference(value = "user-location")
+    @JsonManagedReference
     private Set<User> users;
 
 }

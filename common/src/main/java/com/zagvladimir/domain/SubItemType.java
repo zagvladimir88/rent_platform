@@ -24,6 +24,6 @@ public class SubItemType extends BaseEntity{
     private ItemCategory itemCategory;
 
     @OneToMany(mappedBy="subItemType", fetch = FetchType.EAGER)
-    @JsonManagedReference(value="subItemType")
+    @JsonManagedReference
     Set<Item> items;
 }

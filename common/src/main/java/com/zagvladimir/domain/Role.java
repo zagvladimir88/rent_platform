@@ -12,13 +12,12 @@ import java.util.Set;
 @Entity
 @EqualsAndHashCode(exclude = {"users"})
 @Table(name = "roles")
-@ToString(exclude = "users")
 public class Role extends BaseEntity {
 
   @Column private String name;
 
   @JsonIgnore
-  @ManyToMany(fetch = FetchType.EAGER)
+  @ManyToMany
   @JoinTable(
       name = "user_roles",
       joinColumns = @JoinColumn(name = "role_id"),

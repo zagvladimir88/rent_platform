@@ -15,12 +15,12 @@ public class Item extends BaseEntity{
     private String itemName;
 
     @ManyToOne
-    @JsonBackReference(value = "subItemType")
+    @JsonBackReference
     @JoinColumn(name = "item_type_id")
     private SubItemType subItemType;
 
     @ManyToOne
-    @JsonBackReference(value="item-location")
+    @JsonBackReference
     @JoinColumn(name = "location_id")
     private Location location;
 
@@ -31,7 +31,7 @@ public class Item extends BaseEntity{
     private String description;
 
     @ManyToOne
-    @JsonBackReference(value="owner")
+    @JsonBackReference
     @JoinColumn(name = "owner_id")
     private User owner;
 

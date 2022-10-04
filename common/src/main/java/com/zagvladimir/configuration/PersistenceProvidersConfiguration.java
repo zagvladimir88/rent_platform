@@ -15,21 +15,6 @@ import java.util.Properties;
 @Configuration
 public class PersistenceProvidersConfiguration {
 
-//    @Bean(name = "sessionFactory")
-//    public SessionFactory getSessionFactory(DataSource dataSource) throws Exception{
-//
-//        LocalSessionFactoryBean factoryBean = new LocalSessionFactoryBean();
-//        factoryBean.setPackagesToScan("com.zagvladimir");
-//        factoryBean.setDataSource(dataSource);
-//        factoryBean.setHibernateProperties(getAdditionalProperties());
-//        factoryBean.afterPropertiesSet();
-//
-//        SessionFactory sf = factoryBean.getObject();
-//        log.info("## getSessionFactory: " + sf);
-//        return sf;
-//    }
-
-    //Entity Manager
     @Autowired
     @Bean(name = "entityManagerFactory")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {

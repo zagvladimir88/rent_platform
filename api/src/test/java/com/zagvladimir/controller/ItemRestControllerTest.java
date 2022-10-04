@@ -87,7 +87,7 @@ class ItemRestControllerTest {
     }
 
     @Test
-    void givenNumberFormatException_whenGetItemsWithNonCorrectId() throws Exception {
+    void givenNumberFormatException_whenGetItemsWithIncorrectId() throws Exception {
         String itemId = "asd";
         this.mockMvc
                 .perform(get("/api/items/{id}",itemId))

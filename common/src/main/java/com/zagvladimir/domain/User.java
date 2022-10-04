@@ -28,7 +28,7 @@ public class User extends BaseEntity {
 
   @ManyToOne
   @JoinColumn(name = "location_id")
-  @JsonBackReference(value = "user-location")
+  @JsonBackReference
   private Location location;
 
   @Column(name = "location_details")
@@ -53,7 +53,7 @@ public class User extends BaseEntity {
   private Set<Role> roles;
 
   @OneToMany(mappedBy="owner", fetch = FetchType.EAGER)
-  @JsonManagedReference(value="owner")
+  @JsonManagedReference
   private Set<Item> items;
 
   @OneToMany(mappedBy="renter", fetch = FetchType.EAGER)
