@@ -4,6 +4,11 @@ import com.zagvladimir.controller.requests.items_leased.ItemLeasedCreateRequest;
 import com.zagvladimir.domain.ItemLeased;
 import com.zagvladimir.service.ItemLeasedService;
 import com.zagvladimir.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +25,31 @@ public class ItemLeasedRestController {
     private final ItemLeasedService itemLeasedService;
     private final UserService userService;
 
+    @Operation(summary = "Gets all itemsLeased",
+    responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Found the itemsLeased",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            array = @ArraySchema(schema = @Schema(implementation = ItemLeased.class)))
+                            })
+            })
     @GetMapping
     public ResponseEntity<Object> findAllItems() {
         return new ResponseEntity<>(Collections.singletonMap("result", itemLeasedService.findAll()),
                 HttpStatus.OK);
     }
 
+    @Operation(
+            summary = "Create new itemLeased",
+            responses = {
+                    @ApiResponse( responseCode = "201", description = "itemLeased create successfully",content =
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ItemLeased.class))),
+                    @ApiResponse( responseCode = "409", description = "itemLeased not created, Conflict", content = @Content),
+                    @ApiResponse( responseCode = "500", description = "itemLeased not created, Illegal Arguments", content = @Content)
+            })
     @PostMapping
     public ResponseEntity<Object> createItem(@RequestBody ItemLeasedCreateRequest createRequest) {
 
@@ -54,6 +78,17 @@ public class ItemLeasedRestController {
         return new ResponseEntity<>(model, HttpStatus.CREATED);
     }
 
+    @Operation(summary = "Gets itemLeased by ID",
+                    responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Found the itemLeased by id",
+                            content = {
+                                    @Content(
+                                            mediaType = "application/json",
+                                            array = @ArraySchema(schema = @Schema(implementation = ItemLeased.class)))
+                            })
+            })
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> findItemLeasedById(@PathVariable String id) {
 
@@ -62,7 +97,12 @@ public class ItemLeasedRestController {
         return new ResponseEntity<>(Collections.singletonMap("item", itemLeasedService.findById(itemId)), HttpStatus.OK);
     }
 
-
+    @Operation(
+            summary = "Delete itemLeased",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "itemLeased was deleted", content = @Content),
+                    @ApiResponse(responseCode = "404", description = "itemLeased not found", content = @Content)
+            })
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteItemLeasedById(@PathVariable Long id){
 

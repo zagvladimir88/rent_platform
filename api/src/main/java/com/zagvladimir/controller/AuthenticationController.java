@@ -4,6 +4,9 @@ package com.zagvladimir.controller;
 import com.zagvladimir.controller.requests.auth.AuthRequest;
 import com.zagvladimir.controller.requests.auth.AuthResponse;
 import com.zagvladimir.security.jwt.JwtTokenHelper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +35,15 @@ public class AuthenticationController {
 //            @ApiResponse(code = 400, message = "Request error"),
 //            @ApiResponse(code = 500, message = "Server error")
 //    })
+
+    @Operation(
+            summary = "Login user in system",
+            description = "Return Auth-Token with user login",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successful authorization", content = @Content),
+                    @ApiResponse(responseCode = "400", description = "Request error", content = @Content),
+                    @ApiResponse(responseCode = "500", description = "Server error", content = @Content)
+            })
     @PostMapping
     public ResponseEntity<AuthResponse> loginUser(@RequestBody AuthRequest request) {
 

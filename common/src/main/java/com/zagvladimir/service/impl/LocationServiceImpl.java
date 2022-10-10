@@ -4,6 +4,8 @@ import com.zagvladimir.domain.Location;
 import com.zagvladimir.repository.LocationRepository;
 import com.zagvladimir.service.LocationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +20,11 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public List<Location> findAll() {
         return locationRepository.findAll();
+    }
+
+    @Override
+    public Page<Location> findAll(Pageable pageable) {
+        return locationRepository.findAll(pageable);
     }
 
     @Override

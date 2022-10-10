@@ -158,6 +158,6 @@ class UserRestControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.user.username").value("Evgenii"));
+        .andExpect(jsonPath("$.username").value("Evgenii"));
   }
 }
