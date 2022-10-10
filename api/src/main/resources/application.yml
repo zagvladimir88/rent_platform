@@ -1,4 +1,12 @@
 spring:
+  data:
+    web:
+      sort:
+        sort-parameter: sort
+      pageable:
+        default-page-size: 20
+        size-parameter: size
+        page-parameter: page
   datasource:
     hikari:
       jdbc-url: "jdbc:postgresql://localhost:5432/rent_db"
@@ -22,4 +30,3 @@ jwt:
   expiration: 3600000
 
 ---
-

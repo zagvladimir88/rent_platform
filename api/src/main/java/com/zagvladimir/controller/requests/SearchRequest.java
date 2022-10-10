@@ -9,5 +9,5 @@ public class SearchRequest {
 
     private String size;
 
-    private String searchQuery;
+    private String sort;
 }

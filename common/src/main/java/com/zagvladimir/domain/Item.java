@@ -2,9 +2,11 @@ package com.zagvladimir.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Data
 @Entity
@@ -40,4 +42,8 @@ public class Item extends BaseEntity{
 
     @Column(name = "available")
     private Boolean available;
+
+    @OneToMany(mappedBy = "item")
+    @JsonManagedReference
+    private Set<Image> images;
 }

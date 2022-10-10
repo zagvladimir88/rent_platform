@@ -25,6 +25,11 @@ public class UserServiceImpl implements UserService {
     return userRepository.findAll();
   }
 
+  @Override
+  public Page<User> findAll(Pageable page) {
+    return userRepository.findAll(page);
+  }
+
   @Transactional
   @Override
   public User create(User object) {

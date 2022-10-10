@@ -12,6 +12,8 @@ public interface UserService {
 
     List<User> findAll();
 
+    Page<User> findAll(Pageable page);
+
     User create(User object);
 
     User findById(Long userId);
