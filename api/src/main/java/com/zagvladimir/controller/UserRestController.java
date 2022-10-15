@@ -2,6 +2,7 @@ package com.zagvladimir.controller;
 
 import com.zagvladimir.controller.requests.users.UserCreateRequest;
 import com.zagvladimir.controller.requests.users.UserUpdateRequest;
+import com.zagvladimir.domain.Role;
 import com.zagvladimir.domain.User;
 import com.zagvladimir.repository.RoleRepository;
 import com.zagvladimir.service.LocationService;
@@ -12,6 +13,8 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.tags.Tags;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.util.*;
 
+@Tag(name = "User controller")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
@@ -93,6 +97,14 @@ public class UserRestController {
                                   @Content(
                                           mediaType = "application/json",
                                           array = @ArraySchema(schema = @Schema(implementation = User.class)))
+                          }),
+                  @ApiResponse(
+                          responseCode = "404",
+                          description = "Found the user by login",
+                          content = {
+                                  @Content(
+                                          mediaType = "application/json",
+                                          array = @ArraySchema(schema = @Schema(implementation = User.class)))
                           })
           })
   @GetMapping("/login/{login}")
@@ -126,18 +138,19 @@ public class UserRestController {
     newUser.setModificationDate(new Timestamp(new Date().getTime()));
     newUser.setStatus(createRequest.getStatus());
 
+    Role role = roleRepository.findRoleByName("ROLE_USER");
+    newUser.addRole(role);
     userService.create(newUser);
-    userService.createRoleRow(newUser.getId(), roleRepository.findRoleByName("ROLE_USER").getId());
 
     return new ResponseEntity<>(userService.findById(newUser.getId()), HttpStatus.CREATED);
   }
 
   @Operation(
       summary = "Delete user",
-      description = "This can only be done by the logged in user.",
       responses = {
         @ApiResponse(responseCode = "200", description = "user was deleted", content = @Content),
-        @ApiResponse(responseCode = "404", description = "User not found", content = @Content)
+        @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
+        @ApiResponse(responseCode = "500", description = "Server error", content = @Content)
       })
   @DeleteMapping("/{id}")
   public ResponseEntity<Object> deleteUsersById(@PathVariable Long id) {

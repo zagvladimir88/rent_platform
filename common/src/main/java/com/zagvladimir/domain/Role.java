@@ -1,9 +1,7 @@
 package com.zagvladimir.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -12,6 +10,7 @@ import java.util.Set;
 @Entity
 @EqualsAndHashCode(exclude = {"users"})
 @Table(name = "roles")
+@ToString(exclude = "users")
 public class Role extends BaseEntity {
 
   @Column private String name;

@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.util.*;
 
+@Tag(name = "Roles controller")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/roles")
@@ -76,8 +78,8 @@ public class RoleRestController {
             })
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> findRoleById(@PathVariable String id) {
-        long userId = Long.parseLong(id);
-        return new ResponseEntity<>(Collections.singletonMap("role", roleRepository.findById(userId)), HttpStatus.OK);
+        long roleId = Long.parseLong(id);
+        return new ResponseEntity<>(Collections.singletonMap("role", roleRepository.findById(roleId)), HttpStatus.OK);
     }
 
 
