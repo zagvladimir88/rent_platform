@@ -8,14 +8,13 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Entity
 @EqualsAndHashCode(exclude = {"roles","items","itemsleased","gradesToSet","gradesFromSet"})
 @Table(name = "users")
-//@ToString(exclude = "location")
+@ToString(exclude = {"location","roles","items","gradesToSet","gradesFromSet"})
 public class User extends BaseEntity {
 
   @Column(name = "username")
@@ -69,11 +68,6 @@ public class User extends BaseEntity {
   @JsonManagedReference
   private Set<Grade> gradesFromSet;
 
-  public void addRole(Role role){
-    Set<Role> rolesList = new HashSet<>();
-    rolesList.add(role);
-    roles = rolesList;
-    role.getUsers().add(this);
-  }
+
 
 }

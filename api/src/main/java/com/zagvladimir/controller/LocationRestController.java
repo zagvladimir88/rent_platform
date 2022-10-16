@@ -83,7 +83,7 @@ public class LocationRestController {
     public ResponseEntity<Map<String, Object>> findLocationById(@PathVariable String id) {
         long locationId = Long.parseLong(id);
         return new ResponseEntity<>(
-                Collections.singletonMap("user", locationService.findById(locationId)), HttpStatus.OK);
+                Collections.singletonMap("Location", locationService.findById(locationId)), HttpStatus.OK);
     }
 
     @Operation(

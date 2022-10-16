@@ -4,6 +4,7 @@ package com.zagvladimir.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -11,6 +12,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "items")
+@ToString(exclude = "images")
 public class Item extends BaseEntity{
 
     @Column(name = "item_name")

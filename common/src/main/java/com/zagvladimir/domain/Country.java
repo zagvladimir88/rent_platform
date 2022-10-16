@@ -1,6 +1,6 @@
 package com.zagvladimir.domain;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -18,7 +18,7 @@ public class Country extends BaseEntity{
     @Column(name = "country_name")
     private String countryName;
 
-    @OneToMany(mappedBy="country", fetch = FetchType.EAGER)
-    @JsonManagedReference
+    @OneToMany(mappedBy="country", fetch = FetchType.LAZY)
+    @JsonBackReference
     private Set<Location> locationSet;
 }

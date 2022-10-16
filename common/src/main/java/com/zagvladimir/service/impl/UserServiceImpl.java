@@ -1,23 +1,29 @@
 package com.zagvladimir.service.impl;
 
+import com.zagvladimir.domain.Location;
+import com.zagvladimir.domain.Role;
 import com.zagvladimir.domain.User;
 import com.zagvladimir.repository.UserRepository;
+import com.zagvladimir.service.LocationService;
 import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.util.List;
-import java.util.Optional;
+import java.sql.Timestamp;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
+  private final LocationService locationService;
+  private final BCryptPasswordEncoder passwordEncoder;
 
   @Transactional
   @Override
@@ -32,8 +38,17 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public User create(User object) {
-    return userRepository.save(object);
+  public User create(User user, Role role, Long locationId) {
+    addRole(user,role);
+
+    user.setRegistrationDate(new Timestamp(new Date().getTime()));
+    user.setCreationDate(user.getRegistrationDate());
+    user.setModificationDate(user.getRegistrationDate());
+    Location location = locationService.findById(locationId).orElse(null);
+    user.setLocation(location);
+    user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
+
+    return userRepository.save(user);
   }
 
   @Transactional
@@ -70,8 +85,10 @@ public class UserServiceImpl implements UserService {
     return userRepository.findByUserLogin(login);
   }
 
-  @Override
-  public int createRoleRow(Long userId, Long roleId) {
-    return userRepository.createRoleRow(userId, roleId);
+   public void addRole(User user,Role role){
+    Set<Role> rolesList = new HashSet<>();
+    rolesList.add(role);
+    user.setRoles(rolesList);
+    role.getUsers().add(user);
   }
 }

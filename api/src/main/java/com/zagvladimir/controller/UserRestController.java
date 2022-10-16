@@ -1,11 +1,13 @@
 package com.zagvladimir.controller;
 
+
+
+import com.zagvladimir.controller.mappers.UserMapper;
 import com.zagvladimir.controller.requests.users.UserCreateRequest;
 import com.zagvladimir.controller.requests.users.UserUpdateRequest;
 import com.zagvladimir.domain.Role;
 import com.zagvladimir.domain.User;
 import com.zagvladimir.repository.RoleRepository;
-import com.zagvladimir.service.LocationService;
 import com.zagvladimir.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -14,8 +16,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.tags.Tags;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -24,7 +26,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 @Tag(name = "User controller")
@@ -35,8 +36,8 @@ public class UserRestController {
 
   private final UserService userService;
   private final RoleRepository roleRepository;
-  private final LocationService locationService;
   private final BCryptPasswordEncoder passwordEncoder;
+  private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
   @Operation(summary = "Gets all users",
           responses = {
@@ -82,8 +83,9 @@ public class UserRestController {
             })
       })
   @GetMapping("/{id}")
-  public ResponseEntity<Map<String, Object>> findUserById(@PathVariable String id) {
-    return new ResponseEntity<>(Collections.singletonMap("user", userService.findById(Long.parseLong(id))), HttpStatus.OK);
+  public ResponseEntity<Map<String, Object>> findUserById(@PathVariable Long id) {
+
+    return new ResponseEntity<>(Collections.singletonMap("user",userMapper.userToUserResponse(userService.findById(id))), HttpStatus.OK);
   }
 
 
@@ -124,24 +126,9 @@ public class UserRestController {
   @Transactional
   public ResponseEntity<Object> createUser(@RequestBody UserCreateRequest createRequest) {
 
-    User newUser = new User();
-    newUser.setUsername(createRequest.getUsername());
-    newUser.setUserPassword(passwordEncoder.encode(createRequest.getUserPassword()));
-    newUser.setUserLogin(createRequest.getUserLogin());
-    newUser.setLocation(locationService.findById(createRequest.getLocationId()).get());
-    newUser.setLocationDetails(createRequest.getLocationDetails());
-    newUser.setPhoneNumber(createRequest.getPhoneNumber());
-    newUser.setMobileNumber(createRequest.getMobileNumber());
-    newUser.setEmail(createRequest.getEmail());
-    newUser.setRegistrationDate(new Timestamp(new Date().getTime()));
-    newUser.setCreationDate(new Timestamp(new Date().getTime()));
-    newUser.setModificationDate(new Timestamp(new Date().getTime()));
-    newUser.setStatus(createRequest.getStatus());
-
+    User newUser = userMapper.userCreateRequestToUser(createRequest);
     Role role = roleRepository.findRoleByName("ROLE_USER");
-    newUser.addRole(role);
-    userService.create(newUser);
-
+    userService.create(newUser,role,createRequest.getLocationId());
     return new ResponseEntity<>(userService.findById(newUser.getId()), HttpStatus.CREATED);
   }
 
@@ -167,23 +154,11 @@ public class UserRestController {
           })
   @PutMapping(value = "/{id}")
   @Transactional
-  public ResponseEntity<Object> updateUser(
-      @PathVariable Long id, @RequestBody UserUpdateRequest userUpdateRequest) {
-    User updatedUser = userService.findById(id);
-
-    updatedUser.setUsername(userUpdateRequest.getUsername());
-    updatedUser.setUserPassword(passwordEncoder.encode(userUpdateRequest.getUserPassword()));
-    updatedUser.setUserLogin(userUpdateRequest.getUserLogin());
-    updatedUser.setLocation(locationService.findById(userUpdateRequest.getLocationId()).get());
-    updatedUser.setLocationDetails(userUpdateRequest.getLocationDetails());
-    updatedUser.setPhoneNumber(userUpdateRequest.getPhoneNumber());
-    updatedUser.setMobileNumber(userUpdateRequest.getMobileNumber());
-    updatedUser.setEmail(userUpdateRequest.getEmail());
-    updatedUser.setModificationDate(new Timestamp(new Date().getTime()));
-    updatedUser.setStatus(userUpdateRequest.getStatus());
-
-    userService.create(updatedUser);
-
+  public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest userUpdateRequest) {
+    User updatedUser = userMapper.updateUserFromUpdateRequest(userUpdateRequest,userService.findById(id));
+    userService.update(updatedUser);
     return new ResponseEntity<>(userService.findById(updatedUser.getId()), HttpStatus.OK);
   }
+
+
 }

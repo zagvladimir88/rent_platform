@@ -1,5 +1,6 @@
 package com.zagvladimir.service;
 
+import com.zagvladimir.domain.Role;
 import com.zagvladimir.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +15,7 @@ public interface UserService {
 
     Page<User> findAll(Pageable page);
 
-    User create(User object);
+    User create(User user, Role role, Long locationID);
 
     User findById(Long userId);
 
@@ -26,5 +27,4 @@ public interface UserService {
 
     Optional<User> findByLogin(String login);
 
-    int createRoleRow(Long userId, Long roleId);
 }
