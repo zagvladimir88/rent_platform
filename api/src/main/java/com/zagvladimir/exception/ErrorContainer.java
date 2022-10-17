@@ -1,4 +1,4 @@
-package com.zagvladimir.controller.exceptionhandle;
+package com.zagvladimir.exception;
 
 
 import lombok.Builder;

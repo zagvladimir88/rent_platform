@@ -3,9 +3,13 @@ package com.zagvladimir.service.impl;
 import com.zagvladimir.domain.Grade;
 import com.zagvladimir.repository.GradeRepository;
 import com.zagvladimir.service.GradeService;
+import com.zagvladimir.service.ItemLeasedService;
+import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,6 +18,8 @@ import java.util.Optional;
 public class GradeServiceImpl implements GradeService {
 
     private final GradeRepository gradeRepository;
+    private final ItemLeasedService itemLeasedService;
+    private final UserService userService;
 
     @Override
     public List<Grade> findAll() {
@@ -21,8 +27,12 @@ public class GradeServiceImpl implements GradeService {
     }
 
     @Override
-    public Grade create(Grade object) {
-        return gradeRepository.save(object);
+    public Grade create(Grade grade, Long userToId, Long userFromId, Long itemLeasedId) {
+        grade.setUserTo(userService.findById(userToId));
+        grade.setUserFrom(userService.findById(userFromId));
+        grade.setItemLeased(itemLeasedService.findById(itemLeasedId));
+        grade.setCreationDate(new Timestamp(new Date().getTime()));
+        return gradeRepository.save(grade);
     }
 
     @Override

@@ -16,11 +16,11 @@ public interface LocationService {
 
     List<Location> findAllLocationsWithParams(int limit, int offset);
 
-    Location save(Location object);
+    Location create(Location location, Long countryId);
 
     Optional<Location> findById(Long locationId);
 
-    Location update(Location object);
+    Location update(Location location, Long countryId);
 
     Long delete(Long id);
 

@@ -1,11 +1,13 @@
 package com.zagvladimir.controller;
 
+
+
+import com.zagvladimir.exception.ErrorContainer;
+import com.zagvladimir.controller.mappers.UserMapper;
 import com.zagvladimir.controller.requests.users.UserCreateRequest;
 import com.zagvladimir.controller.requests.users.UserUpdateRequest;
-import com.zagvladimir.domain.Role;
+import com.zagvladimir.controller.response.UserResponse;
 import com.zagvladimir.domain.User;
-import com.zagvladimir.repository.RoleRepository;
-import com.zagvladimir.service.LocationService;
 import com.zagvladimir.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -14,17 +16,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.tags.Tags;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
+import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
 @Tag(name = "User controller")
@@ -34,9 +35,7 @@ import java.util.*;
 public class UserRestController {
 
   private final UserService userService;
-  private final RoleRepository roleRepository;
-  private final LocationService locationService;
-  private final BCryptPasswordEncoder passwordEncoder;
+  private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
   @Operation(summary = "Gets all users",
           responses = {
@@ -46,12 +45,12 @@ public class UserRestController {
                           content = {
                                   @Content(
                                           mediaType = "application/json",
-                                          array = @ArraySchema(schema = @Schema(implementation = User.class)))
+                                          array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)))
                           })
           })
   @GetMapping
   public ResponseEntity<Object> findAllUsers() {
-    return new ResponseEntity<>(Collections.singletonMap("result", userService.findAll()), HttpStatus.OK);
+    return new ResponseEntity<>(Collections.singletonMap("result", userService.findAll().stream().map(userMapper::userToUserResponse)), HttpStatus.OK);
   }
 
   @Operation(
@@ -63,11 +62,11 @@ public class UserRestController {
             content =
                 @Content(
                     mediaType = "application/json",
-                    array = @ArraySchema(schema = @Schema(implementation = User.class))))
+                    array = @ArraySchema(schema = @Schema(implementation = UserResponse.class))))
       })
   @GetMapping("/search")
   public ResponseEntity<Object> findAllUsersWithParams(@ParameterObject Pageable pageable) {
-    return new ResponseEntity<>(userService.findAll(pageable), HttpStatus.OK);
+    return new ResponseEntity<>(userService.findAll(pageable).map(userMapper::userToUserResponse), HttpStatus.OK);
   }
 
   @Operation(summary = "Gets user by ID",
@@ -78,12 +77,12 @@ public class UserRestController {
             content = {
               @Content(
                   mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = User.class)))
+                  array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)))
             })
       })
   @GetMapping("/{id}")
-  public ResponseEntity<Map<String, Object>> findUserById(@PathVariable String id) {
-    return new ResponseEntity<>(Collections.singletonMap("user", userService.findById(Long.parseLong(id))), HttpStatus.OK);
+  public ResponseEntity<Map<String, Object>> findUserById(@PathVariable Long id) {
+    return new ResponseEntity<>(Collections.singletonMap("user",userMapper.userToUserResponse(userService.findById(id))), HttpStatus.OK);
   }
 
 
@@ -96,53 +95,36 @@ public class UserRestController {
                           content = {
                                   @Content(
                                           mediaType = "application/json",
-                                          array = @ArraySchema(schema = @Schema(implementation = User.class)))
+                                          array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)))
                           }),
                   @ApiResponse(
                           responseCode = "404",
-                          description = "Found the user by login",
+                          description = "User not found",
                           content = {
                                   @Content(
                                           mediaType = "application/json",
-                                          array = @ArraySchema(schema = @Schema(implementation = User.class)))
+                                          array = @ArraySchema(schema = @Schema(implementation = ErrorContainer.class)))
                           })
           })
   @GetMapping("/login/{login}")
   public ResponseEntity<Map<String, Object>> findByLogin(@PathVariable String login) {
-    return new ResponseEntity<>(Collections.singletonMap("user", userService.findByLogin(login)), HttpStatus.OK);
+    return new ResponseEntity<>(Collections.singletonMap("user", userMapper.userToUserResponse(userService.findByLogin(login).orElseThrow(EntityNotFoundException::new))), HttpStatus.OK);
   }
 
   @Operation(
       summary = "Create new User",
       responses = {
         @ApiResponse( responseCode = "201", description = "User create successfully",content =
-                @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+                @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))),
         @ApiResponse( responseCode = "409", description = "User not created, Conflict", content = @Content),
         @ApiResponse( responseCode = "500", description = "User not created, Illegal Arguments", content = @Content)
       })
   @PostMapping
   @Transactional
   public ResponseEntity<Object> createUser(@RequestBody UserCreateRequest createRequest) {
-
-    User newUser = new User();
-    newUser.setUsername(createRequest.getUsername());
-    newUser.setUserPassword(passwordEncoder.encode(createRequest.getUserPassword()));
-    newUser.setUserLogin(createRequest.getUserLogin());
-    newUser.setLocation(locationService.findById(createRequest.getLocationId()).get());
-    newUser.setLocationDetails(createRequest.getLocationDetails());
-    newUser.setPhoneNumber(createRequest.getPhoneNumber());
-    newUser.setMobileNumber(createRequest.getMobileNumber());
-    newUser.setEmail(createRequest.getEmail());
-    newUser.setRegistrationDate(new Timestamp(new Date().getTime()));
-    newUser.setCreationDate(new Timestamp(new Date().getTime()));
-    newUser.setModificationDate(new Timestamp(new Date().getTime()));
-    newUser.setStatus(createRequest.getStatus());
-
-    Role role = roleRepository.findRoleByName("ROLE_USER");
-    newUser.addRole(role);
-    userService.create(newUser);
-
-    return new ResponseEntity<>(userService.findById(newUser.getId()), HttpStatus.CREATED);
+    User newUser = userMapper.userCreateRequestToUser(createRequest);
+    userService.create(newUser, createRequest.getLocationId());
+    return new ResponseEntity<>(userMapper.userToUserResponse(userService.findById(newUser.getId())), HttpStatus.CREATED);
   }
 
   @Operation(
@@ -162,28 +144,14 @@ public class UserRestController {
           summary = "Update the User",
           responses = {
                   @ApiResponse( responseCode = "200", description = "User update successfully",content =
-                  @Content(mediaType = "application/json", schema = @Schema(implementation = User.class))),
+                  @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))),
                   @ApiResponse( responseCode = "500", description = "User not updated, Illegal Arguments", content = @Content)
           })
   @PutMapping(value = "/{id}")
   @Transactional
-  public ResponseEntity<Object> updateUser(
-      @PathVariable Long id, @RequestBody UserUpdateRequest userUpdateRequest) {
-    User updatedUser = userService.findById(id);
-
-    updatedUser.setUsername(userUpdateRequest.getUsername());
-    updatedUser.setUserPassword(passwordEncoder.encode(userUpdateRequest.getUserPassword()));
-    updatedUser.setUserLogin(userUpdateRequest.getUserLogin());
-    updatedUser.setLocation(locationService.findById(userUpdateRequest.getLocationId()).get());
-    updatedUser.setLocationDetails(userUpdateRequest.getLocationDetails());
-    updatedUser.setPhoneNumber(userUpdateRequest.getPhoneNumber());
-    updatedUser.setMobileNumber(userUpdateRequest.getMobileNumber());
-    updatedUser.setEmail(userUpdateRequest.getEmail());
-    updatedUser.setModificationDate(new Timestamp(new Date().getTime()));
-    updatedUser.setStatus(userUpdateRequest.getStatus());
-
-    userService.create(updatedUser);
-
-    return new ResponseEntity<>(userService.findById(updatedUser.getId()), HttpStatus.OK);
+  public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest userUpdateRequest) {
+    User updatedUser = userMapper.updateUserFromUpdateRequest(userUpdateRequest,userService.findById(id));
+    userService.update(updatedUser);
+    return new ResponseEntity<>(userMapper.userToUserResponse(userService.findById(updatedUser.getId())), HttpStatus.OK);
   }
 }

@@ -11,7 +11,7 @@ public interface GradeService {
 
     List<Grade> findAll();
 
-    Grade create(Grade object);
+    Grade create(Grade grade, Long userToId, Long userFromId, Long itemLeasedId);
 
     Optional<Grade> findById(Long gradeId);
 

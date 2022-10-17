@@ -1,6 +1,5 @@
 package com.zagvladimir.controller.requests.location;
 
-import com.zagvladimir.domain.Country;
 import com.zagvladimir.domain.enums.Status;
 import lombok.Data;
 
@@ -9,6 +8,6 @@ public class LocationUpdateRequest {
     private String postalCode;
     private String name;
     private String description;
-    private Country country;
+    private Long countryId;
     private Status status = Status.ACTIVE;
 }

@@ -14,11 +14,11 @@ public interface UserService {
 
     Page<User> findAll(Pageable page);
 
-    User create(User object);
+    User create(User user, Long locationID);
 
     User findById(Long userId);
 
-    User update(User object);
+    User update(User userToUpdate);
 
     Long delete(Long id);
 
@@ -26,5 +26,4 @@ public interface UserService {
 
     Optional<User> findByLogin(String login);
 
-    int createRoleRow(Long userId, Long roleId);
 }

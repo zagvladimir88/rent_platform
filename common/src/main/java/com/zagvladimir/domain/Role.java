@@ -13,7 +13,8 @@ import java.util.Set;
 @ToString(exclude = "users")
 public class Role extends BaseEntity {
 
-  @Column private String name;
+  @Column
+  private String name;
 
   @JsonIgnore
   @ManyToMany

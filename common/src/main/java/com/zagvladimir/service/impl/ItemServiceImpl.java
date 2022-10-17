@@ -2,13 +2,18 @@ package com.zagvladimir.service.impl;
 
 import com.zagvladimir.domain.Item;
 import com.zagvladimir.repository.ItemRepository;
+import com.zagvladimir.repository.SubItemTypeRepository;
 import com.zagvladimir.service.ItemService;
+import com.zagvladimir.service.LocationService;
+import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 
@@ -17,6 +22,9 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
+    private final LocationService locationService;
+    private final SubItemTypeRepository subItemTypeRepository;
+    private final UserService userService;
 
     @Transactional
     @Override
@@ -31,8 +39,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public Item create(Item object) {
-        return itemRepository.save(object);
+    public Item create(Item item, Long subItemTypeId, Long ownerId, Long locationId) {
+        item.setSubItemType(subItemTypeRepository.findById(subItemTypeId).get());
+        item.setOwner(userService.findById(ownerId));
+        item.setLocation(locationService.findById(locationId).get());
+        item.setCreationDate(new Timestamp(new Date().getTime()));
+        item.setModificationDate(item.getCreationDate());
+
+        return itemRepository.save(item);
     }
 
     @Transactional

@@ -1,9 +1,8 @@
-package com.zagvladimir.controller.exceptionhandle;
+package com.zagvladimir.exception;
 
 
 
 
-import com.zagvladimir.exception.NoSuchEntityException;
 import com.zagvladimir.util.UUIDGenerator;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;

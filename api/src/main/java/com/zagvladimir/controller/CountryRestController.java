@@ -1,9 +1,11 @@
 package com.zagvladimir.controller;
 
+import com.zagvladimir.controller.mappers.CountryMapper;
 import com.zagvladimir.controller.requests.country.CountryCreateRequest;
 import com.zagvladimir.controller.requests.country.CountryUpdateRequest;
+import com.zagvladimir.controller.response.CountryResponse;
 import com.zagvladimir.domain.Country;
-import com.zagvladimir.repository.CountryRepository;
+import com.zagvladimir.service.CountryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,6 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -19,7 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 @Tag(name = "Country controller")
@@ -28,27 +30,10 @@ import java.util.*;
 @RequestMapping("/api/countries")
 public class CountryRestController {
 
-  private final CountryRepository countryRepository;
+  private final CountryService countryService;
+  private final CountryMapper countryMapper = Mappers.getMapper(CountryMapper.class);
 
-  @Operation(summary = "Gets all Countries")
-  @ApiResponses(
-          value = {
-                  @ApiResponse(
-                          responseCode = "200",
-                          description = "Found the Countries",
-                          content = {
-                                  @Content(
-                                          mediaType = "application/json",
-                                          array = @ArraySchema(schema = @Schema(implementation = Country.class)))
-                          })
-          })
-  @GetMapping
-  public ResponseEntity<Object> findAllCountries() {
-    return new ResponseEntity<>(
-        Collections.singletonMap("Countries", countryRepository.findAll()), HttpStatus.OK);
-  }
-
-  @Operation(
+   @Operation(
           summary = "Gets all countries with pagination",
           responses = {
                   @ApiResponse(
@@ -57,12 +42,11 @@ public class CountryRestController {
                           content =
                           @Content(
                                   mediaType = "application/json",
-                                  array = @ArraySchema(schema = @Schema(implementation = Country.class))))
+                                  array = @ArraySchema(schema = @Schema(implementation = CountryResponse.class))))
           })
-  @GetMapping("/search")
-  public ResponseEntity<Object> findAllCountriesWithParams(
-          @ParameterObject Pageable pageable) {
-    return new ResponseEntity<>(countryRepository.findAll(pageable), HttpStatus.OK);
+  @GetMapping
+  public ResponseEntity<Object> findAllCountries(@ParameterObject Pageable pageable) {
+    return new ResponseEntity<>(countryService.findAll(pageable).map(countryMapper::toResponse), HttpStatus.OK);
   }
 
   @Operation(summary = "Gets country by ID")
@@ -74,49 +58,30 @@ public class CountryRestController {
                           content = {
                                   @Content(
                                           mediaType = "application/json",
-                                          array = @ArraySchema(schema = @Schema(implementation = Country.class)))
+                                          array = @ArraySchema(schema = @Schema(implementation = CountryResponse.class)))
                           })
           })
   @GetMapping("/{id}")
   public ResponseEntity<Map<String, Object>> findCountryById(@PathVariable String id) {
     long userId = Long.parseLong(id);
     return new ResponseEntity<>(
-        Collections.singletonMap("user", countryRepository.findById(userId)), HttpStatus.OK);
+        Collections.singletonMap("user", countryService.findCountryById(userId).map(countryMapper::toResponse)), HttpStatus.OK);
   }
-
-//  @GetMapping("/country/{name}")
-//  public ResponseEntity<Map<String, Object>> findByCountryName(@PathVariable String name) {
-//    return new ResponseEntity<>(
-//        Collections.singletonMap("user", countryRepository.findByCountryName(name)), HttpStatus.OK);
-//  }
 
   @Operation(
           summary = "Create new Country",
           responses = {
                   @ApiResponse( responseCode = "201", description = "Country create successfully",content =
-                  @Content(mediaType = "application/json", schema = @Schema(implementation = Country.class))),
+                  @Content(mediaType = "application/json", schema = @Schema(implementation = CountryResponse.class))),
                   @ApiResponse( responseCode = "409", description = "Country not created, Conflict", content = @Content),
                   @ApiResponse( responseCode = "500", description = "Country not created, Illegal Arguments", content = @Content)
           })
   @PostMapping
   @Transactional
   public ResponseEntity<Object> createCountry(@RequestBody CountryCreateRequest countryCreateRequest) {
-
-    Country newCountry = new Country();
-    newCountry.setCountryName(countryCreateRequest.getCountryName());
-    newCountry.setCreationDate(new Timestamp(new Date().getTime()));
-    newCountry.setModificationDate(new Timestamp(new Date().getTime()));
-    newCountry.setStatus(countryCreateRequest.getStatus());
-
-    countryRepository.save(newCountry);
-
-    List<Country> countries = countryRepository.findAll();
-
-    Map<String, Object> model = new HashMap<>();
-    model.put("Country", newCountry.getCountryName());
-    model.put("Countries", countries);
-
-    return new ResponseEntity<>(model, HttpStatus.CREATED);
+    Country newCountry = countryMapper.countryFromCreateRequest(countryCreateRequest);
+    countryService.create(newCountry);
+    return new ResponseEntity<>(countryService.findAll().stream().map(countryMapper::toResponse), HttpStatus.CREATED);
   }
 
   @Operation(
@@ -127,9 +92,7 @@ public class CountryRestController {
           })
   @DeleteMapping("/{id}")
   public ResponseEntity<Object> deleteCountryById(@PathVariable Long id) {
-
-    countryRepository.deleteById(id);
-
+    countryService.delete(id);
     return new ResponseEntity<>(id, HttpStatus.OK);
   }
 
@@ -144,14 +107,11 @@ public class CountryRestController {
   @PutMapping(value = "/{id}")
   public ResponseEntity<Object> updateCountry(
       @PathVariable Long id, @RequestBody CountryUpdateRequest countryUpdateRequest) {
-    Country updatedCountry = countryRepository.findById(id).get();
+    Country country = countryService.findCountryById(id).get();
+    Country countryToUpdate = countryMapper.updateFromRequest(countryUpdateRequest,country);
 
-    updatedCountry.setCountryName(countryUpdateRequest.getCountryName());
-    updatedCountry.setModificationDate(new Timestamp(new Date().getTime()));
-    updatedCountry.setStatus(countryUpdateRequest.getStatus());
+    countryService.update(countryToUpdate);
 
-    countryRepository.save(updatedCountry);
-
-    return new ResponseEntity<>("Updated user with ID: " + id, HttpStatus.OK);
+    return new ResponseEntity<>(countryService.findCountryById(id).map(countryMapper::toResponse), HttpStatus.OK);
   }
 }
