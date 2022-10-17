@@ -3,6 +3,7 @@ package com.zagvladimir.service.impl;
 import com.zagvladimir.domain.Location;
 import com.zagvladimir.domain.Role;
 import com.zagvladimir.domain.User;
+import com.zagvladimir.repository.RoleRepository;
 import com.zagvladimir.repository.UserRepository;
 import com.zagvladimir.service.LocationService;
 import com.zagvladimir.service.UserService;
@@ -23,6 +24,7 @@ public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
   private final LocationService locationService;
+  private final RoleRepository roleRepository;
   private final BCryptPasswordEncoder passwordEncoder;
 
   @Transactional
@@ -38,7 +40,9 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public User create(User user, Role role, Long locationId) {
+  public User create(User user, Long locationId) {
+
+    Role role = roleRepository.findRoleByName("ROLE_USER");
     addRole(user,role);
 
     user.setRegistrationDate(new Timestamp(new Date().getTime()));
@@ -63,8 +67,10 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public User update(User object) {
-    return userRepository.save(object);
+  public User update(User userToUpdate) {
+    userToUpdate.setModificationDate(new Timestamp(new Date().getTime()));
+    userToUpdate.setUserPassword(passwordEncoder.encode(userToUpdate.getUserPassword()));
+    return userRepository.save(userToUpdate);
   }
 
   @Transactional

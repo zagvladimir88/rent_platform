@@ -10,6 +10,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
+import java.util.List;
+
 
 @Mapper
 public interface UserMapper {
@@ -17,6 +19,10 @@ public interface UserMapper {
     @Mapping(target = "location.items", ignore = true)
     @Mapping(target = "location.users", ignore = true)
     UserResponse userToUserResponse(User user);
+
+    @Mapping(target = "location.items", ignore = true)
+    @Mapping(target = "location.users", ignore = true)
+    List<UserResponse> toListUserResponse(List<User> userList);
 
     User userCreateRequestToUser(UserCreateRequest userCreateRequest);
 

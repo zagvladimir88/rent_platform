@@ -8,7 +8,7 @@ public interface ItemLeasedService {
 
     List<ItemLeased> findAll();
 
-    ItemLeased create(ItemLeased object);
+    ItemLeased create(ItemLeased itemLeased, Long renterId);
 
     ItemLeased findById(Long itemLeasedId);
 

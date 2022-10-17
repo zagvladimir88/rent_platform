@@ -1,9 +1,11 @@
 package com.zagvladimir.controller;
 
+import com.zagvladimir.controller.mappers.LocationMapper;
 import com.zagvladimir.controller.requests.location.LocationCreateRequest;
 import com.zagvladimir.controller.requests.location.LocationUpdateRequest;
+import com.zagvladimir.controller.response.LocationResponse;
+import com.zagvladimir.domain.Country;
 import com.zagvladimir.domain.Location;
-import com.zagvladimir.repository.CountryRepository;
 import com.zagvladimir.service.LocationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -13,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -20,7 +23,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 @Tag(name = "Location controller")
@@ -30,7 +32,7 @@ import java.util.*;
 public class LocationRestController {
 
     private final LocationService locationService;
-    private final CountryRepository countryRepository;
+    private final LocationMapper locationMapper = Mappers.getMapper(LocationMapper.class);
 
     @Operation(summary = "Gets all locations")
     @ApiResponses(
@@ -47,7 +49,7 @@ public class LocationRestController {
     @GetMapping
     public ResponseEntity<Object> findAllLocations() {
         return new ResponseEntity<>(
-                Collections.singletonMap("Countries", locationService.findAll()), HttpStatus.OK);
+                Collections.singletonMap("Countries", locationService.findAll().stream().map(locationMapper::toResponse)), HttpStatus.OK);
     }
 
     @Operation(
@@ -59,12 +61,12 @@ public class LocationRestController {
                             content =
                             @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Location.class))))
+                                    array = @ArraySchema(schema = @Schema(implementation = LocationResponse.class))))
             })
     @GetMapping("/search")
     public ResponseEntity<Object> findAllLocationsWithParams(
             @ParameterObject Pageable pageable) {
-        return new ResponseEntity<>(locationService.findAll(pageable), HttpStatus.OK);
+        return new ResponseEntity<>(locationService.findAll(pageable).map(locationMapper::toResponse), HttpStatus.OK);
     }
 
     @Operation(summary = "Gets location by ID")
@@ -76,21 +78,21 @@ public class LocationRestController {
                             content = {
                                     @Content(
                                             mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = Location.class)))
+                                            array = @ArraySchema(schema = @Schema(implementation = LocationResponse.class)))
                             })
             })
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> findLocationById(@PathVariable String id) {
         long locationId = Long.parseLong(id);
         return new ResponseEntity<>(
-                Collections.singletonMap("Location", locationService.findById(locationId)), HttpStatus.OK);
+                Collections.singletonMap("Location", locationService.findById(locationId).map(locationMapper::toResponse)), HttpStatus.OK);
     }
 
     @Operation(
             summary = "Create new Location",
             responses = {
                     @ApiResponse( responseCode = "201", description = "Location create successfully",content =
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = Location.class))),
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = LocationResponse.class))),
                     @ApiResponse( responseCode = "409", description = "Location not created, Conflict", content = @Content),
                     @ApiResponse( responseCode = "500", description = "Location not created, Illegal Arguments", content = @Content)
             })
@@ -98,21 +100,11 @@ public class LocationRestController {
     @Transactional
     public ResponseEntity<Object> createLocation(@RequestBody LocationCreateRequest locationCreateRequest) {
 
-        Location newLocation = new Location();
-        newLocation.setPostalCode(locationCreateRequest.getPostalCode());
-        newLocation.setName(locationCreateRequest.getName());
-        newLocation.setDescription(locationCreateRequest.getDescription());
-        newLocation.setCountry(countryRepository.findById(locationCreateRequest.getCountryId()).get());
-        newLocation.setCreationDate(new Timestamp(new Date().getTime()));
-        newLocation.setModificationDate(new Timestamp(new Date().getTime()));
-        newLocation.setStatus(locationCreateRequest.getStatus());
+        Location newLocation = locationMapper.fromCreateRequest(locationCreateRequest);
+        Long countryId = locationCreateRequest.getCountryId();
+        locationService.create(newLocation,countryId);
 
-        locationService.save(newLocation);
-
-        Map<String, Object> model = new HashMap<>();
-
-        model.put("Location", locationService.findById(newLocation.getId()));
-        return new ResponseEntity<>(model, HttpStatus.CREATED);
+        return new ResponseEntity<>(locationService.findById(newLocation.getId()).map(locationMapper::toResponse), HttpStatus.CREATED);
     }
 
     @Operation(
@@ -123,9 +115,7 @@ public class LocationRestController {
             })
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteLocationById(@PathVariable Long id) {
-
         locationService.delete(id);
-
         return new ResponseEntity<>(id, HttpStatus.OK);
     }
 
@@ -133,23 +123,20 @@ public class LocationRestController {
             summary = "Update the Location by id",
             responses = {
                     @ApiResponse( responseCode = "200", description = "Location update successfully",content =
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = Location.class))),
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = LocationResponse.class))),
                     @ApiResponse( responseCode = "500", description = "Location not updated, Illegal Arguments", content = @Content)
             })
     @Transactional
     @PutMapping(value = "/{id}")
     public ResponseEntity<Object> updateUser(
             @PathVariable Long id, @RequestBody LocationUpdateRequest locationUpdateRequest) {
-        Location updatedLocation = locationService.findById(id).get();
 
-        updatedLocation.setPostalCode(locationUpdateRequest.getPostalCode());
-        updatedLocation.setName(locationUpdateRequest.getName());
-        updatedLocation.setDescription(locationUpdateRequest.getDescription());
-        updatedLocation.setCountry(locationUpdateRequest.getCountry());
-        updatedLocation.setModificationDate(new Timestamp(new Date().getTime()));
-        updatedLocation.setStatus(locationUpdateRequest.getStatus());
+        Location locationToUpdate = locationMapper.fromUpdateRequest(
+                locationUpdateRequest,
+                locationService.findById(id).get());
 
-        locationService.save(updatedLocation);
+        Long countryId = locationUpdateRequest.getCountryId();
+        locationService.update(locationToUpdate, countryId);
 
         return new ResponseEntity<>("Updated location with ID: " + id, HttpStatus.OK);
     }

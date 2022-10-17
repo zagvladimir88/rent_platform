@@ -1,12 +1,10 @@
 package com.zagvladimir.controller;
 
 
+import com.zagvladimir.controller.mappers.ItemMapper;
 import com.zagvladimir.controller.requests.items.ItemCreateRequest;
 import com.zagvladimir.domain.Item;
-import com.zagvladimir.repository.SubItemTypeRepository;
 import com.zagvladimir.service.ItemService;
-import com.zagvladimir.service.LocationService;
-import com.zagvladimir.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -15,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -22,7 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 @Tag(name = "Items controller")
@@ -32,9 +30,8 @@ import java.util.*;
 public class ItemRestController {
 
     private final ItemService itemService;
-    private final LocationService locationService;
-    private final SubItemTypeRepository subItemTypeRepository;
-    private final UserService userService;
+
+    private final ItemMapper itemMapper = Mappers.getMapper(ItemMapper.class);
 
 
     @Operation(summary = "Gets all items")
@@ -51,7 +48,7 @@ public class ItemRestController {
             })
     @GetMapping
     public ResponseEntity<Object> findAllItems() {
-        return new ResponseEntity<>(itemService.findAll(),
+        return new ResponseEntity<>(itemService.findAll().stream().map(itemMapper::toItemResponse),
                 HttpStatus.OK);
     }
 
@@ -68,7 +65,7 @@ public class ItemRestController {
             })
     @GetMapping("/search")
     public ResponseEntity<Object> findAllItemsWithParams(@ParameterObject Pageable pageable) {
-        return new ResponseEntity<>(itemService.findAll(pageable), HttpStatus.OK);
+        return new ResponseEntity<>(itemService.findAll(pageable).map(itemMapper::toItemResponse), HttpStatus.OK);
     }
 
     @Operation(summary = "Gets item by ID")
@@ -88,11 +85,10 @@ public class ItemRestController {
                             content = @Content),
             })
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> findByItemId(@PathVariable String id) {
+    public ResponseEntity<Map<String, Object>> findByItemId(@PathVariable Long id) {
 
-        long itemId = Long.parseLong(id);
 
-        return new ResponseEntity<>(Collections.singletonMap("item", itemService.findById(itemId)), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap("item",itemMapper.toItemResponse(itemService.findById(id))), HttpStatus.OK);
     }
 
     @Operation(
@@ -107,28 +103,14 @@ public class ItemRestController {
     @Transactional
     public ResponseEntity<Object> createItem(@RequestBody ItemCreateRequest createRequest) {
 
-        Item item = new Item();
-        item.setItemName(createRequest.getItemName());
-        item.setSubItemType(subItemTypeRepository.findById(createRequest.getItemTypeId()).get());
-        item.setLocation(locationService.findById(createRequest.getLocationId()).get());
-        item.setItemLocation(createRequest.getItemLocation());
-        item.setDescription(createRequest.getDescription());
-        item.setOwner(userService.findById(createRequest.getOwnerId()));
-        item.setPricePerHour(createRequest.getPricePerHour());
-        item.setAvailable(createRequest.getAvailable());
-        item.setCreationDate(new Timestamp(new Date().getTime()));
-        item.setModificationDate(new Timestamp(new Date().getTime()));
-        item.setStatus(createRequest.getStatus());
+        Item item = itemMapper.itemCreateRequestToItem(createRequest);
+        Long subItemTypeId = createRequest.getItemTypeId();
+        Long ownerId = createRequest.getOwnerId();
+        Long locationId = createRequest.getLocationId();
 
-        itemService.create(item);
+        itemService.create(item,subItemTypeId,ownerId,locationId);
 
-        List<Item> items = itemService.findAll();
-
-        Map<String, Object> model = new HashMap<>();
-        model.put("item", item.getItemName());
-        model.put("items", items);
-
-        return new ResponseEntity<>(model, HttpStatus.CREATED);
+        return new ResponseEntity<>(itemService.findAll().stream().map(itemMapper::toItemResponse), HttpStatus.CREATED);
     }
 
     @Operation(
