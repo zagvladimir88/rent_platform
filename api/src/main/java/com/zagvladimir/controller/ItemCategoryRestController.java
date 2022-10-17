@@ -1,8 +1,10 @@
 package com.zagvladimir.controller;
 
+import com.zagvladimir.controller.mappers.ItemCategoryMapper;
 import com.zagvladimir.controller.requests.item_category.ItemCategoryCreateRequest;
+import com.zagvladimir.controller.response.ItemCategoryResponse;
 import com.zagvladimir.domain.ItemCategory;
-import com.zagvladimir.repository.ItemCategoryRepository;
+import com.zagvladimir.service.ItemCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,12 +12,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 @Tag(name = "Item Category controller")
@@ -24,7 +28,8 @@ import java.util.*;
 @RequestMapping("/api/item-categories")
 public class ItemCategoryRestController {
 
-  private final ItemCategoryRepository itemCategoryRepository;
+  private final ItemCategoryService itemCategoryService;
+  private final ItemCategoryMapper itemCategoryMapper = Mappers.getMapper(ItemCategoryMapper.class);
 
   @Operation(summary = "Gets all Items Category",
           responses = {
@@ -34,13 +39,13 @@ public class ItemCategoryRestController {
                           content = {
                                   @Content(
                                           mediaType = "application/json",
-                                          array = @ArraySchema(schema = @Schema(implementation = ItemCategory.class)))
+                                          array = @ArraySchema(schema = @Schema(implementation = ItemCategoryResponse.class)))
                           })
           })
   @GetMapping
-  public ResponseEntity<Object> findAllItemCategories() {
+  public ResponseEntity<Object> findAllItemCategories(@ParameterObject Pageable pageable) {
     return new ResponseEntity<>(
-        Collections.singletonMap("result", itemCategoryRepository.findAll()), HttpStatus.OK);
+        Collections.singletonMap("result", itemCategoryService.findAll(pageable).stream().map(itemCategoryMapper::toResponse)), HttpStatus.OK);
   }
 
   @Operation(summary = "Gets Item Category by ID",
@@ -51,14 +56,13 @@ public class ItemCategoryRestController {
                           content = {
                                   @Content(
                                           mediaType = "application/json",
-                                          array = @ArraySchema(schema = @Schema(implementation = ItemCategory.class)))
+                                          array = @ArraySchema(schema = @Schema(implementation = ItemCategoryResponse.class)))
                           })
           })
   @GetMapping("/{id}")
-  public ResponseEntity<Map<String, Object>> findItemCategoryById(@PathVariable String id) {
-    long itemCategoryId = Long.parseLong(id);
+  public ResponseEntity<Map<String, Object>> findItemCategoryById(@PathVariable Long id) {
     return new ResponseEntity<>(
-        Collections.singletonMap("item category", itemCategoryRepository.findById(itemCategoryId)),
+        Collections.singletonMap("item category", itemCategoryService.findById(id).map(itemCategoryMapper::toResponse)),
         HttpStatus.OK);
   }
 
@@ -66,27 +70,18 @@ public class ItemCategoryRestController {
           summary = "Create new Item Category",
           responses = {
                   @ApiResponse( responseCode = "201", description = "ItemCategory was created successfully",content =
-                  @Content(mediaType = "application/json", schema = @Schema(implementation = ItemCategory.class))),
+                  @Content(mediaType = "application/json", schema = @Schema(implementation = ItemCategoryResponse.class))),
                   @ApiResponse( responseCode = "409", description = "ItemCategory not created, Conflict", content = @Content),
                   @ApiResponse( responseCode = "500", description = "ItemCategory not created, Illegal Arguments", content = @Content)
           })
   @PostMapping
   @Transactional
   public ResponseEntity<Object> createItemCategory(@RequestBody ItemCategoryCreateRequest itemCategoryCreateRequest) {
-    ItemCategory newItemCategory = new ItemCategory();
 
-    newItemCategory.setCategoryName(itemCategoryCreateRequest.getCategoryName());
-    newItemCategory.setCreationDate(new Timestamp(new Date().getTime()));
-    newItemCategory.setModificationDate(new Timestamp(new Date().getTime()));
-    newItemCategory.setStatus(itemCategoryCreateRequest.getStatus());
+    ItemCategory newItemCategory = itemCategoryMapper.fromCreateRequest(itemCategoryCreateRequest);
+    itemCategoryService.create(newItemCategory);
 
-    itemCategoryRepository.save(newItemCategory);
-
-    List<ItemCategory> itemCategoryList = itemCategoryRepository.findAll();
-    Map<String, Object> model = new HashMap<>();
-    model.put("item categories", itemCategoryList);
-
-    return new ResponseEntity<>(model, HttpStatus.CREATED);
+    return new ResponseEntity<>(itemCategoryService.findAll().stream().map(itemCategoryMapper::toResponse), HttpStatus.CREATED);
   }
 
   @Operation(
@@ -99,7 +94,7 @@ public class ItemCategoryRestController {
   @DeleteMapping("/{id}")
   public ResponseEntity<Object> deleteItemCategoryById(@PathVariable Long id) {
 
-    itemCategoryRepository.deleteById(id);
+      itemCategoryService.delete(id);
 
     Map<String, Object> model = new HashMap<>();
     model.put("role has been deleted id:", id);

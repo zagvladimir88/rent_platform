@@ -25,6 +25,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
 @Tag(name = "User controller")
@@ -49,7 +50,7 @@ public class UserRestController {
           })
   @GetMapping
   public ResponseEntity<Object> findAllUsers() {
-    return new ResponseEntity<>(Collections.singletonMap("result", userMapper.toListUserResponse(userService.findAll())), HttpStatus.OK);
+    return new ResponseEntity<>(Collections.singletonMap("result", userService.findAll().stream().map(userMapper::userToUserResponse)), HttpStatus.OK);
   }
 
   @Operation(
@@ -107,7 +108,7 @@ public class UserRestController {
           })
   @GetMapping("/login/{login}")
   public ResponseEntity<Map<String, Object>> findByLogin(@PathVariable String login) {
-    return new ResponseEntity<>(Collections.singletonMap("user", userMapper.userToUserResponse(userService.findByLogin(login).get())), HttpStatus.OK);
+    return new ResponseEntity<>(Collections.singletonMap("user", userMapper.userToUserResponse(userService.findByLogin(login).orElseThrow(EntityNotFoundException::new))), HttpStatus.OK);
   }
 
   @Operation(

@@ -4,7 +4,6 @@ import com.zagvladimir.controller.mappers.LocationMapper;
 import com.zagvladimir.controller.requests.location.LocationCreateRequest;
 import com.zagvladimir.controller.requests.location.LocationUpdateRequest;
 import com.zagvladimir.controller.response.LocationResponse;
-import com.zagvladimir.domain.Country;
 import com.zagvladimir.domain.Location;
 import com.zagvladimir.service.LocationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
 @Tag(name = "Location controller")
@@ -49,7 +49,7 @@ public class LocationRestController {
     @GetMapping
     public ResponseEntity<Object> findAllLocations() {
         return new ResponseEntity<>(
-                Collections.singletonMap("Countries", locationService.findAll().stream().map(locationMapper::toResponse)), HttpStatus.OK);
+                Collections.singletonMap("Locations", locationService.findAll().stream().map(locationMapper::toResponse)), HttpStatus.OK);
     }
 
     @Operation(
@@ -133,7 +133,7 @@ public class LocationRestController {
 
         Location locationToUpdate = locationMapper.fromUpdateRequest(
                 locationUpdateRequest,
-                locationService.findById(id).get());
+                locationService.findById(id).orElseThrow(EntityNotFoundException::new));
 
         Long countryId = locationUpdateRequest.getCountryId();
         locationService.update(locationToUpdate, countryId);

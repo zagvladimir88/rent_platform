@@ -1,10 +1,11 @@
 package com.zagvladimir.controller;
 
 
+import com.zagvladimir.controller.mappers.SubItemTypeMapper;
 import com.zagvladimir.controller.requests.sub_item_type.SubItemTypeCreateRequest;
+import com.zagvladimir.controller.response.SubItemTypeResponse;
 import com.zagvladimir.domain.SubItemType;
-import com.zagvladimir.repository.ItemCategoryRepository;
-import com.zagvladimir.repository.SubItemTypeRepository;
+import com.zagvladimir.service.SubItemTypeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,12 +14,13 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
+import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
 @Tag(name = "Sub item types controller")
@@ -27,8 +29,8 @@ import java.util.*;
 @RequestMapping("/api/sub-item-types")
 public class SubItemTypeRestController {
 
-    private final SubItemTypeRepository subItemTypeRepository;
-    private final ItemCategoryRepository itemCategoryRepository;
+    private final SubItemTypeService subItemTypeService;
+    private final SubItemTypeMapper subItemTypeMapper = Mappers.getMapper(SubItemTypeMapper.class);
 
     @Operation(summary = "Gets all SubItemType")
     @ApiResponses(
@@ -39,12 +41,12 @@ public class SubItemTypeRestController {
                             content = {
                                     @Content(
                                             mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = SubItemType.class)))
+                                            array = @ArraySchema(schema = @Schema(implementation = SubItemTypeResponse.class)))
                             })
             })
     @GetMapping
     public ResponseEntity<Object> findAllISubItemTypes() {
-        return new ResponseEntity<>(Collections.singletonMap("result", subItemTypeRepository.findAll()),
+        return new ResponseEntity<>(Collections.singletonMap("result", subItemTypeService.findAll().stream().map(subItemTypeMapper::toResponse)),
                 HttpStatus.OK);
     }
 
@@ -57,41 +59,36 @@ public class SubItemTypeRestController {
                             content = {
                                     @Content(
                                             mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = SubItemType.class)))
+                                            array = @ArraySchema(schema = @Schema(implementation = SubItemTypeResponse.class)))
                             })
             })
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> findSubItemTypeById(@PathVariable String id) {
         long itemTypeCategoryId = Long.parseLong(id);
-        return new ResponseEntity<>(Collections.singletonMap("role", subItemTypeRepository.findById(itemTypeCategoryId)), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap("role", subItemTypeService.findById(itemTypeCategoryId).map(subItemTypeMapper::toResponse)), HttpStatus.OK);
     }
 
     @Operation(
             summary = "Create new SubItemType",
             responses = {
                     @ApiResponse( responseCode = "201", description = "SubItemType create successfully",content =
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = SubItemType.class))),
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = SubItemTypeResponse.class))),
                     @ApiResponse( responseCode = "409", description = "SubItemType not created, Conflict", content = @Content),
                     @ApiResponse( responseCode = "500", description = "SubItemType not created, Illegal Arguments", content = @Content)
             })
     @PostMapping
     @Transactional
     public ResponseEntity<Object> createSubItemType(@RequestBody SubItemTypeCreateRequest subItemTypeCreateRequest) {
-        SubItemType subItemType = new SubItemType();
+        SubItemType subItemType = subItemTypeMapper.fromCreateRequest(subItemTypeCreateRequest);
+        Long categoryId = subItemTypeCreateRequest.getCategoryId();
 
-        subItemType.setSubCategoryName(subItemTypeCreateRequest.getSubCategoryName());
-        subItemType.setItemCategory(itemCategoryRepository.findById(subItemTypeCreateRequest.getCategoryId()).get());
-        subItemType.setCreationDate(new Timestamp(new Date().getTime()));
-        subItemType.setModificationDate(subItemType.getCreationDate());
-        subItemType.setStatus(subItemTypeCreateRequest.getStatus());
+        subItemTypeService.create(subItemType,categoryId);
 
-        subItemTypeRepository.save(subItemType);
-
-
-        Map<String, Object> model = new HashMap<>();
-        model.put("Sub_item_types",subItemTypeRepository.findById(subItemType.getId()).get());
-
-        return new ResponseEntity<>(model, HttpStatus.CREATED);
+        return new ResponseEntity<>(subItemTypeService.findById(subItemType
+                .getId())
+                .map(subItemTypeMapper::toResponse)
+                .orElseThrow(EntityNotFoundException::new)
+                , HttpStatus.CREATED);
     }
 
     @Operation(
@@ -104,11 +101,10 @@ public class SubItemTypeRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteSubItemTypeById(@PathVariable Long id){
 
-        subItemTypeRepository.deleteById(id);
+        subItemTypeService.delete(id);
 
         Map<String, Object> model = new HashMap<>();
         model.put("Sub Item Category was deleted, id:", id);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
-
 }

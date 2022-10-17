@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import javax.persistence.EntityExistsException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -42,8 +43,10 @@ public class UserServiceImpl implements UserService {
   @Override
   public User create(User user, Long locationId) {
 
-    Role role = roleRepository.findRoleByName("ROLE_USER");
-    addRole(user,role);
+    Role role1 = roleRepository.findRoleByName("ROLE_USER");
+    addRole(user,role1);
+    Role role2 = roleRepository.findRoleByName("ROLE_USER");
+    addRole(user,role2);
 
     user.setRegistrationDate(new Timestamp(new Date().getTime()));
     user.setCreationDate(user.getRegistrationDate());
@@ -58,11 +61,7 @@ public class UserServiceImpl implements UserService {
   @Transactional
   @Override
   public User findById(Long userId) {
-    Optional<User> user = userRepository.findById(userId);
-    if (user.isPresent()) {
-      return user.get();
-    }
-    return null;
+    return userRepository.findById(userId).orElseThrow(EntityExistsException::new);
   }
 
   @Transactional
@@ -92,9 +91,14 @@ public class UserServiceImpl implements UserService {
   }
 
    public void addRole(User user,Role role){
-    Set<Role> rolesList = new HashSet<>();
-    rolesList.add(role);
-    user.setRoles(rolesList);
-    role.getUsers().add(user);
+    if (user.getRoles() != null) {
+      user.getRoles().add(role);
+      role.getUsers().add(user);
+    } else {
+      Set<Role> rolesList = new HashSet<>();
+      rolesList.add(role);
+      user.setRoles(rolesList);
+      role.getUsers().add(user);
+     }
   }
 }

@@ -10,23 +10,15 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import java.util.List;
 
-
-@Mapper
+@Mapper(uses = {LocationMapper.class,RoleMapper.class})
 public interface UserMapper {
 
-    @Mapping(target = "location.items", ignore = true)
-    @Mapping(target = "location.users", ignore = true)
+    @Mapping(source = "location", target = "userLocation")
+    @Mapping(source = "roles", target = "userRoles")
     UserResponse userToUserResponse(User user);
 
-    @Mapping(target = "location.items", ignore = true)
-    @Mapping(target = "location.users", ignore = true)
-    List<UserResponse> toListUserResponse(List<User> userList);
-
     User userCreateRequestToUser(UserCreateRequest userCreateRequest);
-
-    User userUpdateRequestToUser(UserUpdateRequest userUpdateRequest);
 
     User updateUserFromUpdateRequest(UserUpdateRequest userUpdateRequest, @MappingTarget User user);
 }
