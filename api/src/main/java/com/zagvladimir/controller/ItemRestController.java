@@ -4,6 +4,7 @@ package com.zagvladimir.controller;
 import com.zagvladimir.controller.mappers.ItemMapper;
 import com.zagvladimir.controller.requests.items.ItemCreateRequest;
 import com.zagvladimir.domain.Item;
+import com.zagvladimir.exception.ErrorContainer;
 import com.zagvladimir.service.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -83,10 +84,13 @@ public class ItemRestController {
                             responseCode = "404",
                             description = "Item not found",
                             content = @Content),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "Item not found",
+                            content = @Content(schema = @Schema(implementation = ErrorContainer.class)))
             })
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> findByItemId(@PathVariable Long id) {
-
 
         return new ResponseEntity<>(Collections.singletonMap("item",itemMapper.toItemResponse(itemService.findById(id))), HttpStatus.OK);
     }
@@ -110,7 +114,7 @@ public class ItemRestController {
 
         itemService.create(item,subItemTypeId,ownerId,locationId);
 
-        return new ResponseEntity<>(itemService.findAll().stream().map(itemMapper::toItemResponse), HttpStatus.CREATED);
+        return new ResponseEntity<>(itemMapper.toItemResponse(itemService.findById(item.getId())), HttpStatus.CREATED);
     }
 
     @Operation(

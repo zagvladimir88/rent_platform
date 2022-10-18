@@ -11,6 +11,7 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -92,9 +93,8 @@ class ItemRestControllerTest {
         this.mockMvc
                 .perform(get("/api/items/{id}",itemId))
                 .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof NumberFormatException))
-                .andExpect(result -> assertEquals("For input string: \"asd\"",result.getResolvedException().getMessage()));
+                .andExpect(status().is5xxServerError())
+                .andExpect(result -> assertTrue(result.getResolvedException() instanceof MethodArgumentTypeMismatchException));
     }
 
     @Test
@@ -116,7 +116,7 @@ class ItemRestControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.item",is("Makita hr2470ft-TEST")));
+                .andExpect(jsonPath("$.itemName",is("Makita hr2470ft-TEST")));
     }
 
     @Test

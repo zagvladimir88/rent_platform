@@ -84,7 +84,7 @@ public class GradeRestController {
 
         gradeService.create(newGrade, userToId, userFromId, itemLeasedId);
 
-        return new ResponseEntity<>(gradeService.findAll().stream().map(gradeMapper::toResponse), HttpStatus.CREATED);
+        return new ResponseEntity<>(gradeService.findById(newGrade.getId()).map(gradeMapper::toResponse), HttpStatus.CREATED);
     }
 
     @Operation(

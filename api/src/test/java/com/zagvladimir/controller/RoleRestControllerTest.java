@@ -80,7 +80,7 @@ class RoleRestControllerTest {
                     .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.roles[*].name",hasItem("ROLE_ADMIN")));
+            .andExpect(jsonPath("$.[*].name",hasItem("ROLE_ADMIN")));
   }
 
   @Test

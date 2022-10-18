@@ -34,24 +34,6 @@ public class LocationRestController {
     private final LocationService locationService;
     private final LocationMapper locationMapper = Mappers.getMapper(LocationMapper.class);
 
-    @Operation(summary = "Gets all locations")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Found the locations",
-                            content = {
-                                    @Content(
-                                            mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = Location.class)))
-                            })
-            })
-    @GetMapping
-    public ResponseEntity<Object> findAllLocations() {
-        return new ResponseEntity<>(
-                Collections.singletonMap("Locations", locationService.findAll().stream().map(locationMapper::toResponse)), HttpStatus.OK);
-    }
-
     @Operation(
             summary = "Gets all locations with pagination",
             responses = {
@@ -63,8 +45,8 @@ public class LocationRestController {
                                     mediaType = "application/json",
                                     array = @ArraySchema(schema = @Schema(implementation = LocationResponse.class))))
             })
-    @GetMapping("/search")
-    public ResponseEntity<Object> findAllLocationsWithParams(
+    @GetMapping
+    public ResponseEntity<Object> findAllLocations(
             @ParameterObject Pageable pageable) {
         return new ResponseEntity<>(locationService.findAll(pageable).map(locationMapper::toResponse), HttpStatus.OK);
     }
@@ -138,7 +120,7 @@ public class LocationRestController {
         Long countryId = locationUpdateRequest.getCountryId();
         locationService.update(locationToUpdate, countryId);
 
-        return new ResponseEntity<>("Updated location with ID: " + id, HttpStatus.OK);
+        return new ResponseEntity<>(locationService.findById(locationToUpdate.getId()).map(locationMapper::toResponse), HttpStatus.OK);
     }
 
 }

@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
 @Tag(name = "Country controller")
@@ -65,7 +66,7 @@ public class CountryRestController {
   public ResponseEntity<Map<String, Object>> findCountryById(@PathVariable String id) {
     long userId = Long.parseLong(id);
     return new ResponseEntity<>(
-        Collections.singletonMap("user", countryService.findCountryById(userId).map(countryMapper::toResponse)), HttpStatus.OK);
+        Collections.singletonMap("country", countryService.findCountryById(userId).map(countryMapper::toResponse)), HttpStatus.OK);
   }
 
   @Operation(
@@ -107,7 +108,7 @@ public class CountryRestController {
   @PutMapping(value = "/{id}")
   public ResponseEntity<Object> updateCountry(
       @PathVariable Long id, @RequestBody CountryUpdateRequest countryUpdateRequest) {
-    Country country = countryService.findCountryById(id).get();
+    Country country = countryService.findCountryById(id).orElseThrow(EntityNotFoundException::new);
     Country countryToUpdate = countryMapper.updateFromRequest(countryUpdateRequest,country);
 
     countryService.update(countryToUpdate);

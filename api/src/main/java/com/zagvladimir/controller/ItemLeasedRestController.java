@@ -58,7 +58,7 @@ public class ItemLeasedRestController {
         Long renterId = createRequest.getRenterId();
         itemLeasedService.create(itemLeased, renterId);
 
-        return new ResponseEntity<>(itemLeasedService.findAll().stream().map(itemLeasedMapper::toResponse), HttpStatus.CREATED);
+        return new ResponseEntity<>(itemLeasedMapper.toResponse(itemLeasedService.findById(itemLeased.getId())), HttpStatus.CREATED);
     }
 
     @Operation(summary = "Gets itemLeased by ID",

@@ -62,7 +62,7 @@ public class ItemCategoryRestController {
   @GetMapping("/{id}")
   public ResponseEntity<Map<String, Object>> findItemCategoryById(@PathVariable Long id) {
     return new ResponseEntity<>(
-        Collections.singletonMap("item category", itemCategoryService.findById(id).map(itemCategoryMapper::toResponse)),
+        Collections.singletonMap("itemCategory", itemCategoryService.findById(id).map(itemCategoryMapper::toResponse)),
         HttpStatus.OK);
   }
 
@@ -81,12 +81,11 @@ public class ItemCategoryRestController {
     ItemCategory newItemCategory = itemCategoryMapper.fromCreateRequest(itemCategoryCreateRequest);
     itemCategoryService.create(newItemCategory);
 
-    return new ResponseEntity<>(itemCategoryService.findAll().stream().map(itemCategoryMapper::toResponse), HttpStatus.CREATED);
+    return new ResponseEntity<>(itemCategoryService.findById(newItemCategory.getId()).map(itemCategoryMapper::toResponse), HttpStatus.CREATED);
   }
 
   @Operation(
           summary = "Delete Item Category",
-          description = "This can only be done by the logged in user.",
           responses = {
                   @ApiResponse(responseCode = "200", description = "Item Category was deleted", content = @Content),
                   @ApiResponse(responseCode = "404", description = "Item Category not found", content = @Content)

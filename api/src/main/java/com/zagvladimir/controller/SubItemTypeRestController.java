@@ -63,9 +63,11 @@ public class SubItemTypeRestController {
                             })
             })
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> findSubItemTypeById(@PathVariable String id) {
+    public ResponseEntity<Object> findSubItemTypeById(@PathVariable String id) {
         long itemTypeCategoryId = Long.parseLong(id);
-        return new ResponseEntity<>(Collections.singletonMap("role", subItemTypeService.findById(itemTypeCategoryId).map(subItemTypeMapper::toResponse)), HttpStatus.OK);
+        return new ResponseEntity<>(subItemTypeService.findById(itemTypeCategoryId).map(subItemTypeMapper::toResponse)
+                .orElseThrow(EntityNotFoundException::new)
+                , HttpStatus.OK);
     }
 
     @Operation(
