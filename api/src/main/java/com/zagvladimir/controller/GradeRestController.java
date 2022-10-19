@@ -13,7 +13,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +28,7 @@ import java.util.*;
 public class GradeRestController {
 
     private final GradeService gradeService;
-    private final GradeMapper gradeMapper = Mappers.getMapper(GradeMapper.class);
+    private final GradeMapper gradeMapper;
 
     @Operation(summary = "Gets all grades",
             responses = {

@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -32,7 +31,7 @@ import java.util.*;
 public class CountryRestController {
 
   private final CountryService countryService;
-  private final CountryMapper countryMapper = Mappers.getMapper(CountryMapper.class);
+  private final CountryMapper countryMapper;
 
    @Operation(
           summary = "Gets all countries with pagination",

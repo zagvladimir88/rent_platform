@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -32,7 +31,7 @@ import java.util.*;
 public class LocationRestController {
 
     private final LocationService locationService;
-    private final LocationMapper locationMapper = Mappers.getMapper(LocationMapper.class);
+    private final LocationMapper locationMapper;
 
     @Operation(
             summary = "Gets all locations with pagination",

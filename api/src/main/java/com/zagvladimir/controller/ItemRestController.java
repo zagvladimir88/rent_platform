@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -32,7 +31,7 @@ public class ItemRestController {
 
     private final ItemService itemService;
 
-    private final ItemMapper itemMapper = Mappers.getMapper(ItemMapper.class);
+    private final ItemMapper itemMapper;
 
 
     @Operation(summary = "Gets all items")

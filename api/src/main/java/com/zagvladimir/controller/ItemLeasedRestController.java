@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +24,7 @@ import java.util.*;
 public class ItemLeasedRestController {
 
     private final ItemLeasedService itemLeasedService;
-    private final ItemLeasedMapper itemLeasedMapper = Mappers.getMapper(ItemLeasedMapper.class);
+    private final ItemLeasedMapper itemLeasedMapper;
 
     @Operation(summary = "Gets all itemsLeased",
     responses = {

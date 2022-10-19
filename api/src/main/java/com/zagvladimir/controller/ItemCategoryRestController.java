@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -29,7 +28,7 @@ import java.util.*;
 public class ItemCategoryRestController {
 
   private final ItemCategoryService itemCategoryService;
-  private final ItemCategoryMapper itemCategoryMapper = Mappers.getMapper(ItemCategoryMapper.class);
+  private final ItemCategoryMapper itemCategoryMapper;
 
   @Operation(summary = "Gets all Items Category",
           responses = {

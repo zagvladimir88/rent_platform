@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +29,7 @@ import java.util.*;
 public class SubItemTypeRestController {
 
     private final SubItemTypeService subItemTypeService;
-    private final SubItemTypeMapper subItemTypeMapper = Mappers.getMapper(SubItemTypeMapper.class);
+    private final SubItemTypeMapper subItemTypeMapper;
 
     @Operation(summary = "Gets all SubItemType")
     @ApiResponses(

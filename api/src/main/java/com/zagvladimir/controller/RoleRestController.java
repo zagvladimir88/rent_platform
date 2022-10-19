@@ -13,11 +13,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
 @Tag(name = "Roles controller")
@@ -28,7 +28,7 @@ public class RoleRestController {
 
     private final RoleRepository roleRepository;
     private final RoleService roleService;
-    private final RoleMapper roleMapper = Mappers.getMapper(RoleMapper.class);
+    private final RoleMapper roleMapper;
 
     @Operation(summary = "Gets all roles")
     @ApiResponses(
@@ -81,7 +81,7 @@ public class RoleRestController {
     @GetMapping("/{roleId}")
     public ResponseEntity<Map<String, Object>> findRoleById(@PathVariable Long roleId) {
 
-        return new ResponseEntity<>(Collections.singletonMap("role",roleMapper.toRoleResponse(roleService.findRoleById(roleId).get())), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap("role",roleMapper.toRoleResponse(roleService.findRoleById(roleId).orElseThrow(EntityNotFoundException::new))), HttpStatus.OK);
     }
 
 
