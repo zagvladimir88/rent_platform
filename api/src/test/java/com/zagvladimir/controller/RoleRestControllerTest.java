@@ -1,15 +1,14 @@
 package com.zagvladimir.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zagvladimir.BaseIntegrationTest;
+import com.zagvladimir.annotations.IT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,10 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Transactional
-class RoleRestControllerTest {
+@IT
+class RoleRestControllerTest extends BaseIntegrationTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -32,7 +29,6 @@ class RoleRestControllerTest {
   private ObjectMapper objectMapper;
 
   @Test
-  @Rollback(value = false)
   void findAllRoles() throws Exception {
     this.mockMvc
         .perform(get("/api/roles/"))
@@ -45,7 +41,6 @@ class RoleRestControllerTest {
   }
 
   @Test
-  @Rollback(value = false)
   void findRolesByUserId() throws Exception {
     this.mockMvc
             .perform(get("/api/roles/users/4"))
@@ -57,7 +52,6 @@ class RoleRestControllerTest {
   }
 
   @Test
-  @Rollback(value = false)
   void findRoleById() throws Exception {
     this.mockMvc
             .perform(get("/api/roles/4"))
