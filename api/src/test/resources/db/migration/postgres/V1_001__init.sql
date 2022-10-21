@@ -112,53 +112,38 @@ create unique index if not exists item_type_id_uindex
 create index if not exists item_type_type_name_index
     on sub_item_types (sub_category_name);
 
-create table if not exists items
+create table items
 (
-    id                bigint
-    constraint rental_items_pk
-    primary key,
-    item_name         varchar(255),
-    item_type_id      integer
-    constraint rental_items_item_type_id_fk
-    references sub_item_types (id),
-    location_id       integer
-    constraint rental_items_location_id_fk
-    references locations,
+    id                bigserial,
+    item_name         varchar(255) not null,
+    item_type_id      bigint,
+    location_id       bigint,
     item_location     varchar,
     description       varchar,
-    owner_id          integer
-    constraint rental_items_users_id_fk
-    references users,
+    owner_id          bigint,
     price_per_hour    numeric(8, 2),
-    available         boolean,
-    creation_date     timestamp(6) default CURRENT_TIMESTAMP(6)                     not null,
-    modification_date timestamp(6) default CURRENT_TIMESTAMP(6)                     not null,
-    status            varchar(25)  default 'ACTIVE'::character varying
-    );
+    available         BOOLEAN      default true,
+    creation_date     timestamp(6) default CURRENT_TIMESTAMP(6),
+    modification_date timestamp(6) default CURRENT_TIMESTAMP(6),
+    status            varchar(25)  default 'ACTIVE'
+);
 
-alter table items
-    owner to test;
-
-create index if not exists items_item_name_index
-    on items (item_name);
-
-create index if not exists items_item_location_index
-    on items (item_location);
-
-create unique index if not exists rental_items_id_uindex
+create unique index items_id_uindex
     on items (id);
 
-create table if not exists items_leased
+alter table items
+    add constraint items_pk
+        primary key (id);
+
+create table items_leased
 (
-    id                        bigint
-    constraint item_leased_pk
-    primary key,
+    id                        bigserial,
     item_id                   bigint
-    constraint item_leased_rental_items_id_fk
-    references items,
+        constraint items_leased_items_id_fk
+            references items,
     renter_id                 bigint
-    constraint item_leased_users_id_fk
-    references users,
+        constraint items_leased_users_id_fk
+            references users,
     time_from                 timestamp(6),
     time_to                   timestamp(6),
     price_per_hour            numeric(8, 2),
@@ -169,44 +154,42 @@ create table if not exists items_leased
     renter_grade_description  varchar,
     creation_date             timestamp(6) default CURRENT_TIMESTAMP(6),
     modification_date         timestamp(6) default CURRENT_TIMESTAMP(6),
-    status                    varchar(25)  default 'ACTIVE'::character varying
-    );
+    status                    varchar(25)  default 'ACTIVE'
+);
 
-alter table items_leased
-    owner to test;
-
-create unique index if not exists item_leased_id_uindex
+create unique index items_leased_id_uindex
     on items_leased (id);
 
-create table if not exists grades
+alter table items_leased
+    add constraint items_leased_pk
+        primary key (id);
+
+
+create table grades
 (
-    id                bigint
-    constraint grade_pk
-    primary key,
-    item_leased_id    integer
-    constraint grade_item_leased_id_fk
-    references items_leased,
-    user_from_id      integer
-    constraint grade_users_id_fk
-    references users,
-    user_to_id        integer
-    constraint grade_users_id_fk_2
-    references users,
+    id                bigserial,
+    item_leased_id    bigint
+        constraint grades_items_leased_id_fk
+            references items_leased,
+    user_from_id      bigint
+        constraint grades_users_id_fk
+            references users,
+    user_to_id        bigint
+        constraint grades_users_id_fk_2
+            references users,
     grade             numeric(3, 1),
     description       varchar,
     creation_date     timestamp(6) default CURRENT_TIMESTAMP(6),
     modification_date timestamp(6) default CURRENT_TIMESTAMP(6),
-    status            varchar(25)  default 'ACTIVE'::character varying
-    );
+    status            varchar(25)  default 'ACTIVE'
+);
+
+create unique index grades_id_uindex
+    on grades (id);
 
 alter table grades
-    owner to test;
-
-create index if not exists grade_grade_index
-    on grades (grade);
-
-create unique index if not exists grade_id_uindex
-    on grades (id);
+    add constraint grades_pk
+        primary key (id);
 
 create table if not exists roles
 (

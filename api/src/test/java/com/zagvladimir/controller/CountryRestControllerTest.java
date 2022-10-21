@@ -6,7 +6,6 @@ import com.zagvladimir.annotations.IT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -28,7 +27,6 @@ class CountryRestControllerTest extends BaseIntegrationTest {
   @Autowired private ObjectMapper objectMapper;
 
   @Test
-  @Rollback(value = false)
   void findAllCountries() throws Exception {
     this.mockMvc
         .perform(get("/api/countries/"))
@@ -40,7 +38,6 @@ class CountryRestControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  @Rollback(value = false)
   void findCountryById() throws Exception {
     Long id = 1L;
     this.mockMvc
