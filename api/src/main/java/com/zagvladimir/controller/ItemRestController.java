@@ -3,6 +3,7 @@ package com.zagvladimir.controller;
 
 import com.zagvladimir.controller.mappers.ItemMapper;
 import com.zagvladimir.controller.requests.items.ItemCreateRequest;
+import com.zagvladimir.controller.response.ItemResponse;
 import com.zagvladimir.domain.Item;
 import com.zagvladimir.exception.ErrorContainer;
 import com.zagvladimir.service.ItemService;
@@ -44,7 +45,7 @@ public class ItemRestController {
                             content = {
                                     @Content(
                                             mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = Item.class)))
+                                            array = @ArraySchema(schema = @Schema(implementation = ItemResponse.class)))
                             })
             })
     @GetMapping
@@ -62,7 +63,7 @@ public class ItemRestController {
                             content =
                             @Content(
                                     mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = Item.class))))
+                                    array = @ArraySchema(schema = @Schema(implementation = ItemResponse.class))))
             })
     @GetMapping("/search")
     public ResponseEntity<Object> findAllItemsWithParams(@ParameterObject Pageable pageable) {
@@ -78,7 +79,7 @@ public class ItemRestController {
                             content = {
                                     @Content(
                                             mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = Item.class)))
+                                            array = @ArraySchema(schema = @Schema(implementation = ItemResponse.class)))
                             }),
                     @ApiResponse(
                             responseCode = "404",
@@ -99,7 +100,7 @@ public class ItemRestController {
             summary = "Create new Item",
             responses = {
                     @ApiResponse( responseCode = "201", description = "Item create successfully",content =
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = Item.class))),
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ItemResponse.class))),
                     @ApiResponse( responseCode = "409", description = "Item not created, Conflict", content = @Content),
                     @ApiResponse( responseCode = "500", description = "Item not created, Illegal Arguments", content = @Content)
             })
