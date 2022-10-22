@@ -19,64 +19,55 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IT
-class ItemLeasedRestControllerTest extends BaseIntegrationTest {
+class SubItemTypeControllerTest extends BaseIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
 
   @Autowired private ObjectMapper objectMapper;
 
   @Test
-  void findAllItems() throws Exception {
+  void findAllISubItemTypes() throws Exception {
     this.mockMvc
-        .perform(get("/api/items-leased/"))
+        .perform(get("/api/sub-item-types/"))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$", notNullValue()));
   }
 
   @Test
-  void createItem() throws Exception {
+  void findSubItemTypeById() throws Exception {
+    Long id = 1L;
+    this.mockMvc
+        .perform(get("/api/sub-item-types/{id}", id))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.subCategoryName").value("TEST1"));
+  }
+
+  @Test
+  void createSubItemType() throws Exception {
     Map<String, Object> body = new HashMap<>();
-    body.put("itemId", "3");
-    body.put("renterId", "6");
-    body.put("timeFrom", "2022-09-06T13:20:05.000+00:00");
-    body.put("timeTo", "2022-09-06T15:20:11.000+00:00");
-    body.put("pricePerHour", "9.0");
-    body.put("discount", "1");
-    body.put("fee", "9");
-    body.put("priceTotal", "9");
-    body.put("rentierGradeDescription", "TEST");
-    body.put("renterGradeDescription", "TEST");
+    body.put("subCategoryName", "TEST");
+    body.put("categoryId", "2");
     body.put("status", "ACTIVE");
 
     mockMvc
         .perform(
-            MockMvcRequestBuilders.post("/api/items-leased/")
+            MockMvcRequestBuilders.post("/api/sub-item-types/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body))
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.rentierGradeDescription").value("TEST"))
-        .andExpect(jsonPath("$.renterGradeDescription").value("TEST"));
+        .andExpect(jsonPath("$.subCategoryName").value("TEST"));
   }
 
   @Test
-  void findItemLeasedById() throws Exception {
-    Long id = 1L;
-    this.mockMvc
-        .perform(get("/api/items-leased/{id}", id))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.item.itemId").value("2"));
-  }
-
-  @Test
-  void deleteItemLeasedById() throws Exception {
+  void deleteSubItemTypeById() throws Exception {
     Long id = 1L;
     this.mockMvc
         .perform(
-            MockMvcRequestBuilders.delete("/api/items-leased/{id}", id)
+            MockMvcRequestBuilders.delete("/api/sub-item-types/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())

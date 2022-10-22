@@ -19,82 +19,62 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IT
-class LocationRestControllerTest extends BaseIntegrationTest {
+class GradeControllerTest extends BaseIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
 
   @Autowired private ObjectMapper objectMapper;
 
   @Test
-  void findAllLocations() throws Exception {
+  void findAllGrades() throws Exception {
     this.mockMvc
-        .perform(get("/api/locations/"))
+        .perform(get("/api/grades/"))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$", notNullValue()));
   }
 
   @Test
-  void findLocationById() throws Exception {
+  void findlGradeById() throws Exception {
     Long id = 1L;
     this.mockMvc
-        .perform(get("/api/locations/{id}", id))
+        .perform(get("/api/grades/{id}", id))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.Location.postalCode").value("246028"));
+        .andExpect(jsonPath("$.Grade.itemLeasedId").value("1"));
   }
 
   @Test
-  void createLocation() throws Exception {
+  void createGrade() throws Exception {
     Map<String, Object> body = new HashMap<>();
-    body.put("postalCode", "33333");
-    body.put("name", "TEST");
+    body.put("itemLeasedId", "1");
+    body.put("userFromId", "6");
+    body.put("userToId", "4");
     body.put("description", "TEST");
-    body.put("countryId", "1");
+    body.put("grade", "4");
     body.put("status", "ACTIVE");
 
     mockMvc
         .perform(
-            MockMvcRequestBuilders.post("/api/locations/")
+            MockMvcRequestBuilders.post("/api/grades/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body))
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.postalCode").value("33333"))
-        .andExpect(jsonPath("$.name").value("TEST"));
+        .andExpect(jsonPath("$.description").value("TEST"))
+        .andExpect(jsonPath("$.grade").value("4.0"));
   }
 
   @Test
-  void deleteLocationById() throws Exception {
+  void deleteGradeById() throws Exception {
     Long id = 1L;
     this.mockMvc
         .perform(
-            MockMvcRequestBuilders.delete("/api/locations/{id}", id)
+            MockMvcRequestBuilders.delete("/api/grades/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isOk());
-  }
-
-  @Test
-  void updateUser() throws Exception {
-    Map<String, Object> body = new HashMap<>();
-    body.put("postalCode", "33333");
-    body.put("name", "TEST");
-    body.put("description", "TEST");
-    body.put("countryId", "1");
-    body.put("status", "ACTIVE");
-
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.put("/api/locations/2")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body))
-                .accept(MediaType.APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.postalCode").value("33333"))
-        .andExpect(jsonPath("$.name").value("TEST"));
   }
 }

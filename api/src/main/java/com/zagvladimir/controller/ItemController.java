@@ -29,7 +29,7 @@ import java.util.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/items")
-public class ItemRestController {
+public class ItemController {
 
     private final ItemService itemService;
 
@@ -92,8 +92,8 @@ public class ItemRestController {
             })
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> findByItemId(@PathVariable Long id) {
-
-        return new ResponseEntity<>(Collections.singletonMap("item",itemMapper.toItemResponse(itemService.findById(id))), HttpStatus.OK);
+    ItemResponse itemResponse = itemMapper.toItemResponse(itemService.findById(id));
+        return new ResponseEntity<>(Collections.singletonMap("item",itemResponse), HttpStatus.OK);
     }
 
     @Operation(

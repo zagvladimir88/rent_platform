@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IT
-class RoleRestControllerTest extends BaseIntegrationTest {
+class RoleControllerTest extends BaseIntegrationTest {
 
   @Autowired
   private MockMvc mockMvc;

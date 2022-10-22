@@ -26,7 +26,7 @@ import java.util.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/sub-item-types")
-public class SubItemTypeRestController {
+public class SubItemTypeController {
 
     private final SubItemTypeService subItemTypeService;
     private final SubItemTypeMapper subItemTypeMapper;

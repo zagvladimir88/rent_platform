@@ -19,59 +19,54 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IT
-class GradeRestControllerTest extends BaseIntegrationTest {
+class ItemCategoryControllerTest extends BaseIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
 
   @Autowired private ObjectMapper objectMapper;
 
   @Test
-  void findAllGrades() throws Exception {
+  void findAllItemCategories() throws Exception {
     this.mockMvc
-        .perform(get("/api/grades/"))
+        .perform(get("/api/item-categories/"))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$", notNullValue()));
+        .andExpect(jsonPath("$.result[*]", notNullValue()));
   }
 
   @Test
-  void findlGradeById() throws Exception {
+  void findItemCategoryById() throws Exception {
     Long id = 1L;
     this.mockMvc
-        .perform(get("/api/grades/{id}", id))
+        .perform(get("/api/item-categories/{id}", id))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.Grade.itemLeasedId").value("1"));
+        .andExpect(jsonPath("$.itemCategory.categoryName").value("TEST1"));
   }
 
   @Test
-  void createGrade() throws Exception {
+  void createItemCategory() throws Exception {
     Map<String, Object> body = new HashMap<>();
-    body.put("itemLeasedId", "1");
-    body.put("userFromId", "6");
-    body.put("userToId", "4");
-    body.put("description", "TEST");
-    body.put("grade", "8");
+    body.put("categoryName", "TEST");
     body.put("status", "ACTIVE");
 
     mockMvc
         .perform(
-            MockMvcRequestBuilders.post("/api/grades/")
+            MockMvcRequestBuilders.post("/api/item-categories/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body))
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.description").value("TEST"))
-        .andExpect(jsonPath("$.grade").value("8.0"));
+        .andExpect(jsonPath("$.categoryName").value("TEST"));
   }
 
   @Test
-  void deleteGradeById() throws Exception {
+  void deleteItemCategoryById() throws Exception {
     Long id = 1L;
     this.mockMvc
         .perform(
-            MockMvcRequestBuilders.delete("/api/grades/{id}", id)
+            MockMvcRequestBuilders.delete("/api/item-categories/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())

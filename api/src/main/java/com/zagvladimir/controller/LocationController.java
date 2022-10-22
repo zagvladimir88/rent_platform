@@ -28,7 +28,7 @@ import java.util.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/locations")
-public class LocationRestController {
+public class LocationController {
 
     private final LocationService locationService;
     private final LocationMapper locationMapper;

@@ -12,84 +12,74 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IT
-class CountryRestControllerTest extends BaseIntegrationTest {
+class ItemLeasedControllerTest extends BaseIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
 
   @Autowired private ObjectMapper objectMapper;
 
   @Test
-  void findAllCountries() throws Exception {
+  void findAllItems() throws Exception {
     this.mockMvc
-        .perform(get("/api/countries/"))
+        .perform(get("/api/items-leased/"))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(
-            jsonPath(
-                "$.content[*].countryName", containsInAnyOrder("Belarus", "Russia", "Germany")));
+        .andExpect(jsonPath("$", notNullValue()));
   }
 
   @Test
-  void findCountryById() throws Exception {
-    Long id = 1L;
-    this.mockMvc
-        .perform(get("/api/countries/{id}", id))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.country.countryName").value("Belarus"));
-  }
-
-  @Test
-  void createCountry() throws Exception {
+  void createItem() throws Exception {
     Map<String, Object> body = new HashMap<>();
-    body.put("countryName", "CountryTest");
+    body.put("itemId", "3");
+    body.put("renterId", "6");
+    body.put("timeFrom", "2022-09-06T13:20:05.000+00:00");
+    body.put("timeTo", "2022-09-06T15:20:11.000+00:00");
+    body.put("pricePerHour", "9.0");
+    body.put("discount", "1");
+    body.put("fee", "9");
+    body.put("priceTotal", "9");
+    body.put("rentierGradeDescription", "TEST");
+    body.put("renterGradeDescription", "TEST");
     body.put("status", "ACTIVE");
 
     mockMvc
         .perform(
-            MockMvcRequestBuilders.post("/api/countries/")
+            MockMvcRequestBuilders.post("/api/items-leased/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body))
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.[*].countryName", hasItem("CountryTest")));
+        .andExpect(jsonPath("$.rentierGradeDescription").value("TEST"))
+        .andExpect(jsonPath("$.renterGradeDescription").value("TEST"));
   }
 
   @Test
-  void deleteCountryById() throws Exception {
+  void findItemLeasedById() throws Exception {
+    Long id = 1L;
+    this.mockMvc
+        .perform(get("/api/items-leased/{id}", id))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.item.itemId").value("2"));
+  }
+
+  @Test
+  void deleteItemLeasedById() throws Exception {
     Long id = 1L;
     this.mockMvc
         .perform(
-            MockMvcRequestBuilders.delete("/api/countries/{id}", id)
+            MockMvcRequestBuilders.delete("/api/items-leased/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isOk());
-  }
-
-  @Test
-  void updateCountry() throws Exception {
-    Map<String, Object> body = new HashMap<>();
-    body.put("status", "ACTIVE");
-    body.put("countryName", "TEST");
-
-    mockMvc
-        .perform(
-            MockMvcRequestBuilders.put("/api/countries/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body))
-                .accept(MediaType.APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.countryName").value("TEST"));
   }
 }

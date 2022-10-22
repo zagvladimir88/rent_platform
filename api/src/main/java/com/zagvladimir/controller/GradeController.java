@@ -26,7 +26,7 @@ import java.util.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/grades")
-public class GradeRestController {
+public class GradeController {
 
     private final GradeService gradeService;
     private final GradeMapper gradeMapper;

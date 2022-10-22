@@ -25,7 +25,7 @@ import java.util.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/item-categories")
-public class ItemCategoryRestController {
+public class ItemCategoryController {
 
   private final ItemCategoryService itemCategoryService;
   private final ItemCategoryMapper itemCategoryMapper;

@@ -12,64 +12,84 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IT
-class ItemCategoryRestControllerTest extends BaseIntegrationTest {
+class CountryControllerTest extends BaseIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
 
   @Autowired private ObjectMapper objectMapper;
 
   @Test
-  void findAllItemCategories() throws Exception {
+  void findAllCountries() throws Exception {
     this.mockMvc
-        .perform(get("/api/item-categories/"))
+        .perform(get("/api/countries/"))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.result[*]", notNullValue()));
+        .andExpect(
+            jsonPath(
+                "$.content[*].countryName", containsInAnyOrder("Belarus", "Russia", "Germany")));
   }
 
   @Test
-  void findItemCategoryById() throws Exception {
+  void findCountryById() throws Exception {
     Long id = 1L;
     this.mockMvc
-        .perform(get("/api/item-categories/{id}", id))
+        .perform(get("/api/countries/{id}", id))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.itemCategory.categoryName").value("TEST1"));
+        .andExpect(jsonPath("$.country.countryName").value("Belarus"));
   }
 
   @Test
-  void createItemCategory() throws Exception {
+  void createCountry() throws Exception {
     Map<String, Object> body = new HashMap<>();
-    body.put("categoryName", "TEST");
+    body.put("countryName", "CountryTest");
     body.put("status", "ACTIVE");
 
     mockMvc
         .perform(
-            MockMvcRequestBuilders.post("/api/item-categories/")
+            MockMvcRequestBuilders.post("/api/countries/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body))
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.categoryName").value("TEST"));
+        .andExpect(jsonPath("$.[*].countryName", hasItem("CountryTest")));
   }
 
   @Test
-  void deleteItemCategoryById() throws Exception {
+  void deleteCountryById() throws Exception {
     Long id = 1L;
     this.mockMvc
         .perform(
-            MockMvcRequestBuilders.delete("/api/item-categories/{id}", id)
+            MockMvcRequestBuilders.delete("/api/countries/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isOk());
+  }
+
+  @Test
+  void updateCountry() throws Exception {
+    Map<String, Object> body = new HashMap<>();
+    body.put("status", "ACTIVE");
+    body.put("countryName", "TEST");
+
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.put("/api/countries/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(body))
+                .accept(MediaType.APPLICATION_JSON))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.countryName").value("TEST"));
   }
 }

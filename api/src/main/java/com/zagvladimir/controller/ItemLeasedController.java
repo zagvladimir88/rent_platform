@@ -22,7 +22,7 @@ import java.util.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/items-leased")
-public class ItemLeasedRestController {
+public class ItemLeasedController {
 
     private final ItemLeasedService itemLeasedService;
     private final ItemLeasedMapper itemLeasedMapper;
