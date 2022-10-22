@@ -41,7 +41,7 @@ class ItemCategoryRestControllerTest extends BaseIntegrationTest {
         .perform(get("/api/item-categories/{id}", id))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.itemCategory.categoryName").value("Строительный инструмент"));
+        .andExpect(jsonPath("$.itemCategory.categoryName").value("TEST1"));
   }
 
   @Test

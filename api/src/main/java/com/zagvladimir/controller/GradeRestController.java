@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.validation.Valid;
 import java.util.*;
 
 @Tag(name = "Grade controller")
@@ -74,7 +75,7 @@ public class GradeRestController {
             })
     @PostMapping
     @Transactional
-    public ResponseEntity<Object> createGrade(@RequestBody GradeCreateRequest gradeCreateRequest) {
+    public ResponseEntity<Object> createGrade(@Valid @RequestBody GradeCreateRequest gradeCreateRequest) {
 
         Grade newGrade = gradeMapper.gradeFromCreateRequest(gradeCreateRequest);
         Long userToId = gradeCreateRequest.getUserToId();

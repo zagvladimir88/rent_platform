@@ -41,7 +41,7 @@ class SubItemTypeRestControllerTest extends BaseIntegrationTest {
         .perform(get("/api/sub-item-types/{id}", id))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.subCategoryName").value("Дрели"));
+        .andExpect(jsonPath("$.subCategoryName").value("TEST1"));
   }
 
   @Test
