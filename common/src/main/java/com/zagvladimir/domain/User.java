@@ -3,11 +3,22 @@ package com.zagvladimir.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
-import javax.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.sql.Timestamp;
-
-
 import java.util.Set;
 
 @Data
@@ -17,19 +28,17 @@ import java.util.Set;
 @ToString(exclude = {"location","roles","items","gradesToSet","gradesFromSet"})
 public class User extends BaseEntity {
 
+  @NotBlank
   @Column(name = "username")
   private String username;
 
+  @Size(min = 2,max = 100)
   @Column(name = "user_login")
   private String userLogin;
 
+  @NotBlank()
   @Column(name = "user_password")
   private String userPassword;
-
-  @ManyToOne
-  @JoinColumn(name = "location_id")
-  @JsonBackReference
-  private Location location;
 
   @Column(name = "location_details")
   private String locationDetails;
@@ -40,13 +49,17 @@ public class User extends BaseEntity {
   @Column(name = "mobile_number")
   private String mobileNumber;
 
+  @Email
   @Column(name = "email")
   private String email;
 
   @Column(name = "registration_date")
   private Timestamp registrationDate;
 
-
+  @ManyToOne
+  @JoinColumn(name = "location_id")
+  @JsonBackReference
+  private Location location;
 
   @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
   @JsonIgnoreProperties("users")
@@ -62,12 +75,9 @@ public class User extends BaseEntity {
 
   @OneToMany(mappedBy="userTo", fetch = FetchType.EAGER)
   @JsonManagedReference
-  private Set<Grade> gradesToSet;
+  private Set<Grade> gradesTo;
 
   @OneToMany(mappedBy="userFrom", fetch = FetchType.EAGER)
   @JsonManagedReference
-  private Set<Grade> gradesFromSet;
-
-
-
+  private Set<Grade> gradesFrom;
 }

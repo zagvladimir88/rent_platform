@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.*;
 
 @Tag(name = "Items Leased controller")
@@ -52,7 +53,7 @@ public class ItemLeasedRestController {
                     @ApiResponse( responseCode = "500", description = "itemLeased not created, Illegal Arguments", content = @Content)
             })
     @PostMapping
-    public ResponseEntity<Object> createItem(@RequestBody ItemLeasedCreateRequest createRequest) {
+    public ResponseEntity<Object> createItem(@Valid @RequestBody ItemLeasedCreateRequest createRequest) {
         ItemLeased itemLeased = itemLeasedMapper.itemLeasedCreationRequestToItemLeased(createRequest);
         Long renterId = createRequest.getRenterId();
         itemLeasedService.create(itemLeased, renterId);

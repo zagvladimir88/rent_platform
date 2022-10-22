@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Map;
 
@@ -144,7 +145,7 @@ public class UserRestController {
       })
   @PostMapping
   @Transactional
-  public ResponseEntity<Object> createUser(@RequestBody UserCreateRequest createRequest) {
+  public ResponseEntity<Object> createUser(@Valid @RequestBody UserCreateRequest createRequest) {
     User newUser = userMapper.userCreateRequestToUser(createRequest);
     userService.create(newUser, createRequest.getLocationId());
     return new ResponseEntity<>(

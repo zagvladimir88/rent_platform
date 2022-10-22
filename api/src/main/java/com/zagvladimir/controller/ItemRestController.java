@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.*;
 
 @Tag(name = "Items controller")
@@ -104,7 +105,7 @@ public class ItemRestController {
             })
     @PostMapping
     @Transactional
-    public ResponseEntity<Object> createItem(@RequestBody ItemCreateRequest createRequest) {
+    public ResponseEntity<Object> createItem(@Valid @RequestBody ItemCreateRequest createRequest) {
 
         Item item = itemMapper.itemCreateRequestToItem(createRequest);
         Long subItemTypeId = createRequest.getItemTypeId();
