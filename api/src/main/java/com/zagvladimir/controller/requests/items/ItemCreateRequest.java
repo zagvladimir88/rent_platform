@@ -4,7 +4,7 @@ import com.zagvladimir.domain.enums.Status;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 
 @Data
@@ -13,13 +13,14 @@ public class ItemCreateRequest {
     @NotBlank
     private String itemName;
 
-    @NotNull
     private long itemTypeId;
 
     private Long locationId;
 
+    @NotEmpty
     private String itemLocation;
 
+    @NotEmpty
     private String description;
 
     private long ownerId;
