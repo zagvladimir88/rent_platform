@@ -42,8 +42,6 @@ public class UserCreateRequest {
     @Email
     private String email;
 
-    @Schema(defaultValue = "ACTIVE", type = "string" , description = "Status")
-    private Status status = Status.ACTIVE;
-
-
+    @Schema(defaultValue = "NOT_ACTIVE", type = "string" , description = "Status")
+    private Status status = Status.NOT_ACTIVE;
 }

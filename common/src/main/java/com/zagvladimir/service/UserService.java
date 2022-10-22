@@ -26,4 +26,5 @@ public interface UserService {
 
     Optional<User> findByLogin(String login);
 
+    boolean activateUser(String code);
 }

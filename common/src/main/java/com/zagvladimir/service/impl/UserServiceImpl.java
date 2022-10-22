@@ -1,13 +1,14 @@
 package com.zagvladimir.service.impl;
 
-import com.zagvladimir.domain.Location;
 import com.zagvladimir.domain.Role;
 import com.zagvladimir.domain.User;
+import com.zagvladimir.domain.enums.Status;
 import com.zagvladimir.repository.RoleRepository;
 import com.zagvladimir.repository.UserRepository;
 import com.zagvladimir.service.LocationService;
 import com.zagvladimir.service.MailSenderService;
 import com.zagvladimir.service.UserService;
+import com.zagvladimir.util.UUIDGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -45,28 +46,29 @@ public class UserServiceImpl implements UserService {
   @Override
   public User create(User user, Long locationId) {
 
-    Role role1 = roleRepository.findRoleByName("ROLE_USER");
-    addRole(user,role1);
+    addRole(user,roleRepository.findRoleByName("ROLE_USER"));
+    user.setLocation(locationService.findById(locationId).orElse(null));
 
     user.setRegistrationDate(new Timestamp(new Date().getTime()));
     user.setCreationDate(user.getRegistrationDate());
     user.setModificationDate(user.getRegistrationDate());
-    Location location = locationService.findById(locationId).orElse(null);
-    user.setLocation(location);
     user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
-
+    user.setStatus(Status.NOT_ACTIVE);
+    user.setActivationCode(UUIDGenerator.generatedUI());
     userRepository.save(user);
+
     if(userRepository.findUsersByEmail(user.getEmail()).isPresent()){
       String message = String.format(
               "Hello, %s! \n" +
                       "Welcome to Rent-platform. Please," +
-                      " visit next ling: http://localhost:8080/registration/activate/%s",
+                      " visit next link: http://localhost:8080/api/registration/activate/%s \n" +
+                      "for activation",
               user.getUsername(),
-              "123"
+              user.getActivationCode()
       );
-    mailSenderService.send(user.getEmail(),"act code",message);
-    }
+    mailSenderService.send(user.getEmail(),"Activation link",message);
 
+    }
 
     return userRepository.findById(user.getId()).orElseThrow(IllegalArgumentException::new);
   }
@@ -103,7 +105,18 @@ public class UserServiceImpl implements UserService {
     return userRepository.findByUserLogin(login);
   }
 
-   public void addRole(User user,Role role){
+  @Override
+  public boolean activateUser(String code) {
+    Optional<User> user = userRepository.findUsersByActivationCode(code);
+    if(user.isPresent() && user.get().getStatus().equals(Status.NOT_ACTIVE)){
+      user.get().setStatus(Status.ACTIVE);
+      userRepository.save(user.get());
+      return true;
+    }
+    return false;
+  }
+
+  public void addRole(User user,Role role){
     if (user.getRoles() != null) {
       user.getRoles().add(role);
       role.getUsers().add(user);

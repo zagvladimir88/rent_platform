@@ -71,6 +71,8 @@ create index if not exists users_username_index
 create unique index if not exists users_user_login_uindex
     on users (user_login);
 
+alter table users
+    add activation_code varchar(40);
 
 create table if not exists item_categories
 (

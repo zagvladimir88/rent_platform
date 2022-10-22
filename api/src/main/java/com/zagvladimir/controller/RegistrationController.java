@@ -15,12 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.Map;
 
 
 @Tag(name = "Registration controller")
@@ -64,17 +68,17 @@ public class RegistrationController {
                 userMapper.userToUserResponse(userService.findById(newUser.getId())), HttpStatus.CREATED);
     }
 
-//    @GetMapping("/activate/{code}")
-//    public String activate(Model model, @PathVariable String code) {
-//        boolean isActivated = userSevice.activateUser(code);
-//
-//        if (isActivated) {
-//            model.addAttribute("message", "User successfully activated");
-//        } else {
-//            model.addAttribute("message", "Activation code is not found!");
-//        }
-//
-//        return "login";
-//    }
+    @GetMapping("/activate/{code}")
+    public ResponseEntity<Object> activate(@PathVariable String code) {
+        boolean isActivated = userService.activateUser(code);
+        Map<String,String> response = null;
+        if (isActivated) {
+            response = Collections.singletonMap("message", "User successfully activated");
+        } else {
+            response = Collections.singletonMap("message", "User not found or this link is outdated");
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
 
 }

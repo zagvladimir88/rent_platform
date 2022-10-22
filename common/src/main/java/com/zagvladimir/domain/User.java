@@ -56,6 +56,9 @@ public class User extends BaseEntity {
   @Column(name = "registration_date")
   private Timestamp registrationDate;
 
+  @Column(name = "activation_code")
+  private String activationCode;
+
   @ManyToOne
   @JoinColumn(name = "location_id")
   @JsonBackReference
