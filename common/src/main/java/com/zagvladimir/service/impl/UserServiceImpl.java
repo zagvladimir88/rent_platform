@@ -6,6 +6,7 @@ import com.zagvladimir.domain.User;
 import com.zagvladimir.repository.RoleRepository;
 import com.zagvladimir.repository.UserRepository;
 import com.zagvladimir.service.LocationService;
+import com.zagvladimir.service.MailSenderService;
 import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService {
   private final LocationService locationService;
   private final RoleRepository roleRepository;
   private final BCryptPasswordEncoder passwordEncoder;
+  private final MailSenderService mailSenderService;
 
   @Transactional
   @Override
@@ -45,8 +47,6 @@ public class UserServiceImpl implements UserService {
 
     Role role1 = roleRepository.findRoleByName("ROLE_USER");
     addRole(user,role1);
-    Role role2 = roleRepository.findRoleByName("ROLE_USER");
-    addRole(user,role2);
 
     user.setRegistrationDate(new Timestamp(new Date().getTime()));
     user.setCreationDate(user.getRegistrationDate());
@@ -55,7 +55,20 @@ public class UserServiceImpl implements UserService {
     user.setLocation(location);
     user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
 
-    return userRepository.save(user);
+    userRepository.save(user);
+    if(userRepository.findUsersByEmail(user.getEmail()).isPresent()){
+      String message = String.format(
+              "Hello, %s! \n" +
+                      "Welcome to Rent-platform. Please," +
+                      " visit next ling: http://localhost:8080/registration/activate/%s",
+              user.getUsername(),
+              "123"
+      );
+    mailSenderService.send(user.getEmail(),"act code",message);
+    }
+
+
+    return userRepository.findById(user.getId()).orElseThrow(IllegalArgumentException::new);
   }
 
   @Transactional

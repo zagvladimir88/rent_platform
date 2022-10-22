@@ -1,0 +1,6 @@
+spring.mail.host=smtp.yandex.ru
+spring.mail.username=mail@yandex.ru
+spring.mail.password=12345678
+spring.mail.port=465
+spring.mail.protocol=smtps
+mail.debug=true
