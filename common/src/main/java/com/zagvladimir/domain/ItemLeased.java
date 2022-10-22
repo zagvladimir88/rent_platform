@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 @Data
 @Entity
 @Table(name = "items_leased")
-public class ItemLeased extends BaseEntity {
+public class ItemLeased extends AuditingEntity {
 
   @Column(name = "item_id")
   private long itemId;

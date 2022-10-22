@@ -14,7 +14,7 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"itemCategory","items"})
 @ToString(exclude = {"itemCategory"})
 @Table(name = "sub_item_types")
-public class SubItemType extends BaseEntity{
+public class SubItemType extends AuditingEntity{
 
     @Column(name = "sub_category_name")
     private String subCategoryName;

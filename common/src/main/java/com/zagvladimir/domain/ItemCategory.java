@@ -9,7 +9,7 @@ import javax.persistence.Table;
 @Data
 @Entity
 @Table(name = "item_categories")
-public class ItemCategory extends BaseEntity{
+public class ItemCategory extends AuditingEntity{
 
     @Column(name = "category_name")
     private String categoryName;

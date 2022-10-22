@@ -13,7 +13,7 @@ import java.util.Set;
 @Entity
 @Table(name = "items")
 @ToString(exclude = "images")
-public class Item extends BaseEntity{
+public class Item extends AuditingEntity{
 
     @Column(name = "item_name")
     private String itemName;

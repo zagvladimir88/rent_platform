@@ -26,7 +26,7 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"roles","items","itemsleased","gradesToSet","gradesFromSet"})
 @Table(name = "users")
 @ToString(exclude = {"location","roles","items","gradesToSet","gradesFromSet"})
-public class User extends BaseEntity {
+public class User extends AuditingEntity {
 
   @NotBlank
   @Column(name = "username")

@@ -6,8 +6,6 @@ import com.zagvladimir.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 @Service
@@ -33,9 +31,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role create(Role role) {
-        role.setCreationDate(new Timestamp(new Date().getTime()));
-        role.setModificationDate(role.getCreationDate());
-
         return roleRepository.save(role);
     }
 

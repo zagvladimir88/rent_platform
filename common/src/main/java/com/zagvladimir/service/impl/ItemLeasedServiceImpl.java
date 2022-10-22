@@ -8,8 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Service
@@ -29,15 +28,13 @@ public class ItemLeasedServiceImpl implements ItemLeasedService {
     @Override
     public ItemLeased create(ItemLeased itemLeased, Long renterId) {
         itemLeased.setRenter(userService.findById(renterId));
-        itemLeased.setCreationDate(new Timestamp(new Date().getTime()));
-        itemLeased.setModificationDate(itemLeased.getCreationDate());
         return itemLeasedRepository.save(itemLeased);
     }
 
     @Transactional
     @Override
     public ItemLeased findById(Long itemLeasedId) {
-        return itemLeasedRepository.findById(itemLeasedId).get();
+        return itemLeasedRepository.findById(itemLeasedId).orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional

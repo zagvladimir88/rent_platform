@@ -11,7 +11,7 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"users"})
 @Table(name = "roles")
 @ToString(exclude = "users")
-public class Role extends BaseEntity {
+public class Role extends AuditingEntity {
 
   @Column
   private String name;

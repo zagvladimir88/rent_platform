@@ -14,7 +14,7 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"country","items","users"})
 @Table(name = "locations")
 @ToString(exclude = {"items","users"})
-public class Location extends BaseEntity{
+public class Location extends AuditingEntity{
 
     @Column(name = "postal_code")
     private String postalCode;

@@ -12,8 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 
@@ -40,19 +39,16 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public Item create(Item item, Long subItemTypeId, Long ownerId, Long locationId) {
-        item.setSubItemType(subItemTypeRepository.findById(subItemTypeId).get());
+        item.setSubItemType(subItemTypeRepository.findById(subItemTypeId).orElseThrow(EntityNotFoundException::new));
         item.setOwner(userService.findById(ownerId));
-        item.setLocation(locationService.findById(locationId).get());
-        item.setCreationDate(new Timestamp(new Date().getTime()));
-        item.setModificationDate(item.getCreationDate());
-
+        item.setLocation(locationService.findById(locationId).orElseThrow(EntityNotFoundException::new));
         return itemRepository.save(item);
     }
 
     @Transactional
     @Override
     public Item findById(Long itemId) {
-        return itemRepository.findById(itemId).get();
+        return itemRepository.findById(itemId).orElseThrow(EntityNotFoundException::new);
     }
 
     @Transactional

@@ -13,7 +13,7 @@ import java.util.Set;
 @EqualsAndHashCode(exclude = {"locationSet"})
 @Table(name = "countries")
 @ToString(exclude = "locationSet")
-public class Country extends BaseEntity{
+public class Country extends AuditingEntity{
 
     @Column(name = "country_name")
     private String countryName;

@@ -39,8 +39,6 @@ public class CountryServiceImpl implements CountryService {
 
     @Override
     public Country create(Country country) {
-        country.setCreationDate(new Timestamp(new Date().getTime()));
-        country.setModificationDate(country.getCreationDate());
         return countryRepository.save(country);
     }
 

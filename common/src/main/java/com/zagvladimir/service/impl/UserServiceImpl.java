@@ -50,8 +50,6 @@ public class UserServiceImpl implements UserService {
     user.setLocation(locationService.findById(locationId).orElse(null));
 
     user.setRegistrationDate(new Timestamp(new Date().getTime()));
-    user.setCreationDate(user.getRegistrationDate());
-    user.setModificationDate(user.getRegistrationDate());
     user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
     user.setStatus(Status.NOT_ACTIVE);
     user.setActivationCode(UUIDGenerator.generatedUI());

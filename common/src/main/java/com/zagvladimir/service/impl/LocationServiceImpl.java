@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
@@ -39,9 +40,7 @@ public class LocationServiceImpl implements LocationService {
     @Override
     public Location create(Location location, Long countryId) {
 
-        location.setCountry(countryRepository.findById(countryId).get());
-        location.setCreationDate(new Timestamp(new Date().getTime()));
-        location.setModificationDate(location.getCreationDate());
+        location.setCountry(countryRepository.findById(countryId).orElseThrow(EntityNotFoundException::new));
 
         return locationRepository.save(location);
     }
@@ -53,7 +52,7 @@ public class LocationServiceImpl implements LocationService {
 
     @Override
     public Location update(Location location, Long countryId) {
-        location.setCountry(countryRepository.findById(countryId).get());
+        location.setCountry(countryRepository.findById(countryId).orElseThrow(EntityNotFoundException::new));
         location.setModificationDate(new Timestamp(new Date().getTime()));
         return locationRepository.save(location);
     }

@@ -20,7 +20,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Collections;
@@ -121,34 +127,6 @@ public class UserController {
                 userService.findByLogin(login).orElseThrow(EntityNotFoundException::new))),
         HttpStatus.OK);
   }
-
-//  @Operation(
-//      summary = "Create new User",
-//      responses = {
-//        @ApiResponse(
-//            responseCode = "201",
-//            description = "User create successfully",
-//            content =
-//                @Content(
-//                    mediaType = "application/json",
-//                    schema = @Schema(implementation = UserResponse.class))),
-//        @ApiResponse(
-//            responseCode = "409",
-//            description = "User not created, Conflict",
-//            content = @Content),
-//        @ApiResponse(
-//            responseCode = "500",
-//            description = "User not created, Illegal Arguments",
-//            content = @Content)
-//      })
-//  @PostMapping
-//  @Transactional
-//  public ResponseEntity<Object> createUser(@Valid @RequestBody UserCreateRequest createRequest) {
-//    User newUser = userMapper.userCreateRequestToUser(createRequest);
-//    userService.create(newUser, createRequest.getLocationId());
-//    return new ResponseEntity<>(
-//        userMapper.userToUserResponse(userService.findById(newUser.getId())), HttpStatus.CREATED);
-//  }
 
   @Operation(
       summary = "Delete user",

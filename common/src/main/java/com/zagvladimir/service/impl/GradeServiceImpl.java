@@ -8,8 +8,6 @@ import com.zagvladimir.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,7 +29,6 @@ public class GradeServiceImpl implements GradeService {
         grade.setUserTo(userService.findById(userToId));
         grade.setUserFrom(userService.findById(userFromId));
         grade.setItemLeased(itemLeasedService.findById(itemLeasedId));
-        grade.setCreationDate(new Timestamp(new Date().getTime()));
         return gradeRepository.save(grade);
     }
 

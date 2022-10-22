@@ -8,8 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,8 +30,6 @@ public class ItemCategoryServiceImpl implements ItemCategoryService {
 
     @Override
     public ItemCategory create(ItemCategory itemCategory) {
-        itemCategory.setCreationDate(new Timestamp(new Date().getTime()));
-        itemCategory.setModificationDate(itemCategory.getCreationDate());
         return itemCategoryRepository.save(itemCategory);
     }
 

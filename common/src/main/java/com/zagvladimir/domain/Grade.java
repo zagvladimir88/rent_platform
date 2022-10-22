@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @EqualsAndHashCode(exclude = {"userFrom","userTo","itemLeased"})
 @Table(name = "grades")
-public class Grade extends BaseEntity{
+public class Grade extends AuditingEntity{
 
     @ManyToOne
     @JoinColumn(name = "item_leased_id")

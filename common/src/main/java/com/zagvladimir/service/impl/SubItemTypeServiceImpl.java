@@ -10,8 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,8 +33,6 @@ public class SubItemTypeServiceImpl implements SubItemTypeService {
     @Override
     public SubItemType create(SubItemType subItemType, Long itemCategoryId) {
         subItemType.setItemCategory(itemCategoryRepository.findById(itemCategoryId).orElseThrow(EntityNotFoundException::new));
-        subItemType.setCreationDate(new Timestamp(new Date().getTime()));
-        subItemType.setModificationDate(subItemType.getCreationDate());
                 return repository.save(subItemType);
     }
 

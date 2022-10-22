@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Entity
 @EqualsAndHashCode(exclude = {"item"})
 @Table(name = "images")
-public class Image extends BaseEntity{
+public class Image extends AuditingEntity{
 
     private String link;
 

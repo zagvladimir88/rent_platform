@@ -64,29 +64,6 @@ class UserControllerTest extends BaseIntegrationTest {
         .andExpect(jsonPath("$.user.userLogin").value("strjke"));
   }
 
-//  @Test
-//  void createUser() throws Exception {
-//    Map<String, Object> body = new HashMap<>();
-//    body.put("status", "ACTIVE");
-//    body.put("username", "TEST1233");
-//    body.put("userLogin", "TEST1233");
-//    body.put("userPassword", "5555555");
-//    body.put("locationId", "1");
-//    body.put("locationDetails", "20 30 5");
-//    body.put("phoneNumber", "802333324523");
-//    body.put("mobileNumber", "+375256145343");
-//    body.put("email", "TEST123@gmail.com");
-//
-//    mockMvc
-//        .perform(
-//            MockMvcRequestBuilders.post("/api/users")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(objectMapper.writeValueAsString(body))
-//                .accept(MediaType.APPLICATION_JSON))
-//        .andDo(print())
-//        .andExpect(status().isCreated());
-//  }
-
   @Test
   void deleteUsersById() throws Exception {
     this.mockMvc
