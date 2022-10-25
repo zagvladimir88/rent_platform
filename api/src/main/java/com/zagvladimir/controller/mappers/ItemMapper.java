@@ -13,8 +13,8 @@ public interface ItemMapper {
     @Mapping(source = "location.id", target = "locationId")
     @Mapping(source = "owner.id", target = "ownerId")
     @Mapping(source = "subItemType.id", target = "subItemTypeId")
-    ItemResponse toItemResponse(Item item);
+    ItemResponse toResponse(Item item);
 
-    Item itemCreateRequestToItem(ItemCreateRequest request);
+    Item convertCreateRequest(ItemCreateRequest request);
 
 }

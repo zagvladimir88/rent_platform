@@ -1,13 +1,13 @@
-package com.zagvladimir.service.impl;
+package com.zagvladimir.service.location;
 
 import com.zagvladimir.domain.Location;
 import com.zagvladimir.repository.CountryRepository;
 import com.zagvladimir.repository.LocationRepository;
-import com.zagvladimir.service.LocationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.sql.Timestamp;
@@ -32,11 +32,7 @@ public class LocationServiceImpl implements LocationService {
         return locationRepository.findAll(pageable);
     }
 
-    @Override
-    public List<Location> findAllLocationsWithParams(int limit, int offset) {
-        return locationRepository.findAllLocationsWithParams(limit,offset);
-    }
-
+    @Transactional
     @Override
     public Location create(Location location, Long countryId) {
 
@@ -50,6 +46,7 @@ public class LocationServiceImpl implements LocationService {
         return locationRepository.findById(locationId);
     }
 
+    @Transactional
     @Override
     public Location update(Location location, Long countryId) {
         location.setCountry(countryRepository.findById(countryId).orElseThrow(EntityNotFoundException::new));
@@ -57,6 +54,7 @@ public class LocationServiceImpl implements LocationService {
         return locationRepository.save(location);
     }
 
+    @Transactional
     @Override
     public Long delete(Long id) {
         locationRepository.deleteById(id);

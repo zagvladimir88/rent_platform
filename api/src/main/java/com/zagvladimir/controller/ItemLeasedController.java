@@ -3,7 +3,7 @@ package com.zagvladimir.controller;
 import com.zagvladimir.controller.mappers.ItemLeasedMapper;
 import com.zagvladimir.controller.requests.items_leased.ItemLeasedCreateRequest;
 import com.zagvladimir.domain.ItemLeased;
-import com.zagvladimir.service.ItemLeasedService;
+import com.zagvladimir.service.item_leased.ItemLeasedService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -54,7 +54,7 @@ public class ItemLeasedController {
             })
     @PostMapping
     public ResponseEntity<Object> createItem(@Valid @RequestBody ItemLeasedCreateRequest createRequest) {
-        ItemLeased itemLeased = itemLeasedMapper.itemLeasedCreationRequestToItemLeased(createRequest);
+        ItemLeased itemLeased = itemLeasedMapper.convertCreateRequest(createRequest);
         Long renterId = createRequest.getRenterId();
         itemLeasedService.create(itemLeased, renterId);
 

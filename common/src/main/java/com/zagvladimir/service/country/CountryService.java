@@ -1,4 +1,4 @@
-package com.zagvladimir.service;
+package com.zagvladimir.service.country;
 
 import com.zagvladimir.domain.Country;
 import org.springframework.data.domain.Page;

@@ -1,4 +1,4 @@
-package com.zagvladimir.service;
+package com.zagvladimir.service.sub_item_type;
 
 import com.zagvladimir.domain.SubItemType;
 import org.springframework.data.domain.Page;

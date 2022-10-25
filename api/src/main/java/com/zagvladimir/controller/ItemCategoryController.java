@@ -4,7 +4,7 @@ import com.zagvladimir.controller.mappers.ItemCategoryMapper;
 import com.zagvladimir.controller.requests.item_category.ItemCategoryCreateRequest;
 import com.zagvladimir.controller.response.ItemCategoryResponse;
 import com.zagvladimir.domain.ItemCategory;
-import com.zagvladimir.service.ItemCategoryService;
+import com.zagvladimir.service.item_category.ItemCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -77,7 +77,7 @@ public class ItemCategoryController {
   @Transactional
   public ResponseEntity<Object> createItemCategory(@RequestBody ItemCategoryCreateRequest itemCategoryCreateRequest) {
 
-    ItemCategory newItemCategory = itemCategoryMapper.fromCreateRequest(itemCategoryCreateRequest);
+    ItemCategory newItemCategory = itemCategoryMapper.convertCreateRequest(itemCategoryCreateRequest);
     itemCategoryService.create(newItemCategory);
 
     return new ResponseEntity<>(itemCategoryService.findById(newItemCategory.getId()).map(itemCategoryMapper::toResponse), HttpStatus.CREATED);

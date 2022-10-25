@@ -1,4 +1,4 @@
-package com.zagvladimir.service;
+package com.zagvladimir.service.item;
 
 import com.zagvladimir.domain.Item;
 import org.springframework.data.domain.Page;
@@ -19,9 +19,4 @@ public interface ItemService {
 
     Long delete(Long itemId);
 
-    List<Item> findItemsByCategoryId(Long itemTypeId);
-
-    List<Item> findItemsByItemName(String name);
-
-    List<Item> search(int limit, int offset);
 }

@@ -12,6 +12,6 @@ public interface SubItemTypeMapper {
     @Mapping(source = "itemCategory.id", target = "itemCategoryId")
     SubItemTypeResponse toResponse(SubItemType subItemType);
 
-    SubItemType fromCreateRequest(SubItemTypeCreateRequest request);
+    SubItemType convertCreateRequest(SubItemTypeCreateRequest request);
 
 }

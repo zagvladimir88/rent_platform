@@ -5,7 +5,7 @@ import com.zagvladimir.controller.mappers.SubItemTypeMapper;
 import com.zagvladimir.controller.requests.sub_item_type.SubItemTypeCreateRequest;
 import com.zagvladimir.controller.response.SubItemTypeResponse;
 import com.zagvladimir.domain.SubItemType;
-import com.zagvladimir.service.SubItemTypeService;
+import com.zagvladimir.service.sub_item_type.SubItemTypeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -80,7 +80,7 @@ public class SubItemTypeController {
     @PostMapping
     @Transactional
     public ResponseEntity<Object> createSubItemType(@RequestBody SubItemTypeCreateRequest subItemTypeCreateRequest) {
-        SubItemType subItemType = subItemTypeMapper.fromCreateRequest(subItemTypeCreateRequest);
+        SubItemType subItemType = subItemTypeMapper.convertCreateRequest(subItemTypeCreateRequest);
         Long categoryId = subItemTypeCreateRequest.getCategoryId();
 
         subItemTypeService.create(subItemType,categoryId);

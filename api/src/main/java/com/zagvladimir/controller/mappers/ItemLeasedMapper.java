@@ -12,5 +12,5 @@ public interface ItemLeasedMapper {
     @Mapping(source = "renter.id", target = "renterId")
     ItemLeasedResponse toResponse(ItemLeased itemLeased);
 
-    ItemLeased itemLeasedCreationRequestToItemLeased(ItemLeasedCreateRequest request);
+    ItemLeased convertCreateRequest(ItemLeasedCreateRequest request);
 }

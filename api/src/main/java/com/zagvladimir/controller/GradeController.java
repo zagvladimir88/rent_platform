@@ -5,7 +5,7 @@ import com.zagvladimir.controller.mappers.GradeMapper;
 import com.zagvladimir.controller.requests.grade.GradeCreateRequest;
 import com.zagvladimir.controller.response.GradeResponse;
 import com.zagvladimir.domain.Grade;
-import com.zagvladimir.service.GradeService;
+import com.zagvladimir.service.grade.GradeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Tag(name = "Grade controller")
 @RestController
@@ -44,8 +45,9 @@ public class GradeController {
             })
     @GetMapping
     public ResponseEntity<Object> findAllGrades() {
+        List<GradeResponse> gradeResponseList = gradeService.findAll().stream().map(gradeMapper::toResponse).collect(Collectors.toList());
         return new ResponseEntity<>(
-                Collections.singletonMap("Grades", gradeService.findAll().stream().map(gradeMapper::toResponse)), HttpStatus.OK);
+                Collections.singletonMap("Grades", gradeResponseList), HttpStatus.OK);
     }
 
     @Operation(summary = "Gets grade by ID",
@@ -77,7 +79,7 @@ public class GradeController {
     @Transactional
     public ResponseEntity<Object> createGrade(@Valid @RequestBody GradeCreateRequest gradeCreateRequest) {
 
-        Grade newGrade = gradeMapper.gradeFromCreateRequest(gradeCreateRequest);
+        Grade newGrade = gradeMapper.convertCreateRequest(gradeCreateRequest);
         Long userToId = gradeCreateRequest.getUserToId();
         Long userFromId = gradeCreateRequest.getUserFromId();
         Long itemLeasedId = gradeCreateRequest.getItemLeasedId();

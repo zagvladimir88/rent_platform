@@ -16,8 +16,8 @@ public interface LocationMapper {
     @Mapping(source = "country.countryName", target = "countryName")
     LocationResponse toResponse(Location location);
 
-    Location fromCreateRequest(LocationCreateRequest request);
+    Location convertCreateRequest(LocationCreateRequest request);
 
-    Location fromUpdateRequest(LocationUpdateRequest request, @MappingTarget Location location);
+    Location convertUpdateRequest(LocationUpdateRequest request, @MappingTarget Location location);
 
 }

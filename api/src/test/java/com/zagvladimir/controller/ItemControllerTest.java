@@ -3,7 +3,7 @@ package com.zagvladimir.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zagvladimir.BaseIntegrationTest;
 import com.zagvladimir.annotations.IT;
-import com.zagvladimir.service.UserService;
+import com.zagvladimir.service.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,7 +14,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import javax.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;

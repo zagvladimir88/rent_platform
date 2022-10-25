@@ -4,7 +4,7 @@ import com.zagvladimir.controller.mappers.RoleMapper;
 import com.zagvladimir.controller.requests.role.RoleCreateRequest;
 import com.zagvladimir.controller.response.RoleResponse;
 import com.zagvladimir.repository.RoleRepository;
-import com.zagvladimir.service.RoleService;
+import com.zagvladimir.service.role.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -44,7 +44,7 @@ public class RoleController {
             })
     @GetMapping
     public ResponseEntity<Object> findAllRoles() {
-        return new ResponseEntity<>(Collections.singletonMap("result", roleService.findAll().stream().map(roleMapper::toRoleResponse)),
+        return new ResponseEntity<>(Collections.singletonMap("result", roleService.findAll().stream().map(roleMapper::toResponse)),
                 HttpStatus.OK);
     }
 
@@ -62,7 +62,7 @@ public class RoleController {
             })
     @GetMapping("users/{id}")
     public ResponseEntity<Object> findRolesByUserId(@PathVariable Long id){
-        return new ResponseEntity<>(Collections.singletonMap("result", roleService.findRolesByUserId(id).stream().map(roleMapper::toRoleResponse)),
+        return new ResponseEntity<>(Collections.singletonMap("result", roleService.findRolesByUserId(id).stream().map(roleMapper::toResponse)),
                 HttpStatus.OK);
     }
 
@@ -81,7 +81,7 @@ public class RoleController {
     @GetMapping("/{roleId}")
     public ResponseEntity<Map<String, Object>> findRoleById(@PathVariable Long roleId) {
 
-        return new ResponseEntity<>(Collections.singletonMap("role",roleMapper.toRoleResponse(roleService.findRoleById(roleId).orElseThrow(EntityNotFoundException::new))), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap("role",roleMapper.toResponse(roleService.findRoleById(roleId).orElseThrow(EntityNotFoundException::new))), HttpStatus.OK);
     }
 
 
@@ -95,9 +95,9 @@ public class RoleController {
             })
     @PostMapping
     public ResponseEntity<Object> createRole(@RequestBody RoleCreateRequest createRequest) {
-        roleService.create(roleMapper.fromCreateRequest(createRequest));
+        roleService.create(roleMapper.convertCreateRequest(createRequest));
 
-        return new ResponseEntity<>(roleRepository.findAll().stream().map(roleMapper::toRoleResponse), HttpStatus.CREATED);
+        return new ResponseEntity<>(roleRepository.findAll().stream().map(roleMapper::toResponse), HttpStatus.CREATED);
     }
 
 

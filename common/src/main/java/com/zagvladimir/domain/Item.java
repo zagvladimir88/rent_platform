@@ -18,6 +18,23 @@ public class Item extends AuditingEntity{
     @Column(name = "item_name")
     private String itemName;
 
+    @Column(name = "item_location")
+    private String itemLocation;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "price_per_hour")
+    private double pricePerHour;
+
+    @Column(name = "available")
+    private Boolean available;
+
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "item_type_id")
@@ -27,23 +44,6 @@ public class Item extends AuditingEntity{
     @JsonBackReference
     @JoinColumn(name = "location_id")
     private Location location;
-
-    @Column(name = "item_location")
-    private String itemLocation;
-
-    @Column(name = "description")
-    private String description;
-
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "owner_id")
-    private User owner;
-
-    @Column(name = "price_per_hour")
-    private double pricePerHour;
-
-    @Column(name = "available")
-    private Boolean available;
 
     @OneToMany(mappedBy = "item")
     @JsonManagedReference

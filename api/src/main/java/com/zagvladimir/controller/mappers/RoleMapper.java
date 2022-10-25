@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
 @Mapper
 public interface RoleMapper {
 
-    RoleResponse toRoleResponse(Role role);
+    RoleResponse toResponse(Role role);
 
-    Role fromCreateRequest(RoleCreateRequest request);
+    Role convertCreateRequest(RoleCreateRequest request);
 }

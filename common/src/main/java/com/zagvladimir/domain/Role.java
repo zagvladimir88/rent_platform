@@ -1,9 +1,15 @@
 package com.zagvladimir.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.Set;
 
 @Data
@@ -13,10 +19,8 @@ import java.util.Set;
 @ToString(exclude = "users")
 public class Role extends AuditingEntity {
 
-  @Column
-  private String name;
+  @Column private String name;
 
-  @JsonIgnore
   @ManyToMany
   @JoinTable(
       name = "user_roles",

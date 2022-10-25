@@ -5,7 +5,7 @@ import com.zagvladimir.controller.requests.users.UserUpdateRequest;
 import com.zagvladimir.controller.response.UserResponse;
 import com.zagvladimir.domain.User;
 import com.zagvladimir.exception.ErrorContainer;
-import com.zagvladimir.service.UserService;
+import com.zagvladimir.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -58,7 +58,7 @@ public class UserController {
   public ResponseEntity<Object> findAllUsers() {
     return new ResponseEntity<>(
         Collections.singletonMap(
-            "result", userService.findAll().stream().map(userMapper::userToUserResponse)),
+            "result", userService.findAll().stream().map(userMapper::toResponse)),
         HttpStatus.OK);
   }
 
@@ -76,7 +76,7 @@ public class UserController {
   @GetMapping("/search")
   public ResponseEntity<Object> findAllUsersWithParams(@ParameterObject Pageable pageable) {
     return new ResponseEntity<>(
-        userService.findAll(pageable).map(userMapper::userToUserResponse), HttpStatus.OK);
+        userService.findAll(pageable).map(userMapper::toResponse), HttpStatus.OK);
   }
 
   @Operation(
@@ -94,7 +94,7 @@ public class UserController {
   @GetMapping("/{id}")
   public ResponseEntity<Map<String, Object>> findUserById(@PathVariable Long id) {
     return new ResponseEntity<>(
-        Collections.singletonMap("user", userMapper.userToUserResponse(userService.findById(id))),
+        Collections.singletonMap("user", userMapper.toResponse(userService.findById(id))),
         HttpStatus.OK);
   }
 
@@ -123,7 +123,7 @@ public class UserController {
     return new ResponseEntity<>(
         Collections.singletonMap(
             "user",
-            userMapper.userToUserResponse(
+            userMapper.toResponse(
                 userService.findByLogin(login).orElseThrow(EntityNotFoundException::new))),
         HttpStatus.OK);
   }
@@ -160,9 +160,9 @@ public class UserController {
   public ResponseEntity<Object> updateUser(
       @PathVariable Long id, @RequestBody UserUpdateRequest userUpdateRequest) {
     User updatedUser =
-        userMapper.updateUserFromUpdateRequest(userUpdateRequest, userService.findById(id));
+        userMapper.convertUpdateRequest(userUpdateRequest, userService.findById(id));
     userService.update(updatedUser);
     return new ResponseEntity<>(
-        userMapper.userToUserResponse(userService.findById(updatedUser.getId())), HttpStatus.OK);
+        userMapper.toResponse(userService.findById(updatedUser.getId())), HttpStatus.OK);
   }
 }

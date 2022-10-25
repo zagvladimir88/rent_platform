@@ -1,12 +1,12 @@
-package com.zagvladimir.service.impl;
+package com.zagvladimir.service.grade;
 
 import com.zagvladimir.domain.Grade;
 import com.zagvladimir.repository.GradeRepository;
-import com.zagvladimir.service.GradeService;
-import com.zagvladimir.service.ItemLeasedService;
-import com.zagvladimir.service.UserService;
+import com.zagvladimir.service.item_leased.ItemLeasedService;
+import com.zagvladimir.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +24,7 @@ public class GradeServiceImpl implements GradeService {
         return gradeRepository.findAll();
     }
 
+    @Transactional
     @Override
     public Grade create(Grade grade, Long userToId, Long userFromId, Long itemLeasedId) {
         grade.setUserTo(userService.findById(userToId));
@@ -37,11 +38,13 @@ public class GradeServiceImpl implements GradeService {
         return gradeRepository.findById(gradeId);
     }
 
+    @Transactional
     @Override
     public Grade update(Grade object) {
         return null;
     }
 
+    @Transactional
     @Override
     public Long delete(Long gradeId) {
         gradeRepository.deleteById(gradeId);

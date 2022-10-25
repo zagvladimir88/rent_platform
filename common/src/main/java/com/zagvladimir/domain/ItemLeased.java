@@ -14,11 +14,6 @@ public class ItemLeased extends AuditingEntity {
   @Column(name = "item_id")
   private long itemId;
 
-  @JoinColumn(name = "renter_id")
-  @ManyToOne
-  @JsonBackReference
-  private User renter;
-
   @Column(name = "time_from")
   private Timestamp timeFrom;
 
@@ -40,4 +35,9 @@ public class ItemLeased extends AuditingEntity {
 
   @Column(name = "renter_grade_description")
   private String renterGradeDescription;
+
+  @JoinColumn(name = "renter_id")
+  @ManyToOne
+  @JsonBackReference
+  private User renter;
 }

@@ -1,4 +1,4 @@
-package com.zagvladimir.service;
+package com.zagvladimir.service.role;
 
 import com.zagvladimir.domain.Role;
 

@@ -1,4 +1,4 @@
-package com.zagvladimir.service;
+package com.zagvladimir.service.grade;
 
 import com.zagvladimir.domain.Grade;
 import org.springframework.stereotype.Service;

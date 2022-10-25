@@ -4,7 +4,7 @@ import com.zagvladimir.controller.mappers.UserMapper;
 import com.zagvladimir.controller.requests.users.UserCreateRequest;
 import com.zagvladimir.controller.response.UserResponse;
 import com.zagvladimir.domain.User;
-import com.zagvladimir.service.UserService;
+import com.zagvladimir.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -63,10 +63,10 @@ public class RegistrationController {
     @PostMapping
     @Transactional
     public ResponseEntity<Object> addUser(@Valid @RequestBody UserCreateRequest createRequest) throws MessagingException {
-        User newUser = userMapper.userCreateRequestToUser(createRequest);
+        User newUser = userMapper.convertCreateRequest(createRequest);
         userService.create(newUser, createRequest.getLocationId());
         return new ResponseEntity<>(
-                userMapper.userToUserResponse(userService.findById(newUser.getId())), HttpStatus.CREATED);
+                userMapper.toResponse(userService.findById(newUser.getId())), HttpStatus.CREATED);
     }
 
     @GetMapping("/activate/{code}")

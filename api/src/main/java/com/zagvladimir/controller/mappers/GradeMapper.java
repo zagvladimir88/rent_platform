@@ -14,5 +14,5 @@ public interface GradeMapper {
     @Mapping(source = "userTo.id", target = "userToId")
     GradeResponse toResponse(Grade grade);
 
-    Grade gradeFromCreateRequest(GradeCreateRequest request);
+    Grade convertCreateRequest(GradeCreateRequest request);
 }

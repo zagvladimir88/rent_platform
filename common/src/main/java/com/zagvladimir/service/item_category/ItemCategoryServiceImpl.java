@@ -1,12 +1,12 @@
-package com.zagvladimir.service.impl;
+package com.zagvladimir.service.item_category;
 
 import com.zagvladimir.domain.ItemCategory;
 import com.zagvladimir.repository.ItemCategoryRepository;
-import com.zagvladimir.service.ItemCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +28,7 @@ public class ItemCategoryServiceImpl implements ItemCategoryService {
         return itemCategoryRepository.findAll();
     }
 
+    @Transactional
     @Override
     public ItemCategory create(ItemCategory itemCategory) {
         return itemCategoryRepository.save(itemCategory);
@@ -38,11 +39,13 @@ public class ItemCategoryServiceImpl implements ItemCategoryService {
         return itemCategoryRepository.findById(itemCategoryId);
     }
 
+    @Transactional
     @Override
     public ItemCategory update(ItemCategory itemCategory) {
         return itemCategoryRepository.save(itemCategory);
     }
 
+    @Transactional
     @Override
     public Long delete(Long itemCategoryId) {
         itemCategoryRepository.deleteById(itemCategoryId);

@@ -5,7 +5,7 @@ import com.zagvladimir.controller.requests.location.LocationCreateRequest;
 import com.zagvladimir.controller.requests.location.LocationUpdateRequest;
 import com.zagvladimir.controller.response.LocationResponse;
 import com.zagvladimir.domain.Location;
-import com.zagvladimir.service.LocationService;
+import com.zagvladimir.service.location.LocationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -81,7 +81,7 @@ public class LocationController {
     @Transactional
     public ResponseEntity<Object> createLocation(@RequestBody LocationCreateRequest locationCreateRequest) {
 
-        Location newLocation = locationMapper.fromCreateRequest(locationCreateRequest);
+        Location newLocation = locationMapper.convertCreateRequest(locationCreateRequest);
         Long countryId = locationCreateRequest.getCountryId();
         locationService.create(newLocation,countryId);
 
@@ -112,7 +112,7 @@ public class LocationController {
     public ResponseEntity<Object> updateUser(
             @PathVariable Long id, @RequestBody LocationUpdateRequest locationUpdateRequest) {
 
-        Location locationToUpdate = locationMapper.fromUpdateRequest(
+        Location locationToUpdate = locationMapper.convertUpdateRequest(
                 locationUpdateRequest,
                 locationService.findById(id).orElseThrow(EntityNotFoundException::new));
 

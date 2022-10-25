@@ -1,4 +1,4 @@
-package com.zagvladimir.service;
+package com.zagvladimir.service.user;
 
 import com.zagvladimir.domain.User;
 import org.springframework.data.domain.Page;
@@ -21,8 +21,6 @@ public interface UserService {
     User update(User userToUpdate);
 
     Long delete(Long id);
-
-    Page<User> search(Pageable page);
 
     Optional<User> findByLogin(String login);
 

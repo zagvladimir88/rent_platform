@@ -1,13 +1,12 @@
-package com.zagvladimir.service.impl;
+package com.zagvladimir.service.user;
 
 import com.zagvladimir.domain.Role;
 import com.zagvladimir.domain.User;
 import com.zagvladimir.domain.enums.Status;
 import com.zagvladimir.repository.RoleRepository;
 import com.zagvladimir.repository.UserRepository;
-import com.zagvladimir.service.LocationService;
+import com.zagvladimir.service.location.LocationService;
 import com.zagvladimir.service.MailSenderService;
-import com.zagvladimir.service.UserService;
 import com.zagvladimir.util.UUIDGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +40,6 @@ public class UserServiceImpl implements UserService {
   private final BCryptPasswordEncoder passwordEncoder;
   private final MailSenderService mailSenderService;
 
-  @Transactional
   @Override
   public List<User> findAll() {
     return userRepository.findAll();
@@ -70,7 +68,6 @@ public class UserServiceImpl implements UserService {
     return userRepository.findById(user.getId()).orElseThrow(IllegalArgumentException::new);
   }
 
-  @Transactional
   @Override
   public User findById(Long userId) {
     return userRepository.findById(userId).orElseThrow(EntityExistsException::new);
@@ -89,12 +86,6 @@ public class UserServiceImpl implements UserService {
   public Long delete(Long id) {
     userRepository.deleteById(id);
     return id;
-  }
-
-  @Transactional
-  @Override
-  public Page<User> search(Pageable page) {
-    return userRepository.findAll(page);
   }
 
   @Override

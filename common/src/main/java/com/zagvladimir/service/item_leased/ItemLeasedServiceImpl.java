@@ -1,9 +1,8 @@
-package com.zagvladimir.service.impl;
+package com.zagvladimir.service.item_leased;
 
 import com.zagvladimir.domain.ItemLeased;
 import com.zagvladimir.repository.ItemLeasedRepository;
-import com.zagvladimir.service.ItemLeasedService;
-import com.zagvladimir.service.UserService;
+import com.zagvladimir.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +17,6 @@ public class ItemLeasedServiceImpl implements ItemLeasedService {
     private final ItemLeasedRepository itemLeasedRepository;
     private final UserService userService;
 
-    @Transactional
     @Override
     public List<ItemLeased> findAll() {
         return itemLeasedRepository.findAll();
@@ -31,7 +29,6 @@ public class ItemLeasedServiceImpl implements ItemLeasedService {
         return itemLeasedRepository.save(itemLeased);
     }
 
-    @Transactional
     @Override
     public ItemLeased findById(Long itemLeasedId) {
         return itemLeasedRepository.findById(itemLeasedId).orElseThrow(EntityNotFoundException::new);

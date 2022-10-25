@@ -5,7 +5,7 @@ import com.zagvladimir.controller.requests.country.CountryCreateRequest;
 import com.zagvladimir.controller.requests.country.CountryUpdateRequest;
 import com.zagvladimir.controller.response.CountryResponse;
 import com.zagvladimir.domain.Country;
-import com.zagvladimir.service.CountryService;
+import com.zagvladimir.service.country.CountryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -79,7 +79,7 @@ public class CountryController {
   @PostMapping
   @Transactional
   public ResponseEntity<Object> createCountry(@RequestBody CountryCreateRequest countryCreateRequest) {
-    Country newCountry = countryMapper.countryFromCreateRequest(countryCreateRequest);
+    Country newCountry = countryMapper.toResponse(countryCreateRequest);
     countryService.create(newCountry);
     return new ResponseEntity<>(countryService.findAll().stream().map(countryMapper::toResponse), HttpStatus.CREATED);
   }

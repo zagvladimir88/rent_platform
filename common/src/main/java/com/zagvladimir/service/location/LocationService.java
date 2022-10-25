@@ -1,4 +1,4 @@
-package com.zagvladimir.service;
+package com.zagvladimir.service.location;
 
 import com.zagvladimir.domain.Location;
 import org.springframework.data.domain.Page;
@@ -13,8 +13,6 @@ public interface LocationService {
     List<Location> findAll();
 
     Page<Location> findAll(Pageable pageable);
-
-    List<Location> findAllLocationsWithParams(int limit, int offset);
 
     Location create(Location location, Long countryId);
 

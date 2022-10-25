@@ -1,4 +1,4 @@
-package com.zagvladimir.service;
+package com.zagvladimir.service.item_category;
 
 import com.zagvladimir.domain.ItemCategory;
 import org.springframework.data.domain.Page;

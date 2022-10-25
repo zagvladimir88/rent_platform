@@ -6,7 +6,7 @@ import com.zagvladimir.controller.requests.items.ItemCreateRequest;
 import com.zagvladimir.controller.response.ItemResponse;
 import com.zagvladimir.domain.Item;
 import com.zagvladimir.exception.ErrorContainer;
-import com.zagvladimir.service.ItemService;
+import com.zagvladimir.service.item.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -50,7 +50,7 @@ public class ItemController {
             })
     @GetMapping
     public ResponseEntity<Object> findAllItems() {
-        return new ResponseEntity<>(itemService.findAll().stream().map(itemMapper::toItemResponse),
+        return new ResponseEntity<>(itemService.findAll().stream().map(itemMapper::toResponse),
                 HttpStatus.OK);
     }
 
@@ -67,7 +67,7 @@ public class ItemController {
             })
     @GetMapping("/search")
     public ResponseEntity<Object> findAllItemsWithParams(@ParameterObject Pageable pageable) {
-        return new ResponseEntity<>(itemService.findAll(pageable).map(itemMapper::toItemResponse), HttpStatus.OK);
+        return new ResponseEntity<>(itemService.findAll(pageable).map(itemMapper::toResponse), HttpStatus.OK);
     }
 
     @Operation(summary = "Gets item by ID")
@@ -92,7 +92,7 @@ public class ItemController {
             })
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, Object>> findByItemId(@PathVariable Long id) {
-    ItemResponse itemResponse = itemMapper.toItemResponse(itemService.findById(id));
+    ItemResponse itemResponse = itemMapper.toResponse(itemService.findById(id));
         return new ResponseEntity<>(Collections.singletonMap("item",itemResponse), HttpStatus.OK);
     }
 
@@ -108,14 +108,14 @@ public class ItemController {
     @Transactional
     public ResponseEntity<Object> createItem(@Valid @RequestBody ItemCreateRequest createRequest) {
 
-        Item item = itemMapper.itemCreateRequestToItem(createRequest);
+        Item item = itemMapper.convertCreateRequest(createRequest);
         Long subItemTypeId = createRequest.getItemTypeId();
         Long ownerId = createRequest.getOwnerId();
         Long locationId = createRequest.getLocationId();
 
         itemService.create(item,subItemTypeId,ownerId,locationId);
 
-        return new ResponseEntity<>(itemMapper.toItemResponse(itemService.findById(item.getId())), HttpStatus.CREATED);
+        return new ResponseEntity<>(itemMapper.toResponse(itemService.findById(item.getId())), HttpStatus.CREATED);
     }
 
     @Operation(

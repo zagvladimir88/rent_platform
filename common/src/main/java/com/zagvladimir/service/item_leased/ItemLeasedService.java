@@ -1,4 +1,4 @@
-package com.zagvladimir.service;
+package com.zagvladimir.service.item_leased;
 
 import com.zagvladimir.domain.ItemLeased;
 

@@ -12,6 +12,6 @@ public interface CountryMapper {
 
     CountryResponse toResponse(Country country);
 
-    Country countryFromCreateRequest(CountryCreateRequest request);
+    Country toResponse(CountryCreateRequest request);
     Country updateFromRequest(CountryUpdateRequest request, @MappingTarget Country country);
 }

@@ -10,5 +10,5 @@ public interface ItemCategoryMapper {
 
     ItemCategoryResponse toResponse(ItemCategory itemCategory);
 
-    ItemCategory fromCreateRequest(ItemCategoryCreateRequest request);
+    ItemCategory convertCreateRequest(ItemCategoryCreateRequest request);
 }

@@ -11,6 +11,12 @@ import javax.persistence.*;
 @Table(name = "grades")
 public class Grade extends AuditingEntity{
 
+    @Column(name = "grade")
+    private double grade;
+
+    @Column(name = "description")
+    private String description;
+
     @ManyToOne
     @JoinColumn(name = "item_leased_id")
     @JsonBackReference
@@ -25,11 +31,5 @@ public class Grade extends AuditingEntity{
     @JoinColumn(name = "user_to_id")
     @JsonBackReference
     private User userTo;
-
-    @Column(name = "grade")
-    private double grade;
-
-    @Column(name = "description")
-    private String description;
 
 }
