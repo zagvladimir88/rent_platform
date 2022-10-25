@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.Collections;
@@ -26,7 +27,8 @@ public class ApplicationExceptionHandler {
   @ExceptionHandler({
     NoSuchEntityException.class,
     EmptyResultDataAccessException.class,
-    NoSuchElementException.class
+    NoSuchElementException.class,
+    EntityNotFoundException.class
   })
   public ResponseEntity<Object> handlerEntityNotFoundException(Exception e) {
 
@@ -34,7 +36,7 @@ public class ApplicationExceptionHandler {
         ErrorContainer.builder()
             .exceptionId(UUIDGenerator.generatedUI())
             .errorCode(2)
-            .errorMessage(e.getMessage())
+            .errorMessage("No value present")
             .e(e.getClass().toString())
             .build();
 

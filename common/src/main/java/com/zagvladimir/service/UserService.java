@@ -4,7 +4,7 @@ import com.zagvladimir.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-
+import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +14,7 @@ public interface UserService {
 
     Page<User> findAll(Pageable page);
 
-    User create(User user, Long locationID);
+    User create(User user, Long locationID) throws MessagingException;
 
     User findById(Long userId);
 

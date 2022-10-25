@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -62,16 +63,15 @@ class ItemControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  void givenNoSuchElementException_whenGetItemsWithNonExistId() throws Exception {
+  void givenEntityNotFoundException_whenGetItemsWithNonExistId() throws Exception {
     int itemId = 145665565;
     this.mockMvc
         .perform(get("/api/items/{id}", itemId))
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(
-            result -> assertTrue(result.getResolvedException() instanceof NoSuchElementException))
-        .andExpect(
-            result -> assertEquals("No value present", result.getResolvedException().getMessage()));
+            result -> assertTrue(result.getResolvedException() instanceof EntityNotFoundException))
+        .andExpect(jsonPath("$.error.errorMessage").value("No value present"));
   }
 
   @Test

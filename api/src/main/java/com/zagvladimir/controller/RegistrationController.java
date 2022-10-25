@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Map;
@@ -61,7 +62,7 @@ public class RegistrationController {
             })
     @PostMapping
     @Transactional
-    public ResponseEntity<Object> addUser(@Valid @RequestBody UserCreateRequest createRequest) {
+    public ResponseEntity<Object> addUser(@Valid @RequestBody UserCreateRequest createRequest) throws MessagingException {
         User newUser = userMapper.userCreateRequestToUser(createRequest);
         userService.create(newUser, createRequest.getLocationId());
         return new ResponseEntity<>(
@@ -80,5 +81,4 @@ public class RegistrationController {
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
-
 }

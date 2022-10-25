@@ -1,6 +1,8 @@
-spring.mail.host=smtp.yandex.ru
-spring.mail.username=mail@yandex.ru
-spring.mail.password=12345678
-spring.mail.port=465
-spring.mail.protocol=smtps
-mail.debug=true
+# Gmail SMTP
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username= your mail addres
+spring.mail.password= your password
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+spring.mail.templates.path=mail-templates

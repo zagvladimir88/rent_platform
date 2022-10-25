@@ -54,24 +54,14 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                /*For swagger access only*/
-//                .antMatchers("/v3/api-docs/", "/configuration/ui/**", "/swagger-resources/**", "/configuration/security/**","/swagger-ui.html" ,"/swagger-ui/**", "/webjars/**").permitAll()
-//                .antMatchers("/actuator/**").permitAll()
-//                .antMatchers(HttpMethod.GET, "/swagger-ui/index.html#").permitAll()
-//                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/guest/**").permitAll()
-                .antMatchers("/login/").permitAll()
                 .antMatchers("/registration/**").permitAll()
-                .antMatchers("/authentication/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers("/users/**").permitAll()
                 .antMatchers("/api/**").permitAll()
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .antMatchers("/admin/**").hasAnyRole("ADMIN", "MODERATOR")
                 .anyRequest()
                 .authenticated();
 
-//         Custom JWT based authentication
         httpSecurity
                 .addFilterBefore(authenticationTokenFilterBean(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
     }
@@ -82,13 +72,4 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         authenticationTokenFilter.setAuthenticationManager(authenticationManager);
         return authenticationTokenFilter;
     }
-
-
-
-    //For swagger access only
-//    @Override
-//    public void configure(WebSecurity web) throws Exception {
-//        web.ignoring()
-//                .antMatchers("/v2/api-docs", "/configuration/ui/**", "/swagger-resources/**", "/configuration/security/**", "/swagger-ui.html", "/webjars/**");
-//    }
 }

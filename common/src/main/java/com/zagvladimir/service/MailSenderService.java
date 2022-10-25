@@ -2,26 +2,45 @@ package com.zagvladimir.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.util.Map;
 
 @Service
+@PropertySource("classpath:mail.properties")
 public class MailSenderService {
 
     @Value("${spring.mail.username}")
-    private String username;
+    private String noreplyAddress;
 
     @Autowired
-    private JavaMailSender mailSender;
+    private JavaMailSender emailSender;
 
-    public void send(String emailTo, String subject, String message){
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
+    @Autowired
+    private SpringTemplateEngine thymeleafTemplateEngine;
 
-        mailMessage.setFrom(username);
-        mailMessage.setTo(emailTo);
-        mailMessage.setSubject(subject);
-        mailMessage.setText(message);
-        mailSender.send(mailMessage);
+    public void sendMessageUsingThymeleafTemplate(
+            String to, String subject, Map<String, Object> templateModel)
+            throws MessagingException {
+
+        Context thymeleafContext = new Context();
+        thymeleafContext.setVariables(templateModel);
+        String htmlBody = thymeleafTemplateEngine.process("email-template.html", thymeleafContext);
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setFrom(noreplyAddress);
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(htmlBody, true);
+        emailSender.send(message);
     }
+
+
 }
