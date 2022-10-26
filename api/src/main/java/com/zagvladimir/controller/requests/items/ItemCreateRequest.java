@@ -15,6 +15,9 @@ public class ItemCreateRequest {
     @NotBlank
     private String itemName;
 
+    @Schema(defaultValue = "Makita", type = "string" , description = "Brand name")
+    private String brand;
+
     @Schema(defaultValue = "5", type = "Long" , description = "Item type id")
     private long subCategoryId;
 

@@ -132,6 +132,7 @@ create table items
     item_name         varchar(255) not null,
     sub_category_id      bigint,
     description       varchar,
+    brand           varchar(50),
     price_per_day    numeric(8, 2),
     available         BOOLEAN      default true,
     creation_date     timestamp(6) default CURRENT_TIMESTAMP(6),

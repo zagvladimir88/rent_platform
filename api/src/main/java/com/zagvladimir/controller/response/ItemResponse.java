@@ -14,6 +14,8 @@ public class ItemResponse {
 
     private String itemName;
 
+    private String brand;
+
     private Long subCategoryId;
 
     private String description;

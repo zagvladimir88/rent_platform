@@ -29,6 +29,9 @@ public class Item extends AuditingEntity{
     @Column(name = "available")
     private Boolean available;
 
+    @Column(name = "brand")
+    private String brand;
+
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "sub_category_id")

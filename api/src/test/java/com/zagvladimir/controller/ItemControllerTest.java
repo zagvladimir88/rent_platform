@@ -91,6 +91,7 @@ class ItemControllerTest extends BaseIntegrationTest {
     Map<String, Object> body = new HashMap<>();
     body.put("itemName", "Makita hr2470ft-TEST");
     body.put("subCategoryId", 5);
+    body.put("brand", "Makita");
     body.put("description", "Rotary Hammer makita hr2470ft");
     body.put("pricePerDay", 6.0);
     body.put("available", true);
@@ -104,7 +105,8 @@ class ItemControllerTest extends BaseIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.itemName", is("Makita hr2470ft-TEST")));
+        .andExpect(jsonPath("$.itemName", is("Makita hr2470ft-TEST")))
+        .andExpect(jsonPath("$.brand", is("Makita")));
   }
 
   @Test
