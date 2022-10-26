@@ -6,23 +6,22 @@ import org.springframework.data.domain.Pageable;
 
 import javax.mail.MessagingException;
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
 
-    List<User> findAll();
+  List<User> findAll();
 
-    Page<User> findAll(Pageable page);
+  Page<User> findAll(Pageable page);
 
-    User create(User user, Long locationID) throws MessagingException;
+  User create(User user, Long locationID) throws MessagingException;
 
-    User findById(Long userId);
+  User findById(Long userId);
 
-    User update(User userToUpdate);
+  User update(User userToUpdate);
 
-    Long delete(Long id);
+  Long delete(Long id);
 
-    Optional<User> findByLogin(String login);
+  User findByLogin(String login);
 
-    boolean activateUser(String code);
+  boolean activateUser(String code);
 }

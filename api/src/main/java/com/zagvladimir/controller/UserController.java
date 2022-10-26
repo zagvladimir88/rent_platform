@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Collections;
 import java.util.Map;
 
@@ -43,26 +43,6 @@ public class UserController {
   private final UserMapper userMapper;
 
   @Operation(
-      summary = "Gets all users",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Found the users",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)))
-            })
-      })
-  @GetMapping
-  public ResponseEntity<Object> findAllUsers() {
-    return new ResponseEntity<>(
-        Collections.singletonMap(
-            "result", userService.findAll().stream().map(userMapper::toResponse)),
-        HttpStatus.OK);
-  }
-
-  @Operation(
       summary = "Gets all users with pagination",
       responses = {
         @ApiResponse(
@@ -73,10 +53,10 @@ public class UserController {
                     mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = UserResponse.class))))
       })
-  @GetMapping("/search")
-  public ResponseEntity<Object> findAllUsersWithParams(@ParameterObject Pageable pageable) {
-    return new ResponseEntity<>(
-        userService.findAll(pageable).map(userMapper::toResponse), HttpStatus.OK);
+  @GetMapping
+  public ResponseEntity<Object> findAllUsers(@ParameterObject Pageable pageable) {
+    Page<UserResponse> users = userService.findAll(pageable).map(userMapper::toResponse);
+    return new ResponseEntity<>(users, HttpStatus.OK);
   }
 
   @Operation(
@@ -94,8 +74,7 @@ public class UserController {
   @GetMapping("/{id}")
   public ResponseEntity<Map<String, Object>> findUserById(@PathVariable Long id) {
     UserResponse user = userMapper.toResponse(userService.findById(id));
-      return new ResponseEntity<>(Collections.singletonMap("user",user),
-        HttpStatus.OK);
+    return new ResponseEntity<>(Collections.singletonMap("user", user), HttpStatus.OK);
   }
 
   @Operation(summary = "Gets user by Login")
@@ -120,12 +99,8 @@ public class UserController {
       })
   @GetMapping("/login/{login}")
   public ResponseEntity<Map<String, Object>> findByLogin(@PathVariable String login) {
-    return new ResponseEntity<>(
-        Collections.singletonMap(
-            "user",
-            userMapper.toResponse(
-                userService.findByLogin(login).orElseThrow(EntityNotFoundException::new))),
-        HttpStatus.OK);
+    UserResponse userResponse = userMapper.toResponse(userService.findByLogin(login));
+    return new ResponseEntity<>(Collections.singletonMap("user", userResponse), HttpStatus.OK);
   }
 
   @Operation(
@@ -137,7 +112,9 @@ public class UserController {
       })
   @DeleteMapping("/{id}")
   public ResponseEntity<Object> deleteUsersById(@PathVariable Long id) {
-    return new ResponseEntity<>(userService.delete(id), HttpStatus.OK);
+    userService.delete(id);
+    return new ResponseEntity<>(
+        Collections.singletonMap("The user was deleted, id:", id), HttpStatus.OK);
   }
 
   @Operation(
@@ -159,10 +136,8 @@ public class UserController {
   @Transactional
   public ResponseEntity<Object> updateUser(
       @PathVariable Long id, @RequestBody UserUpdateRequest userUpdateRequest) {
-    User updatedUser =
-        userMapper.convertUpdateRequest(userUpdateRequest, userService.findById(id));
-    userService.update(updatedUser);
-    return new ResponseEntity<>(
-        userMapper.toResponse(userService.findById(updatedUser.getId())), HttpStatus.OK);
+    User updatedUser = userMapper.convertUpdateRequest(userUpdateRequest, userService.findById(id));
+    UserResponse userResponse = userMapper.toResponse(userService.update(updatedUser));
+    return new ResponseEntity<>(Collections.singletonMap("user", userResponse), HttpStatus.OK);
   }
 }

@@ -36,7 +36,7 @@ public class ApplicationExceptionHandler {
         ErrorContainer.builder()
             .exceptionId(UUIDGenerator.generatedUI())
             .errorCode(2)
-            .errorMessage("No value present")
+            .errorMessage(e.getMessage())
             .e(e.getClass().toString())
             .build();
 

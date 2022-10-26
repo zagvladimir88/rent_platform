@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
@@ -78,7 +79,8 @@ public class UserServiceImpl implements UserService {
   public User update(User userToUpdate) {
     userToUpdate.setModificationDate(new Timestamp(new Date().getTime()));
     userToUpdate.setUserPassword(passwordEncoder.encode(userToUpdate.getUserPassword()));
-    return userRepository.save(userToUpdate);
+    userRepository.save(userToUpdate);
+    return userRepository.findById(userToUpdate.getId()).orElseThrow(EntityNotFoundException::new);
   }
 
   @Transactional
@@ -89,8 +91,13 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Optional<User> findByLogin(String login) {
-    return userRepository.findByUserLogin(login);
+  public User findByLogin(String login) {
+    return userRepository
+        .findByUserLogin(login)
+        .orElseThrow(
+            () ->
+                new EntityNotFoundException(
+                    String.format("The user with login: %s not found", login)));
   }
 
   @Override

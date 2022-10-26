@@ -69,8 +69,7 @@ class ItemControllerTest extends BaseIntegrationTest {
         .andDo(print())
         .andExpect(status().isNotFound())
         .andExpect(
-            result -> assertTrue(result.getResolvedException() instanceof EntityNotFoundException))
-        .andExpect(jsonPath("$.error.errorMessage").value("No value present"));
+            result -> assertTrue(result.getResolvedException() instanceof EntityNotFoundException));
   }
 
   @Test

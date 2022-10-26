@@ -1,6 +1,5 @@
 package com.zagvladimir.controller;
 
-
 import com.zagvladimir.controller.mappers.SubItemTypeMapper;
 import com.zagvladimir.controller.requests.sub_category.SubCategoryCreateRequest;
 import com.zagvladimir.controller.response.SubCategoryResponse;
@@ -14,98 +13,123 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.EntityNotFoundException;
-import java.util.*;
+import java.util.Collections;
 
-@Tag(name = "Sub item types controller")
+@Tag(name = "Sub categories controller")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/sub-item-types")
+@RequestMapping("/api/sub-categories")
 public class SubCategoryController {
 
-    private final SubCategoryService subCategoryService;
-    private final SubItemTypeMapper subItemTypeMapper;
+  private final SubCategoryService subCategoryService;
+  private final SubItemTypeMapper subItemTypeMapper;
 
-    @Operation(summary = "Gets all SubItemType")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Found the SubItemType",
-                            content = {
-                                    @Content(
-                                            mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = SubCategoryResponse.class)))
-                            })
+  @Operation(summary = "Gets all Sub Category")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Found the sub category",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  array =
+                      @ArraySchema(schema = @Schema(implementation = SubCategoryResponse.class)))
             })
-    @GetMapping
-    public ResponseEntity<Object> findAllISubItemTypes() {
-        return new ResponseEntity<>(Collections.singletonMap("result", subCategoryService.findAll().stream().map(subItemTypeMapper::toResponse)),
-                HttpStatus.OK);
-    }
+      })
+  @GetMapping
+  public ResponseEntity<Object> findAllISubCategories(@ParameterObject Pageable pageable) {
 
-    @Operation(summary = "Gets SubItemType by ID")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Found the SubItemType by id",
-                            content = {
-                                    @Content(
-                                            mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = SubCategoryResponse.class)))
-                            })
+    Page<SubCategoryResponse> subCategories =
+        subCategoryService.findAll(pageable).map(subItemTypeMapper::toResponse);
+    return new ResponseEntity<>(
+        Collections.singletonMap("SubCategories", subCategories), HttpStatus.OK);
+  }
+
+  @Operation(summary = "Gets sub category by ID")
+  @ApiResponses(
+      value = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Found the sub category by id",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  array =
+                      @ArraySchema(schema = @Schema(implementation = SubCategoryResponse.class)))
             })
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> findSubItemTypeById(@PathVariable String id) {
-        long itemTypeCategoryId = Long.parseLong(id);
-        return new ResponseEntity<>(subCategoryService.findById(itemTypeCategoryId).map(subItemTypeMapper::toResponse)
-                .orElseThrow(EntityNotFoundException::new)
-                , HttpStatus.OK);
-    }
+      })
+  @GetMapping("/{id}")
+  public ResponseEntity<Object> findSubCategoryById(@PathVariable String id) {
+    long itemTypeCategoryId = Long.parseLong(id);
+    SubCategoryResponse subCategoryResponse =
+        subItemTypeMapper.toResponse(subCategoryService.findById(itemTypeCategoryId));
+    return new ResponseEntity<>(
+        Collections.singletonMap("subCategory", subCategoryResponse), HttpStatus.OK);
+  }
 
-    @Operation(
-            summary = "Create new SubItemType",
-            responses = {
-                    @ApiResponse( responseCode = "201", description = "SubItemType create successfully",content =
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = SubCategoryResponse.class))),
-                    @ApiResponse( responseCode = "409", description = "SubItemType not created, Conflict", content = @Content),
-                    @ApiResponse( responseCode = "500", description = "SubItemType not created, Illegal Arguments", content = @Content)
-            })
-    @PostMapping
-    @Transactional
-    public ResponseEntity<Object> createSubItemType(@RequestBody SubCategoryCreateRequest subCategoryCreateRequest) {
-        SubCategory subCategory = subItemTypeMapper.convertCreateRequest(subCategoryCreateRequest);
-        Long categoryId = subCategoryCreateRequest.getCategoryId();
+  @Operation(
+      summary = "Create new sub category",
+      responses = {
+        @ApiResponse(
+            responseCode = "201",
+            description = "sub category create successfully",
+            content =
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = SubCategoryResponse.class))),
+        @ApiResponse(
+            responseCode = "409",
+            description = "sub category not created, Conflict",
+            content = @Content),
+        @ApiResponse(
+            responseCode = "500",
+            description = "sub category not created, Illegal Arguments",
+            content = @Content)
+      })
+  @PostMapping
+  @Transactional
+  public ResponseEntity<Object> createSubCategory(
+      @RequestBody SubCategoryCreateRequest subCategoryCreateRequest) {
+    SubCategory subCategory = subItemTypeMapper.convertCreateRequest(subCategoryCreateRequest);
+    Long categoryId = subCategoryCreateRequest.getCategoryId();
+    SubCategory newSubCategory = subCategoryService.create(subCategory, categoryId);
 
-        subCategoryService.create(subCategory,categoryId);
+    return new ResponseEntity<>(
+        Collections.singletonMap("subCategory", subItemTypeMapper.toResponse(newSubCategory)),
+        HttpStatus.CREATED);
+  }
 
-        return new ResponseEntity<>(subCategoryService.findById(subCategory
-                .getId())
-                .map(subItemTypeMapper::toResponse)
-                .orElseThrow(EntityNotFoundException::new)
-                , HttpStatus.CREATED);
-    }
-
-    @Operation(
-            summary = "Delete SubItemType",
-            description = "This can only be done by the logged in user.",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "SubItemType deleted", content = @Content),
-                    @ApiResponse(responseCode = "404", description = "SubItemType not found", content = @Content)
-            })
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteSubItemTypeById(@PathVariable Long id){
-
-        subCategoryService.delete(id);
-
-        Map<String, Object> model = new HashMap<>();
-        model.put("Sub Item Category was deleted, id:", id);
-        return new ResponseEntity<>(model, HttpStatus.OK);
-    }
+  @Operation(
+      summary = "Delete sub category",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "sub category deleted",
+            content = @Content),
+        @ApiResponse(
+            responseCode = "404",
+            description = "sub category not found",
+            content = @Content)
+      })
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Object> deleteSubCategoryById(@PathVariable Long id) {
+    subCategoryService.delete(id);
+    return new ResponseEntity<>(
+        Collections.singletonMap("The sub category was deleted, id:", id), HttpStatus.OK);
+  }
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,21 +27,11 @@ class UserControllerTest extends BaseIntegrationTest {
 
   @Test
   void findAllUsers() throws Exception {
-    this.mockMvc
-        .perform(get("/api/users/"))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.result[*]").isNotEmpty());
-  }
-
-  @Test
-  void findAllUsersWithParams() throws Exception {
-    this.mockMvc
-        .perform(get("/api/users/").param("page", "0").param("size", "10"))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.result[0].id").value("6"))
-        .andExpect(jsonPath("$.result[1].id").value("5"));
+    mockMvc.perform(MockMvcRequestBuilders.get("/api/users/")
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$['pageable']['paged']").value("true"))
+            .andExpect(jsonPath("$.content[0].firstName").value("Oleg"));
   }
 
   @Test
@@ -96,6 +87,6 @@ class UserControllerTest extends BaseIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.firstName").value("Evgenii"));
+        .andExpect(jsonPath("$.user.firstName").value("Evgenii"));
   }
 }

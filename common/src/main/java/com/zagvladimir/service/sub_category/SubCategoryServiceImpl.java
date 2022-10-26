@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,12 +34,20 @@ public class SubCategoryServiceImpl implements SubCategoryService {
   public SubCategory create(SubCategory subCategory, Long itemCategoryId) {
     subCategory.setCategory(
         categoryRepository.findById(itemCategoryId).orElseThrow(EntityNotFoundException::new));
-    return repository.save(subCategory);
+    repository.save(subCategory);
+    return repository
+        .findById(subCategory.getId())
+        .orElseThrow(() -> new EntityNotFoundException("Sub category not created"));
   }
 
   @Override
-  public Optional<SubCategory> findById(Long subItemTypeId) {
-    return repository.findById(subItemTypeId);
+  public SubCategory findById(Long subItemTypeId) {
+    return repository
+        .findById(subItemTypeId)
+        .orElseThrow(
+            () ->
+                new EntityNotFoundException(
+                    String.format("Entity with id:%d not found", subItemTypeId)));
   }
 
   @Transactional
