@@ -92,7 +92,6 @@ VALUES (1, 'TEST1', 1, '2022-09-15 15:15:22.361321', '2022-09-15 15:15:22.361321
        (9, 'TEST9', 1, '2022-09-15 15:15:22.361321', '2022-09-15 15:15:22.361321', 'ACTIVE');
 select SETVAL('sub_item_types_id_seq', 10);
 
-
 INSERT INTO items (id, item_name, item_type_id, location_id, item_location, description, owner_id, price_per_hour, available, creation_date, modification_date, status)
 VALUES (2, 'Makita hr2470ft', 5, 2, 'Microdistrict 17', 'Rotary Hammer makita hr2470ft', 3, 5.00, true, '2022-08-28 17:17:29.000000', '2022-08-28 17:17:31.000000', 'ACTIVE'),
        (3, 'Makita hr2450ft', 5, 2, 'Microdistrict 20', 'Rotary Hammer makita hr2450', 3, 5.00, true, '2022-08-28 17:32:34.668000', '2022-08-28 17:32:34.668000', 'ACTIVE'),
@@ -107,12 +106,13 @@ VALUES (1, 2, 5, '2022-09-06 16:20:05.000000', '2022-09-06 18:20:11.000000', 5.0
        (2, 3, 5, '2022-09-06 17:21:14.000000', '2022-09-06 22:21:19.000000', 5.00, 0.00, 0.10, 5.10, '5', '5', '2022-09-06 15:21:33.000000', '2022-09-06 15:21:34.000000', 'ACTIVE');
 select SETVAL('items_leased_id_seq', 2);
 
-INSERT INTO public.grades (id, item_leased_id, user_from_id, user_to_id, grade, description, creation_date, modification_date, status)
-VALUES (1, 1, 6, 4, 5.0, 'Good', '2022-09-28 22:31:44.000000', '2022-09-28 22:31:45.000000', 'ACTIVE'),
-       (3, 2, 22, 4, 5.0, 'Good', '2022-09-28 22:33:35.000000', '2022-09-28 22:33:36.000000', 'ACTIVE'),
-       (4, 1, 3, 4, 5.0, 'Excellent', '2022-09-29 17:46:54.973000', '2022-09-29 17:47:15.772000', 'ACTIVE'),
-       (5, 1, 3, 4, 5.0, 'ExcellentTest', '2022-09-29 17:51:06.263000', '2022-09-29 17:51:06.263000', 'ACTIVE'),
-       (6, 1, 3, 4, 5.0, 'ExcellentTestTestTest', '2022-09-29 17:52:38.842000', '2022-09-29 17:52:38.842000', 'ACTIVE'),
-       (7, 1, 3, 4, 5.0, 'ExcellentTestTestTest', '2022-09-29 19:13:48.990000', '2022-09-29 19:13:48.990000', 'ACTIVE'),
-       (8, 1, 3, 4, 5.0, 'TEST', '2022-10-03 17:12:00.371000', '2022-10-03 17:12:00.371000', 'ACTIVE');
+INSERT INTO public.grades (id, item_id, user_id, grade, description, creation_date, modification_date, status)
+VALUES (3, 2, 22, 5.0, 'Good', '2022-09-28 22:33:35.000000', '2022-09-28 22:33:36.000000', 'ACTIVE'),
+ (31, 2, 3, 6.0, 'string', '2022-10-22 18:05:27.474000', null, 'ACTIVE'),
+ (5, 2, 3, 5.0, 'ExcellentTest', '2022-09-29 17:51:06.263000', '2022-09-29 17:51:06.263000', 'ACTIVE'),
+ (7, 2, 3, 5.0, 'ExcellentTestTestTest', '2022-09-29 19:13:48.990000', '2022-09-29 19:13:48.990000', 'ACTIVE'),
+ (4, 2, 3, 5.0, 'Excellent', '2022-09-29 17:46:54.973000', '2022-09-29 17:47:15.772000', 'ACTIVE'),
+ (6, 2, 3, 5.0, 'ExcellentTestTestTest', '2022-09-29 17:52:38.842000', '2022-09-29 17:52:38.842000', 'ACTIVE'),
+ (8, 2, 3, 5.0, 'TEST', '2022-10-03 17:12:00.371000', '2022-10-03 17:12:00.371000', 'ACTIVE'),
+ (1, 2, 6, 5.0, 'Good', '2022-09-28 22:31:44.000000', '2022-09-28 22:31:45.000000', 'ACTIVE');
 select SETVAL('grades_id_seq', 8);

@@ -80,11 +80,10 @@ public class GradeController {
     public ResponseEntity<Object> createGrade(@Valid @RequestBody GradeCreateRequest gradeCreateRequest) {
 
         Grade newGrade = gradeMapper.convertCreateRequest(gradeCreateRequest);
-        Long userToId = gradeCreateRequest.getUserToId();
-        Long userFromId = gradeCreateRequest.getUserFromId();
-        Long itemLeasedId = gradeCreateRequest.getItemLeasedId();
+        Long userId = gradeCreateRequest.getUserId();
+        Long itemId = gradeCreateRequest.getItemId();
 
-        gradeService.create(newGrade, userToId, userFromId, itemLeasedId);
+        gradeService.create(newGrade, userId, itemId);
 
         return new ResponseEntity<>(gradeService.findById(newGrade.getId()).map(gradeMapper::toResponse), HttpStatus.CREATED);
     }

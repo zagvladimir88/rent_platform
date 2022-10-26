@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@EqualsAndHashCode(exclude = {"userFrom","userTo","itemLeased"})
+@EqualsAndHashCode(exclude = {"user","item"})
 @Table(name = "grades")
 public class Grade extends AuditingEntity{
 
@@ -18,18 +18,12 @@ public class Grade extends AuditingEntity{
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "item_leased_id")
+    @JoinColumn(name = "item_id")
     @JsonBackReference
-    private ItemLeased itemLeased;
+    private Item item;
 
     @ManyToOne
-    @JoinColumn(name = "user_from_id")
+    @JoinColumn(name = "user_id")
     @JsonBackReference
-    private User userFrom;
-
-    @ManyToOne
-    @JoinColumn(name = "user_to_id")
-    @JsonBackReference
-    private User userTo;
-
+    private User user;
 }

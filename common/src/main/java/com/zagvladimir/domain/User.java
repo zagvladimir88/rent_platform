@@ -23,9 +23,9 @@ import java.util.Set;
 
 @Data
 @Entity
-@EqualsAndHashCode(exclude = {"roles","items","itemsLeased","gradesToSet","gradesFromSet"})
+@EqualsAndHashCode(exclude = {"roles","items","itemsLeased","grades"})
 @Table(name = "users")
-@ToString(exclude = {"location","roles","items","gradesToSet","gradesFromSet"})
+@ToString(exclude = {"location","roles","items","grades"})
 public class User extends AuditingEntity {
 
   @NotBlank
@@ -79,11 +79,7 @@ public class User extends AuditingEntity {
   @JsonManagedReference
   private Set<ItemLeased> itemsLeased;
 
-  @OneToMany(mappedBy="userTo", fetch = FetchType.EAGER)
+  @OneToMany(mappedBy="user", fetch = FetchType.EAGER)
   @JsonManagedReference
-  private Set<Grade> gradesTo;
-
-  @OneToMany(mappedBy="userFrom", fetch = FetchType.EAGER)
-  @JsonManagedReference
-  private Set<Grade> gradesFrom;
+  private Set<Grade> grades;
 }

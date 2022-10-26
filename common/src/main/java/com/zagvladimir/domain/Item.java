@@ -45,7 +45,11 @@ public class Item extends AuditingEntity{
     @JoinColumn(name = "location_id")
     private Location location;
 
-    @OneToMany(mappedBy = "item")
+    @OneToMany(mappedBy = "items")
     @JsonManagedReference
     private Set<Image> images;
+
+    @OneToMany(mappedBy = "item")
+    @JsonManagedReference
+    private Set<Grade> grades;
 }

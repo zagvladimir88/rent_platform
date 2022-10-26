@@ -2,7 +2,7 @@ package com.zagvladimir.service.grade;
 
 import com.zagvladimir.domain.Grade;
 import com.zagvladimir.repository.GradeRepository;
-import com.zagvladimir.service.item_leased.ItemLeasedService;
+import com.zagvladimir.service.item.ItemService;
 import com.zagvladimir.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.Optional;
 public class GradeServiceImpl implements GradeService {
 
     private final GradeRepository gradeRepository;
-    private final ItemLeasedService itemLeasedService;
+    private final ItemService itemService;
     private final UserService userService;
 
     @Override
@@ -26,10 +26,9 @@ public class GradeServiceImpl implements GradeService {
 
     @Transactional
     @Override
-    public Grade create(Grade grade, Long userToId, Long userFromId, Long itemLeasedId) {
-        grade.setUserTo(userService.findById(userToId));
-        grade.setUserFrom(userService.findById(userFromId));
-        grade.setItemLeased(itemLeasedService.findById(itemLeasedId));
+    public Grade create(Grade grade, Long userId, Long itemId) {
+        grade.setUser(userService.findById(userId));
+        grade.setItem(itemService.findById(itemId));
         return gradeRepository.save(grade);
     }
 

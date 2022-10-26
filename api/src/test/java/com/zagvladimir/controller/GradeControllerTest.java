@@ -41,15 +41,14 @@ class GradeControllerTest extends BaseIntegrationTest {
         .perform(get("/api/grades/{id}", id))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.Grade.itemLeasedId").value("1"));
+        .andExpect(jsonPath("$.Grade.itemId").value("2"));
   }
 
   @Test
   void createGrade() throws Exception {
     Map<String, Object> body = new HashMap<>();
-    body.put("itemLeasedId", "1");
-    body.put("userFromId", "6");
-    body.put("userToId", "4");
+    body.put("itemId", "2");
+    body.put("userId", "6");
     body.put("description", "TEST");
     body.put("grade", "4");
     body.put("status", "ACTIVE");

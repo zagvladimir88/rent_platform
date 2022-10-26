@@ -21,7 +21,7 @@ public class Image extends AuditingEntity{
     @ManyToOne
     @JoinColumn(name = "item_id")
     @JsonBackReference
-    private Item item;
+    private Item items;
 
 
 }

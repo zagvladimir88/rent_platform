@@ -12,13 +12,10 @@ import javax.validation.constraints.NotNull;
 public class GradeCreateRequest {
 
   @Schema(defaultValue = "2", type = "Long" , description = "Item leased id")
-  private long itemLeasedId;
+  private long itemId;
 
   @Schema(defaultValue = "3", type = "Long" , description = "The id of the user who rated")
-  private long userFromId;
-
-  @Schema(defaultValue = "4", type = "Long" , description = "The шв of the user who received the rating")
-  private long userToId;
+  private long userId;
 
   @Schema(defaultValue = "Good", type = "number($double)" , description = "Description")
   @NotNull

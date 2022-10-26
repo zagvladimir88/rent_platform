@@ -11,11 +11,9 @@ public class GradeResponse {
 
     private Long id;
 
-    private Long itemLeasedId;
+    private Long itemId;
 
-    private Long userFromId;
-
-    private Long userToId;
+    private Long userId;
 
     private double grade;
 
