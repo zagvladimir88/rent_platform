@@ -98,65 +98,33 @@ create unique index if not exists users_user_login_uindex
 alter table users
     add activation_code varchar(40);
 
-create table if not exists item_categories
+create table categories
 (
-    id
-                      bigserial
-        constraint
-            item_categories_pkey
-            primary
-                key,
-    category_name
-                      varchar(35),
-    creation_date     timestamp(6) default CURRENT_TIMESTAMP
-        (
-            6
-        ),
-    modification_date timestamp(6) default CURRENT_TIMESTAMP
-        (
-            6
-        ),
-    status            varchar(25)  default 'ACTIVE':: character varying
+    id                smallserial
+        constraint categories_pk
+            primary key,
+    category_name     varchar(35) not null,
+    creation_date     timestamp(6) default CURRENT_TIMESTAMP(6),
+    modification_date timestamp(6) default CURRENT_TIMESTAMP(6),
+    status            varchar(25)  default 'ACTIVE'
 );
 
-alter table item_categories
-    owner to test;
 
-create table if not exists sub_item_types
+create table sub_categories
 (
-    id
-                      bigserial
-        constraint
-            sub_item_types_pkey
-            primary
-                key,
-    sub_category_name
-                      varchar(100),
-    category_id       integer
-        constraint sub_item_categories_item_categories_id_fk
-            references item_categories,
-    creation_date     timestamp(6) default CURRENT_TIMESTAMP
-        (
-            6
-        ),
-    modification_date timestamp(6) default CURRENT_TIMESTAMP
-        (
-            6
-        ),
-    status            varchar(25)  default 'ACTIVE':: character varying
+    id                bigserial
+        constraint sub_categories_pk
+            primary key,
+    sub_category_name varchar(100) not null,
+    category_id       bigserial
+        constraint sub_categories_categories_id_fk
+            references categories (id),
+    creation_date     timestamp(6) default CURRENT_TIMESTAMP(6),
+    modification_date timestamp(6) default CURRENT_TIMESTAMP(6),
+    status            varchar(25)  default 'ACTIVE'
 );
 
-alter table sub_item_types
-    owner to test;
 
-create unique index if not exists sub_item_types_id_uindex
-    on sub_item_types (id);
-
-create unique index if not exists item_type_id_uindex
-    on sub_item_types (id);
-
-create index if not exists item_type_type_name_index
-    on sub_item_types (sub_category_name);
 
 create table items
 (

@@ -8,8 +8,8 @@ import javax.persistence.Table;
 
 @Data
 @Entity
-@Table(name = "item_categories")
-public class ItemCategory extends AuditingEntity{
+@Table(name = "categories")
+public class Category extends AuditingEntity{
 
     @Column(name = "category_name")
     private String categoryName;

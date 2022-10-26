@@ -6,5 +6,5 @@ delete from roles;
 delete from users;
 delete from locations;
 delete from countries;
-delete from sub_item_types;
-delete from item_categories;
+delete from sub_categories;
+delete from categories;

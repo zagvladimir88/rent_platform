@@ -5,11 +5,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SubItemTypeResponse {
+public class SubCategoryResponse {
 
     private Long id;
 
     private String subCategoryName;
 
-    private Long itemCategoryId;
+    private Long categoryId;
 }

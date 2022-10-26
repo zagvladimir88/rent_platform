@@ -1,14 +1,14 @@
 package com.zagvladimir.controller.mappers;
 
-import com.zagvladimir.controller.requests.item_category.ItemCategoryCreateRequest;
+import com.zagvladimir.controller.requests.category.CategoryCreateRequest;
 import com.zagvladimir.controller.response.ItemCategoryResponse;
-import com.zagvladimir.domain.ItemCategory;
+import com.zagvladimir.domain.Category;
 import org.mapstruct.Mapper;
 
 @Mapper
 public interface ItemCategoryMapper {
 
-    ItemCategoryResponse toResponse(ItemCategory itemCategory);
+    ItemCategoryResponse toResponse(Category category);
 
-    ItemCategory convertCreateRequest(ItemCategoryCreateRequest request);
+    Category convertCreateRequest(CategoryCreateRequest request);
 }

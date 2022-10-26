@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface ItemRepository extends JpaRepository<Item,Long>{
 
-    List<Item> findItemBySubItemTypeId(Long typeId);
+    List<Item> findItemBySubCategoryId(Long typeId);
     List<Item> findItemsByItemName(String itemName);
 }

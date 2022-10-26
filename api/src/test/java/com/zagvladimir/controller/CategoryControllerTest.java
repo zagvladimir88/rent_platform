@@ -19,55 +19,54 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IT
-class SubItemTypeControllerTest extends BaseIntegrationTest {
+class CategoryControllerTest extends BaseIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
 
   @Autowired private ObjectMapper objectMapper;
 
   @Test
-  void findAllISubItemTypes() throws Exception {
+  void findAllItemCategories() throws Exception {
     this.mockMvc
-        .perform(get("/api/sub-item-types/"))
+        .perform(get("/api/item-categories/"))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$", notNullValue()));
+        .andExpect(jsonPath("$.result[*]", notNullValue()));
   }
 
   @Test
-  void findSubItemTypeById() throws Exception {
+  void findItemCategoryById() throws Exception {
     Long id = 1L;
     this.mockMvc
-        .perform(get("/api/sub-item-types/{id}", id))
+        .perform(get("/api/item-categories/{id}", id))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.subCategoryName").value("TEST1"));
+        .andExpect(jsonPath("$.itemCategory.categoryName").value("TEST1"));
   }
 
   @Test
-  void createSubItemType() throws Exception {
+  void createItemCategory() throws Exception {
     Map<String, Object> body = new HashMap<>();
-    body.put("subCategoryName", "TEST");
-    body.put("categoryId", "2");
+    body.put("categoryName", "TEST");
     body.put("status", "ACTIVE");
 
     mockMvc
         .perform(
-            MockMvcRequestBuilders.post("/api/sub-item-types/")
+            MockMvcRequestBuilders.post("/api/item-categories/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body))
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.subCategoryName").value("TEST"));
+        .andExpect(jsonPath("$.categoryName").value("TEST"));
   }
 
   @Test
-  void deleteSubItemTypeById() throws Exception {
+  void deleteItemCategoryById() throws Exception {
     Long id = 1L;
     this.mockMvc
         .perform(
-            MockMvcRequestBuilders.delete("/api/sub-item-types/{id}", id)
+            MockMvcRequestBuilders.delete("/api/item-categories/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())

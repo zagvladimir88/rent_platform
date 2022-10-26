@@ -2,7 +2,7 @@ package com.zagvladimir.service.item;
 
 import com.zagvladimir.domain.Item;
 import com.zagvladimir.repository.ItemRepository;
-import com.zagvladimir.repository.SubItemTypeRepository;
+import com.zagvladimir.repository.SubCategoryRepository;
 import com.zagvladimir.service.location.LocationService;
 import com.zagvladimir.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final LocationService locationService;
-    private final SubItemTypeRepository subItemTypeRepository;
+    private final SubCategoryRepository subCategoryRepository;
     private final UserService userService;
 
     @Override
@@ -37,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public Item create(Item item, Long subItemTypeId, Long ownerId, Long locationId) {
-        item.setSubItemType(subItemTypeRepository.findById(subItemTypeId).orElseThrow(EntityNotFoundException::new));
+        item.setSubCategory(subCategoryRepository.findById(subItemTypeId).orElseThrow(EntityNotFoundException::new));
         item.setOwner(userService.findById(ownerId));
         item.setLocation(locationService.findById(locationId).orElseThrow(EntityNotFoundException::new));
         return itemRepository.save(item);

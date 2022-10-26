@@ -1,10 +1,10 @@
 package com.zagvladimir.controller;
 
 import com.zagvladimir.controller.mappers.ItemCategoryMapper;
-import com.zagvladimir.controller.requests.item_category.ItemCategoryCreateRequest;
+import com.zagvladimir.controller.requests.category.CategoryCreateRequest;
 import com.zagvladimir.controller.response.ItemCategoryResponse;
-import com.zagvladimir.domain.ItemCategory;
-import com.zagvladimir.service.item_category.ItemCategoryService;
+import com.zagvladimir.domain.Category;
+import com.zagvladimir.service.category.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,9 +25,9 @@ import java.util.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/item-categories")
-public class ItemCategoryController {
+public class CategoryController {
 
-  private final ItemCategoryService itemCategoryService;
+  private final CategoryService categoryService;
   private final ItemCategoryMapper itemCategoryMapper;
 
   @Operation(summary = "Gets all Items Category",
@@ -44,7 +44,7 @@ public class ItemCategoryController {
   @GetMapping
   public ResponseEntity<Object> findAllItemCategories(@ParameterObject Pageable pageable) {
     return new ResponseEntity<>(
-        Collections.singletonMap("result", itemCategoryService.findAll(pageable).stream().map(itemCategoryMapper::toResponse)), HttpStatus.OK);
+        Collections.singletonMap("result", categoryService.findAll(pageable).stream().map(itemCategoryMapper::toResponse)), HttpStatus.OK);
   }
 
   @Operation(summary = "Gets Item Category by ID",
@@ -61,7 +61,7 @@ public class ItemCategoryController {
   @GetMapping("/{id}")
   public ResponseEntity<Map<String, Object>> findItemCategoryById(@PathVariable Long id) {
     return new ResponseEntity<>(
-        Collections.singletonMap("itemCategory", itemCategoryService.findById(id).map(itemCategoryMapper::toResponse)),
+        Collections.singletonMap("itemCategory", categoryService.findById(id).map(itemCategoryMapper::toResponse)),
         HttpStatus.OK);
   }
 
@@ -75,12 +75,12 @@ public class ItemCategoryController {
           })
   @PostMapping
   @Transactional
-  public ResponseEntity<Object> createItemCategory(@RequestBody ItemCategoryCreateRequest itemCategoryCreateRequest) {
+  public ResponseEntity<Object> createItemCategory(@RequestBody CategoryCreateRequest categoryCreateRequest) {
 
-    ItemCategory newItemCategory = itemCategoryMapper.convertCreateRequest(itemCategoryCreateRequest);
-    itemCategoryService.create(newItemCategory);
+    Category newCategory = itemCategoryMapper.convertCreateRequest(categoryCreateRequest);
+    categoryService.create(newCategory);
 
-    return new ResponseEntity<>(itemCategoryService.findById(newItemCategory.getId()).map(itemCategoryMapper::toResponse), HttpStatus.CREATED);
+    return new ResponseEntity<>(categoryService.findById(newCategory.getId()).map(itemCategoryMapper::toResponse), HttpStatus.CREATED);
   }
 
   @Operation(
@@ -92,7 +92,7 @@ public class ItemCategoryController {
   @DeleteMapping("/{id}")
   public ResponseEntity<Object> deleteItemCategoryById(@PathVariable Long id) {
 
-      itemCategoryService.delete(id);
+      categoryService.delete(id);
 
     Map<String, Object> model = new HashMap<>();
     model.put("role has been deleted id:", id);

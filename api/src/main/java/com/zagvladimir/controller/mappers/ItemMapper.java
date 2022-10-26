@@ -12,7 +12,7 @@ public interface ItemMapper {
 
     @Mapping(source = "location.id", target = "locationId")
     @Mapping(source = "owner.id", target = "ownerId")
-    @Mapping(source = "subItemType.id", target = "subItemTypeId")
+    @Mapping(source = "subCategory.id", target = "subCategoryId")
     ItemResponse toResponse(Item item);
 
     Item convertCreateRequest(ItemCreateRequest request);

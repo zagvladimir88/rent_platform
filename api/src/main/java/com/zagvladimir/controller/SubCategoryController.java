@@ -2,10 +2,10 @@ package com.zagvladimir.controller;
 
 
 import com.zagvladimir.controller.mappers.SubItemTypeMapper;
-import com.zagvladimir.controller.requests.sub_item_type.SubItemTypeCreateRequest;
-import com.zagvladimir.controller.response.SubItemTypeResponse;
-import com.zagvladimir.domain.SubItemType;
-import com.zagvladimir.service.sub_item_type.SubItemTypeService;
+import com.zagvladimir.controller.requests.sub_category.SubCategoryCreateRequest;
+import com.zagvladimir.controller.response.SubCategoryResponse;
+import com.zagvladimir.domain.SubCategory;
+import com.zagvladimir.service.sub_category.SubCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,9 +26,9 @@ import java.util.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/sub-item-types")
-public class SubItemTypeController {
+public class SubCategoryController {
 
-    private final SubItemTypeService subItemTypeService;
+    private final SubCategoryService subCategoryService;
     private final SubItemTypeMapper subItemTypeMapper;
 
     @Operation(summary = "Gets all SubItemType")
@@ -40,12 +40,12 @@ public class SubItemTypeController {
                             content = {
                                     @Content(
                                             mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = SubItemTypeResponse.class)))
+                                            array = @ArraySchema(schema = @Schema(implementation = SubCategoryResponse.class)))
                             })
             })
     @GetMapping
     public ResponseEntity<Object> findAllISubItemTypes() {
-        return new ResponseEntity<>(Collections.singletonMap("result", subItemTypeService.findAll().stream().map(subItemTypeMapper::toResponse)),
+        return new ResponseEntity<>(Collections.singletonMap("result", subCategoryService.findAll().stream().map(subItemTypeMapper::toResponse)),
                 HttpStatus.OK);
     }
 
@@ -58,13 +58,13 @@ public class SubItemTypeController {
                             content = {
                                     @Content(
                                             mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = SubItemTypeResponse.class)))
+                                            array = @ArraySchema(schema = @Schema(implementation = SubCategoryResponse.class)))
                             })
             })
     @GetMapping("/{id}")
     public ResponseEntity<Object> findSubItemTypeById(@PathVariable String id) {
         long itemTypeCategoryId = Long.parseLong(id);
-        return new ResponseEntity<>(subItemTypeService.findById(itemTypeCategoryId).map(subItemTypeMapper::toResponse)
+        return new ResponseEntity<>(subCategoryService.findById(itemTypeCategoryId).map(subItemTypeMapper::toResponse)
                 .orElseThrow(EntityNotFoundException::new)
                 , HttpStatus.OK);
     }
@@ -73,19 +73,19 @@ public class SubItemTypeController {
             summary = "Create new SubItemType",
             responses = {
                     @ApiResponse( responseCode = "201", description = "SubItemType create successfully",content =
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = SubItemTypeResponse.class))),
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = SubCategoryResponse.class))),
                     @ApiResponse( responseCode = "409", description = "SubItemType not created, Conflict", content = @Content),
                     @ApiResponse( responseCode = "500", description = "SubItemType not created, Illegal Arguments", content = @Content)
             })
     @PostMapping
     @Transactional
-    public ResponseEntity<Object> createSubItemType(@RequestBody SubItemTypeCreateRequest subItemTypeCreateRequest) {
-        SubItemType subItemType = subItemTypeMapper.convertCreateRequest(subItemTypeCreateRequest);
-        Long categoryId = subItemTypeCreateRequest.getCategoryId();
+    public ResponseEntity<Object> createSubItemType(@RequestBody SubCategoryCreateRequest subCategoryCreateRequest) {
+        SubCategory subCategory = subItemTypeMapper.convertCreateRequest(subCategoryCreateRequest);
+        Long categoryId = subCategoryCreateRequest.getCategoryId();
 
-        subItemTypeService.create(subItemType,categoryId);
+        subCategoryService.create(subCategory,categoryId);
 
-        return new ResponseEntity<>(subItemTypeService.findById(subItemType
+        return new ResponseEntity<>(subCategoryService.findById(subCategory
                 .getId())
                 .map(subItemTypeMapper::toResponse)
                 .orElseThrow(EntityNotFoundException::new)
@@ -102,7 +102,7 @@ public class SubItemTypeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteSubItemTypeById(@PathVariable Long id){
 
-        subItemTypeService.delete(id);
+        subCategoryService.delete(id);
 
         Map<String, Object> model = new HashMap<>();
         model.put("Sub Item Category was deleted, id:", id);

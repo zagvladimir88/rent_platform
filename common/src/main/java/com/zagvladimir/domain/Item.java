@@ -38,7 +38,7 @@ public class Item extends AuditingEntity{
     @ManyToOne
     @JsonBackReference
     @JoinColumn(name = "item_type_id")
-    private SubItemType subItemType;
+    private SubCategory subCategory;
 
     @ManyToOne
     @JsonBackReference

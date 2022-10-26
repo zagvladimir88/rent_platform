@@ -1,11 +1,11 @@
-package com.zagvladimir.controller.requests.sub_item_type;
+package com.zagvladimir.controller.requests.sub_category;
 
 import com.zagvladimir.domain.enums.Status;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-public class SubItemTypeCreateRequest {
+public class SubCategoryCreateRequest {
 
     @Schema(defaultValue = "testCategory", type = "string" , description = "Sub Category Name")
     private String subCategoryName;

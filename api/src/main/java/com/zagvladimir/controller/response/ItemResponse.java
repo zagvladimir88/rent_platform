@@ -14,7 +14,7 @@ public class ItemResponse {
 
     private String itemName;
 
-    private Long subItemTypeId;
+    private Long subCategoryId;
 
     private Long locationId;
 

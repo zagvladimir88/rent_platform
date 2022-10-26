@@ -13,17 +13,17 @@ import java.util.Set;
 @Entity
 @EqualsAndHashCode(exclude = {"itemCategory","items"})
 @ToString(exclude = {"itemCategory"})
-@Table(name = "sub_item_types")
-public class SubItemType extends AuditingEntity{
+@Table(name = "sub_categories")
+public class SubCategory extends AuditingEntity{
 
     @Column(name = "sub_category_name")
     private String subCategoryName;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    private ItemCategory itemCategory;
+    private Category category;
 
-    @OneToMany(mappedBy="subItemType", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy= "subCategory", fetch = FetchType.EAGER)
     @JsonManagedReference
     Set<Item> items;
 }
