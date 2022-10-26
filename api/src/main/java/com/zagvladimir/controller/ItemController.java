@@ -109,11 +109,9 @@ public class ItemController {
     public ResponseEntity<Object> createItem(@Valid @RequestBody ItemCreateRequest createRequest) {
 
         Item item = itemMapper.convertCreateRequest(createRequest);
-        Long subItemTypeId = createRequest.getItemTypeId();
-        Long ownerId = createRequest.getOwnerId();
-        Long locationId = createRequest.getLocationId();
+        Long subCategoryId = createRequest.getSubCategoryId();
 
-        itemService.create(item,subItemTypeId,ownerId,locationId);
+        itemService.create(item,subCategoryId);
 
         return new ResponseEntity<>(itemMapper.toResponse(itemService.findById(item.getId())), HttpStatus.CREATED);
     }

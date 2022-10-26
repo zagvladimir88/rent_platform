@@ -16,25 +16,15 @@ public class ItemCreateRequest {
     private String itemName;
 
     @Schema(defaultValue = "5", type = "Long" , description = "Item type id")
-    private long itemTypeId;
-
-    @Schema(defaultValue = "2", type = "Long" , description = "Location Id")
-    private Long locationId;
-
-    @Schema(defaultValue = "Microdistrict 17", type = "string" , description = "Item address")
-    @NotEmpty
-    private String itemLocation;
+    private long subCategoryId;
 
     @Schema(defaultValue = "Rotary Hammer makita hr2470ft", type = "string" , description = "Item description")
     @NotEmpty
     private String description;
 
-    @Schema(defaultValue = "3", type = "string" , description = "The id of the user who owns")
-    private long ownerId;
-
     @Schema(defaultValue = "5.0", type = "number($double)" , description = "Price per hour")
     @Positive
-    private int pricePerHour;
+    private int pricePerDay;
 
     @Schema(defaultValue = "true", type = "boolean" , description = "Status of available")
     private Boolean available;

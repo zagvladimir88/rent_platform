@@ -11,7 +11,7 @@ public interface ItemService {
     List<Item> findAll();
     Page<Item> findAll(Pageable pageable);
 
-    Item create(Item item, Long subItemTypeId, Long ownerId, Long locationId);
+    Item create(Item item, Long subCategoryId);
 
     Item findById(Long itemId);
 

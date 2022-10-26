@@ -11,29 +11,24 @@ import java.util.Set;
 
 @Data
 @Entity
-@EqualsAndHashCode(exclude = {"country","items","users"})
+@EqualsAndHashCode(exclude = {"country","users"})
 @Table(name = "locations")
-@ToString(exclude = {"items","users"})
+@ToString(exclude = {"users","country"})
 public class Location extends AuditingEntity{
 
     @Column(name = "postal_code")
     private String postalCode;
+
     @Column(name = "name")
     private String name;
+
     @Column(name = "description")
     private String description;
-
 
     @ManyToOne
     @JoinColumn(name = "country_id")
     @JsonManagedReference
     private Country country;
-
-
-    @OneToMany(mappedBy="location", fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private Set<Item> items;
-
 
     @OneToMany(mappedBy="location", fetch = FetchType.LAZY)
     @JsonManagedReference

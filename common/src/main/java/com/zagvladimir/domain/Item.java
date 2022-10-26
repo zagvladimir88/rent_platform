@@ -4,6 +4,7 @@ package com.zagvladimir.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -11,39 +12,27 @@ import java.util.Set;
 
 @Data
 @Entity
+@EqualsAndHashCode(exclude = {"images","grades","subCategory"})
 @Table(name = "items")
-@ToString(exclude = "images")
+@ToString(exclude = {"images","grades","subCategory"})
 public class Item extends AuditingEntity{
 
     @Column(name = "item_name")
     private String itemName;
 
-    @Column(name = "item_location")
-    private String itemLocation;
-
     @Column(name = "description")
     private String description;
 
-    @Column(name = "price_per_hour")
-    private double pricePerHour;
+    @Column(name = "price_per_day")
+    private double pricePerDay;
 
     @Column(name = "available")
     private Boolean available;
 
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name = "owner_id")
-    private User owner;
-
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "item_type_id")
+    @JoinColumn(name = "sub_category_id")
     private SubCategory subCategory;
-
-    @ManyToOne
-    @JsonBackReference
-    @JoinColumn(name = "location_id")
-    private Location location;
 
     @OneToMany(mappedBy = "items")
     @JsonManagedReference

@@ -130,12 +130,9 @@ create table items
 (
     id                bigserial,
     item_name         varchar(255) not null,
-    item_type_id      bigint,
-    location_id       bigint,
-    item_location     varchar,
+    sub_category_id      bigint,
     description       varchar,
-    owner_id          bigint,
-    price_per_hour    numeric(8, 2),
+    price_per_day    numeric(8, 2),
     available         BOOLEAN      default true,
     creation_date     timestamp(6) default CURRENT_TIMESTAMP(6),
     modification_date timestamp(6) default CURRENT_TIMESTAMP(6),
@@ -144,6 +141,11 @@ create table items
 
 create unique index items_id_uindex
     on items (id);
+
+
+alter table items
+    add constraint items_sub_categories_id_fk
+        foreign key (sub_category_id) references sub_categories (id);
 
 alter table items
     add constraint items_pk

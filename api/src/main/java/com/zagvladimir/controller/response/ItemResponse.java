@@ -16,13 +16,7 @@ public class ItemResponse {
 
     private Long subCategoryId;
 
-    private Long locationId;
-
-    private String itemLocation;
-
     private String description;
-
-    private Long ownerId;
 
     private double pricePerHour;
 

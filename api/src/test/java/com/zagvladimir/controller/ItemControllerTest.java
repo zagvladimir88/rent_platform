@@ -90,14 +90,11 @@ class ItemControllerTest extends BaseIntegrationTest {
   void createItem() throws Exception {
     Map<String, Object> body = new HashMap<>();
     body.put("itemName", "Makita hr2470ft-TEST");
-    body.put("itemTypeId", 5);
-    body.put("locationId", 2);
-    body.put("itemLocation", "Microdistrict 17");
+    body.put("subCategoryId", 5);
     body.put("description", "Rotary Hammer makita hr2470ft");
-    body.put("pricePerHour", 6.0);
+    body.put("pricePerDay", 6.0);
     body.put("available", true);
     body.put("status", "ACTIVE");
-    body.put("ownerId", 4);
 
     mockMvc
         .perform(

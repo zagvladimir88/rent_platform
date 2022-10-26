@@ -92,13 +92,14 @@ INSERT INTO sub_categories (id, sub_category_name, category_id, creation_date, m
 
 select SETVAL('sub_categories_id_seq', 10);
 
-INSERT INTO items (id, item_name, item_type_id, location_id, item_location, description, owner_id, price_per_hour, available, creation_date, modification_date, status)
-VALUES (2, 'Makita hr2470ft', 5, 2, 'Microdistrict 17', 'Rotary Hammer makita hr2470ft', 3, 5.00, true, '2022-08-28 17:17:29.000000', '2022-08-28 17:17:31.000000', 'ACTIVE'),
-       (3, 'Makita hr2450ft', 5, 2, 'Microdistrict 20', 'Rotary Hammer makita hr2450', 3, 5.00, true, '2022-08-28 17:32:34.668000', '2022-08-28 17:32:34.668000', 'ACTIVE'),
-       (4, 'Bosch GBH 2-26', 5, 2, 'Microdistrict 16', 'Rotary Hammer Bosch GBH 2-26 DFR 0.611.254.768', 3, 6.00, true, '2022-08-28 17:32:34.685000', '2022-08-28 17:32:34.685000', 'ACTIVE'),
-       (5, 'GST 150 BCE PROFESSIONAL', 4, 2, 'Microdistrict 16', 'JIGSAW GST 150 BCE PROFESSIONAL', 5, 3.00, true, '2022-08-28 19:54:08.000000', '2022-08-28 19:54:10.000000', 'ACTIVE'),
-       (6, 'GST 12V-70 PROFESSIONAL', 4, 2, 'Microdistrict 16', 'Extremely compact and lightweight 12 volt professional cordless jigsaw', 5, 3.00, true, '2022-08-28 19:54:11.000000', '2022-08-28 19:54:13.000000', 'ACTIVE'),
-       (8, 'DEKO DKRH20H3', 5, 2, 'Microdistrict 3', 'Rotary Hammer DEKO DKRH20H3', 5, 5.00, true, '2022-09-04 15:53:19.140000', '2022-09-04 15:53:19.140000', 'ACTIVE');
+INSERT INTO items (id, item_name, sub_category_id, description, price_per_day, available, creation_date, modification_date, status)
+VALUES (2, 'Makita hr2470ft', 5, 'Rotary Hammer makita hr2470ft', 5.00, true, '2022-08-28 17:17:29.000000', '2022-08-28 17:17:31.000000', 'ACTIVE'),
+ (3, 'Makita hr2450ft', 5, 'Rotary Hammer makita hr2450', 5.00, true, '2022-08-28 17:32:34.668000', '2022-08-28 17:32:34.668000', 'ACTIVE'),
+ (4, 'Bosch GBH 2-26', 5, 'Rotary Hammer Bosch GBH 2-26 DFR 0.611.254.768', 6.00, true, '2022-08-28 17:32:34.685000', '2022-08-28 17:32:34.685000', 'ACTIVE'),
+ (5, 'GST 150 BCE PROFESSIONAL', 4, 'JIGSAW GST 150 BCE PROFESSIONAL', 3.00, true, '2022-08-28 19:54:08.000000', '2022-08-28 19:54:10.000000', 'ACTIVE'),
+ (6, 'GST 12V-70 PROFESSIONAL', 4, 'Extremely compact and lightweight 12 volt professional cordless jigsaw', 3.00, true, '2022-08-28 19:54:11.000000', '2022-08-28 19:54:13.000000', 'ACTIVE'),
+ (8, 'DEKO DKRH20H3', 5, 'Rotary Hammer DEKO DKRH20H3', 5.00, true, '2022-09-04 15:53:19.140000', '2022-09-04 15:53:19.140000', 'ACTIVE');
+
 select SETVAL('items_id_seq', 10);
 
 INSERT INTO items_leased (id, item_id, renter_id, time_from, time_to, price_per_day, discount, price_total, creation_date, modification_date, status)

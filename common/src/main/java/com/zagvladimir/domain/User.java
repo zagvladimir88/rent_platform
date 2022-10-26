@@ -71,10 +71,6 @@ public class User extends AuditingEntity {
   @JsonIgnoreProperties("users")
   private Set<Role> roles;
 
-  @OneToMany(mappedBy="owner", fetch = FetchType.EAGER)
-  @JsonManagedReference
-  private Set<Item> items;
-
   @OneToMany(mappedBy="renter", fetch = FetchType.EAGER)
   @JsonManagedReference
   private Set<ItemLeased> itemsLeased;

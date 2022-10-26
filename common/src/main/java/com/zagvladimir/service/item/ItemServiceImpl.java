@@ -3,8 +3,6 @@ package com.zagvladimir.service.item;
 import com.zagvladimir.domain.Item;
 import com.zagvladimir.repository.ItemRepository;
 import com.zagvladimir.repository.SubCategoryRepository;
-import com.zagvladimir.service.location.LocationService;
-import com.zagvladimir.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,9 +18,7 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
-    private final LocationService locationService;
     private final SubCategoryRepository subCategoryRepository;
-    private final UserService userService;
 
     @Override
     public List<Item> findAll() {
@@ -36,10 +32,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Transactional
     @Override
-    public Item create(Item item, Long subItemTypeId, Long ownerId, Long locationId) {
-        item.setSubCategory(subCategoryRepository.findById(subItemTypeId).orElseThrow(EntityNotFoundException::new));
-        item.setOwner(userService.findById(ownerId));
-        item.setLocation(locationService.findById(locationId).orElseThrow(EntityNotFoundException::new));
+    public Item create(Item item, Long subCategoryId) {
+        item.setSubCategory(subCategoryRepository.findById(subCategoryId).orElseThrow(EntityNotFoundException::new));
         return itemRepository.save(item);
     }
 
