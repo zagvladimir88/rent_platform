@@ -29,8 +29,14 @@ import java.util.Set;
 public class User extends AuditingEntity {
 
   @NotBlank
-  @Column(name = "username")
-  private String username;
+  @Size(min = 2,max = 25)
+  @Column(name = "first_name")
+  private String firstName;
+
+  @NotBlank
+  @Size(min = 2,max = 32)
+  @Column(name = "last_name")
+  private String lastName;
 
   @Size(min = 2,max = 100)
   @Column(name = "user_login")
@@ -42,9 +48,6 @@ public class User extends AuditingEntity {
 
   @Column(name = "location_details")
   private String locationDetails;
-
-  @Column(name = "phone_number")
-  private String phoneNumber;
 
   @Column(name = "mobile_number")
   private String mobileNumber;

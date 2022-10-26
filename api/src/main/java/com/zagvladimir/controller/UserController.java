@@ -93,8 +93,8 @@ public class UserController {
       })
   @GetMapping("/{id}")
   public ResponseEntity<Map<String, Object>> findUserById(@PathVariable Long id) {
-    return new ResponseEntity<>(
-        Collections.singletonMap("user", userMapper.toResponse(userService.findById(id))),
+    UserResponse user = userMapper.toResponse(userService.findById(id));
+      return new ResponseEntity<>(Collections.singletonMap("user",user),
         HttpStatus.OK);
   }
 

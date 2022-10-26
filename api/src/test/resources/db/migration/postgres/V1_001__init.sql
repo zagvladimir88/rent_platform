@@ -42,14 +42,14 @@ create table if not exists users
     id                bigserial
     constraint users_pk
     primary key,
-    username          varchar(25)                               not null,
+    first_name          varchar(25)                               not null,
+    last_name          varchar(32)                               not null,
     user_password     varchar(200)                              not null,
     location_id       integer
     constraint users_location_id_fk
     references locations
     on update cascade on delete cascade,
     location_details  varchar,
-    phone_number      varchar(15),
     mobile_number     varchar(15),
     email             varchar(255)                              not null,
     registration_date timestamp(6) default CURRENT_TIMESTAMP(6) not null,
@@ -65,8 +65,8 @@ alter table users
 create index if not exists users_email_index
     on users (email);
 
-create index if not exists users_username_index
-    on users (username);
+create index if not exists users_first_name_index
+    on users (first_name);
 
 create unique index if not exists users_user_login_uindex
     on users (user_login);
@@ -245,4 +245,5 @@ alter table images
 
 create unique index if not exists images_id_uindex
     on images (id);
+
 

@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
 
   private void sendEmail(User user) throws MessagingException {
     Map<String, Object> templateModel = new HashMap<>();
-    templateModel.put("recipientName", user.getUsername());
+    templateModel.put("recipientName", user.getFirstName());
     templateModel.put("email", user.getEmail());
     templateModel.put("url", String.format(ACTIVATION_URL, user.getActivationCode()));
 

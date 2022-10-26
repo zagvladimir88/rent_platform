@@ -52,7 +52,7 @@ class UserControllerTest extends BaseIntegrationTest {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.user.id").value(id))
-        .andExpect(jsonPath("$.user.username").value("Vladimir"));
+        .andExpect(jsonPath("$.user.firstName").value("Vladimir"));
   }
 
   @Test
@@ -79,12 +79,12 @@ class UserControllerTest extends BaseIntegrationTest {
   void updateUser() throws Exception {
     Map<String, Object> body = new HashMap<>();
     body.put("status", "ACTIVE");
-    body.put("username", "Evgenii");
+    body.put("firstName", "Evgenii");
+    body.put("lastName", "Popov");
     body.put("userLogin", "joniq");
     body.put("userPassword", "5555");
     body.put("locationId", "1");
     body.put("locationDetails", "20 30 5");
-    body.put("phoneNumber", "802333324523");
     body.put("mobileNumber", "+375256145343");
     body.put("email", "evgeniiArgs@gmail.com");
 
@@ -96,6 +96,6 @@ class UserControllerTest extends BaseIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.username").value("Evgenii"));
+        .andExpect(jsonPath("$.firstName").value("Evgenii"));
   }
 }

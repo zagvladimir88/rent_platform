@@ -14,7 +14,12 @@ public class UserUpdateRequest {
   @Schema(defaultValue = "Vladimir", type = "string" , description = "User Name")
   @NotBlank
   @Size(min = 2,max = 25)
-  private String username;
+  private String firstName;
+
+  @Schema(defaultValue = "Ivanov", type = "string" , description = "Last Name")
+  @NotBlank
+  @Size(min = 2,max = 32)
+  private String lastName;
 
   @Schema(defaultValue = "testLogin", type = "string" , description = "User Login")
   @NotBlank
@@ -31,9 +36,6 @@ public class UserUpdateRequest {
 
   @Schema(defaultValue = "19 4 33", type = "string" , description = "User address first line")
   private String locationDetails;
-
-  @Schema(defaultValue = "80233435353", type = "string" , description = "User phone number")
-  private String phoneNumber;
 
   @Schema(defaultValue = "+375291544444", type = "string" , description = "User mobile number")
   private String mobileNumber;
