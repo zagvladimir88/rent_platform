@@ -20,21 +20,13 @@ public class ItemLeased extends AuditingEntity {
   @Column(name = "time_to")
   private Timestamp timeTo;
 
-  @Column(name = "price_per_hour")
-  private double pricePerHour;
+  @Column(name = "price_per_day")
+  private double pricePerDay;
 
   @Column private double discount;
 
-  @Column private double fee;
-
   @Column(name = "price_total")
   private double priceTotal;
-
-  @Column(name = "rentier_grade_description")
-  private String rentierGradeDescription;
-
-  @Column(name = "renter_grade_description")
-  private String renterGradeDescription;
 
   @JoinColumn(name = "renter_id")
   @ManyToOne

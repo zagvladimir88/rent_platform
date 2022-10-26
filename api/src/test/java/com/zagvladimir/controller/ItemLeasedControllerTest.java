@@ -41,12 +41,9 @@ class ItemLeasedControllerTest extends BaseIntegrationTest {
     body.put("renterId", "6");
     body.put("timeFrom", "2022-09-06T13:20:05.000+00:00");
     body.put("timeTo", "2022-09-06T15:20:11.000+00:00");
-    body.put("pricePerHour", "9.0");
+    body.put("pricePerDay", "9.0");
     body.put("discount", "1");
-    body.put("fee", "9");
     body.put("priceTotal", "9");
-    body.put("rentierGradeDescription", "TEST");
-    body.put("renterGradeDescription", "TEST");
     body.put("status", "ACTIVE");
 
     mockMvc
@@ -57,8 +54,8 @@ class ItemLeasedControllerTest extends BaseIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.rentierGradeDescription").value("TEST"))
-        .andExpect(jsonPath("$.renterGradeDescription").value("TEST"));
+        .andExpect(jsonPath("$.renterId").value("6"))
+        .andExpect(jsonPath("$.timeFrom").value("2022-09-06T13:20:05.000+00:00"));
   }
 
   @Test

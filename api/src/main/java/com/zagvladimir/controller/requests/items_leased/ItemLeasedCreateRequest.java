@@ -25,24 +25,15 @@ public class ItemLeasedCreateRequest {
         @NotNull
         private Timestamp timeTo;
 
-        @Schema(defaultValue = "5.0", type = "number($double)", description = "Price per hour")
+        @Schema(defaultValue = "5.0", type = "number($double)", description = "Price per day")
         @Positive
-        private double pricePerHour;
+        private double pricePerDay;
 
         @Schema(defaultValue = "5.0", type = "number($double)" , description = "Discount")
         private double discount;
 
-        @Schema(defaultValue = "0.1", type = "number($double)" , description = "Fee")
-        private double fee;
-
         @Schema(defaultValue = "8", type = "number($double)" , description = "Total Price")
         private double priceTotal;
-
-        @Schema(defaultValue = "test", type = "string" , description = "Renter grade")
-        private String  rentierGradeDescription;
-
-        @Schema(defaultValue = "test", type = "string" , description = "Rentier grade")
-        private String  renterGradeDescription;
 
         @Schema(defaultValue = "ACTIVE", type = "string" , description = "Status")
         private Status status = Status.ACTIVE;

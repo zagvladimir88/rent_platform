@@ -101,9 +101,10 @@ VALUES (2, 'Makita hr2470ft', 5, 2, 'Microdistrict 17', 'Rotary Hammer makita hr
        (8, 'DEKO DKRH20H3', 5, 2, 'Microdistrict 3', 'Rotary Hammer DEKO DKRH20H3', 5, 5.00, true, '2022-09-04 15:53:19.140000', '2022-09-04 15:53:19.140000', 'ACTIVE');
 select SETVAL('items_id_seq', 10);
 
-INSERT INTO items_leased (id, item_id, renter_id, time_from, time_to, price_per_hour, discount, fee, price_total, rentier_grade_description, renter_grade_description, creation_date, modification_date, status)
-VALUES (1, 2, 5, '2022-09-06 16:20:05.000000', '2022-09-06 18:20:11.000000', 5.00, 0.00, 0.10, 5.10, '5', '5', '2022-09-06 15:20:54.000000', '2022-09-06 15:20:55.000000', 'ACTIVE'),
-       (2, 3, 5, '2022-09-06 17:21:14.000000', '2022-09-06 22:21:19.000000', 5.00, 0.00, 0.10, 5.10, '5', '5', '2022-09-06 15:21:33.000000', '2022-09-06 15:21:34.000000', 'ACTIVE');
+INSERT INTO items_leased (id, item_id, renter_id, time_from, time_to, price_per_day, discount, price_total, creation_date, modification_date, status)
+VALUES (1, 2, 5, '2022-09-06 16:20:05.000000', '2022-09-06 18:20:11.000000', 5.00, 0.00, 5.10, '2022-09-06 15:20:54.000000', '2022-09-06 15:20:55.000000', 'ACTIVE'),
+(2, 3, 5, '2022-09-06 17:21:14.000000', '2022-09-06 22:21:19.000000', 5.00, 0.00, 5.10, '2022-09-06 15:21:33.000000', '2022-09-06 15:21:34.000000', 'ACTIVE');
+
 select SETVAL('items_leased_id_seq', 2);
 
 INSERT INTO public.grades (id, item_id, user_id, grade, description, creation_date, modification_date, status)

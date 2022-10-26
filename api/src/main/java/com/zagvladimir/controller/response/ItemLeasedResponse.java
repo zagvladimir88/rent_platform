@@ -19,16 +19,9 @@ public class ItemLeasedResponse {
 
     private Timestamp timeTo;
 
-    private double pricePerHour;
+    private double pricePerDay;
 
     private double discount;
 
-    private double fee;
-
     private double priceTotal;
-
-    private String rentierGradeDescription;
-
-    private String renterGradeDescription;
-
 }
