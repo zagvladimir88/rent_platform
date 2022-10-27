@@ -14,7 +14,5 @@ public interface GradeService {
 
   Grade findById(Long gradeId);
 
-  Grade update(Grade object);
-
   Long delete(Long gradeId);
 }

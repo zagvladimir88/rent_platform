@@ -75,7 +75,7 @@ class UserControllerTest extends BaseIntegrationTest {
     body.put("firstName", "Evgenii");
     body.put("lastName", "Popov");
     body.put("userLogin", "joniq");
-    body.put("userPassword", "5555");
+    body.put("userPassword", "555555");
     body.put("locationId", "1");
     body.put("locationDetails", "20 30 5");
     body.put("mobileNumber", "+375256145343");

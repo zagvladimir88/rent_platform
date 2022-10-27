@@ -40,6 +40,7 @@ public class UserCreateRequest {
     @Schema(defaultValue = "+375291544444", type = "string" , description = "User mobile number")
     private String mobileNumber;
 
+    @Size(min = 2, max = 255)
     @Schema(defaultValue = "test@gmail.com", type = "string" , description = "User email")
     @Email
     private String email;

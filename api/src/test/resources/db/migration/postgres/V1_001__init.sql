@@ -1,21 +1,9 @@
 create table if not exists countries
 (
-    id
-                      bigserial
-        constraint
-            countries_pk
-            primary
-                key,
-    country_name
-                      varchar(30),
-    creation_date     timestamp(6) default CURRENT_TIMESTAMP
-        (
-            6
-        ),
-    modification_date timestamp(6) default CURRENT_TIMESTAMP
-        (
-            6
-        ),
+    id bigserial  constraint  countries_pk  primary  key,
+    country_name      varchar(30),
+    creation_date     timestamp(6) default CURRENT_TIMESTAMP(6),
+    modification_date timestamp(6) default CURRENT_TIMESTAMP(6),
     status            varchar(25)  default 'ACTIVE':: character varying
 );
 
@@ -49,36 +37,20 @@ alter table locations
 
 create table if not exists users
 (
-    id
-                      bigserial
-        constraint
-            users_pk
-            primary
-                key,
-    first_name
-                      varchar(25)  not null,
-    last_name         varchar(32)  not null,
-    user_password     varchar(200) not null,
-    location_id       integer
-        constraint users_location_id_fk
+    id   bigserial  constraint  users_pk primary  key,
+    first_name varchar(25)  not null,
+    last_name  varchar(32)  not null,
+    user_password varchar(200) not null,
+    location_id   integer constraint users_location_id_fk
             references locations
             on update cascade
             on delete cascade,
     location_details  varchar,
     mobile_number     varchar(15),
     email             varchar(255) not null,
-    registration_date timestamp(6) default CURRENT_TIMESTAMP
-        (
-            6
-        )                          not null,
-    creation_date     timestamp(6) default CURRENT_TIMESTAMP
-        (
-            6
-        ),
-    modification_date timestamp(6) default CURRENT_TIMESTAMP
-        (
-            6
-        ),
+    registration_date timestamp(6) default CURRENT_TIMESTAMP(6)                          not null,
+    creation_date     timestamp(6) default CURRENT_TIMESTAMP(6),
+    modification_date timestamp(6) default CURRENT_TIMESTAMP(6),
     status            varchar(25)  default 'ACTIVE':: character varying,
     user_login        varchar(100) not null
 );
@@ -112,9 +84,7 @@ create table categories
 
 create table sub_categories
 (
-    id                bigserial
-        constraint sub_categories_pk
-            primary key,
+    id  bigserial  constraint sub_categories_pk  primary key,
     sub_category_name varchar(100) not null,
     category_id       bigserial
         constraint sub_categories_categories_id_fk
@@ -123,8 +93,6 @@ create table sub_categories
     modification_date timestamp(6) default CURRENT_TIMESTAMP(6),
     status            varchar(25)  default 'ACTIVE'
 );
-
-
 
 create table items
 (
@@ -204,23 +172,11 @@ alter table grades
 
 create table if not exists roles
 (
-    id
-                      bigserial
-        constraint
-            roles_pk
-            primary
-                key,
-    name
-                      varchar(100),
-    creation_date     timestamp(6) default CURRENT_TIMESTAMP
-        (
-            6
-        ) not null,
-    modification_date timestamp(6) default CURRENT_TIMESTAMP
-        (
-            6
-        ) not null,
-    status            varchar(25)  default 'ACTIVE':: character varying
+    id  bigserial   constraint  roles_pk    primary  key,
+    name   varchar(100),
+    creation_date     timestamp(6) default CURRENT_TIMESTAMP(6) not null,
+    modification_date timestamp(6) default CURRENT_TIMESTAMP(6) not null,
+    status  varchar(25)  default 'ACTIVE':: character varying
 );
 
 alter table roles
@@ -231,33 +187,10 @@ create unique index if not exists roles_id_uindex
 
 create table if not exists user_roles
 (
-    user_id
-                      bigint
-        constraint
-            user_roles_users_id_fk
-            references
-                users
-            on
-                update
-                cascade
-            on
-                delete
-                cascade,
-    role_id
-                      bigint
-        constraint
-            user_roles_roles_id_fk
-            references
-                roles,
-    creation_date
-                      timestamp(6) default CURRENT_TIMESTAMP
-        (
-            6
-        ),
-    modification_date timestamp(6) default CURRENT_TIMESTAMP
-        (
-            6
-        )
+    user_id  bigint constraint  user_roles_users_id_fk  references   users  on update  cascade  on   delete    cascade,
+    role_id  bigint  constraint  user_roles_roles_id_fk   references  roles,
+    creation_date timestamp(6) default CURRENT_TIMESTAMP(6),
+    modification_date timestamp(6) default CURRENT_TIMESTAMP(6)
 );
 
 alter table user_roles
@@ -265,29 +198,13 @@ alter table user_roles
 
 create table if not exists images
 (
-    id
-                      bigserial
-        constraint
-            images_pk
-            primary
-                key
-        constraint
-            table_name_items_id_fk
-            references
-                items,
-    item_id
-                      bigserial,
-    link
-                      varchar(64) not null,
-    creation_date     timestamp(6) default CURRENT_TIMESTAMP
-        (
-            6
-        ),
-    modification_date timestamp(6) default CURRENT_TIMESTAMP
-        (
-            6
-        ),
-    status            varchar(25)  default 'ACTIVE':: character varying
+    id  bigserial constraint images_pk primary  key
+        constraint    table_name_items_id_fk   references  items,
+    item_id  bigserial,
+    link varchar(64) not null,
+    creation_date   timestamp(6) default CURRENT_TIMESTAMP(6),
+    modification_date timestamp(6) default CURRENT_TIMESTAMP(6),
+    status  varchar(25)  default 'ACTIVE':: character varying
 );
 
 alter table images

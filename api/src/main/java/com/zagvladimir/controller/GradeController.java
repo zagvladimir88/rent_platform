@@ -85,7 +85,7 @@ public class GradeController {
             })
     @PostMapping
     @Transactional
-    public ResponseEntity<Object> createGrade(@Valid @RequestBody GradeCreateRequest gradeCreateRequest) {
+    public ResponseEntity<Object> createGrade(@RequestBody @Valid GradeCreateRequest gradeCreateRequest) {
 
         Grade newGrade = gradeMapper.convertCreateRequest(gradeCreateRequest);
         Long userId = gradeCreateRequest.getUserId();

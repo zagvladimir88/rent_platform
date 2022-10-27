@@ -90,7 +90,8 @@ public class ItemController {
             })
     @PostMapping
     @Transactional
-    public ResponseEntity<Object> createItem(@Valid @RequestBody ItemCreateRequest createRequest) {
+    public ResponseEntity<Object> createItem(
+            @RequestBody @Valid ItemCreateRequest createRequest) {
 
         Item item = itemMapper.convertCreateRequest(createRequest);
         Long subCategoryId = createRequest.getSubCategoryId();

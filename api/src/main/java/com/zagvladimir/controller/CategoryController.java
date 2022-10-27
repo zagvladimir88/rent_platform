@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Map;
 
@@ -101,7 +102,7 @@ public class CategoryController {
   @PostMapping
   @Transactional
   public ResponseEntity<Object> createItemCategory(
-      @RequestBody CategoryCreateRequest categoryCreateRequest) {
+      @RequestBody @Valid CategoryCreateRequest categoryCreateRequest) {
 
     Category newCategory = itemCategoryMapper.convertCreateRequest(categoryCreateRequest);
     CategoryResponse categoryResponse =

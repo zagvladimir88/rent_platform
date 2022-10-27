@@ -11,9 +11,11 @@ import java.sql.Timestamp;
 @Data
 public class ItemLeasedCreateRequest {
 
+        @NotNull
         @Schema(defaultValue = "2", type = "Long" , description = "The number of the item that is being rented")
         private long itemId;
 
+        @NotNull
         @Schema(defaultValue = "3", type = "Long" , description = "The number of the users who owns")
         private long renterId;
 
@@ -22,7 +24,6 @@ public class ItemLeasedCreateRequest {
         private Timestamp timeFrom;
 
         @Schema(defaultValue = "2022-09-07 16:20:05.000000", type = "string($date-time)" , description = "End date of the lease")
-        @NotNull
         private Timestamp timeTo;
 
         @Schema(defaultValue = "5.0", type = "number($double)", description = "Price per day")

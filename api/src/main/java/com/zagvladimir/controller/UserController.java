@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Map;
 
@@ -139,7 +140,7 @@ public class UserController {
   @PutMapping(value = "/{id}")
   @Transactional
   public ResponseEntity<Object> updateUser(
-      @PathVariable Long id, @RequestBody UserUpdateRequest userUpdateRequest) {
+      @PathVariable Long id, @Valid @RequestBody UserUpdateRequest userUpdateRequest) {
     User updatedUser = userMapper.convertUpdateRequest(userUpdateRequest, userService.findById(id));
     UserResponse userResponse = userMapper.toResponse(userService.update(updatedUser));
     return new ResponseEntity<>(Collections.singletonMap("user", userResponse), HttpStatus.OK);

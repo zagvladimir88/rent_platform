@@ -1,6 +1,7 @@
 package com.zagvladimir.exception;
 
 import com.zagvladimir.util.UUIDGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @ControllerAdvice
 public class ApplicationExceptionHandler {
 
@@ -39,7 +41,7 @@ public class ApplicationExceptionHandler {
             .errorMessage(e.getMessage())
             .e(e.getClass().toString())
             .build();
-
+    log.warn("error: {}, id: {}, error code: {}",error.getErrorMessage(), error.getExceptionId(),error.getErrorCode());
     return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.NOT_FOUND);
   }
 
@@ -115,7 +117,6 @@ public class ApplicationExceptionHandler {
     for (FieldError fieldError : e.getBindingResult().getFieldErrors()) {
       messages.put(fieldError.getField(), fieldError.getDefaultMessage());
     }
-
     return new ResponseEntity<>(
         Collections.singletonMap("error", messages), HttpStatus.BAD_REQUEST);
   }

@@ -4,7 +4,6 @@ import com.zagvladimir.controller.mappers.RoleMapper;
 import com.zagvladimir.controller.requests.role.RoleCreateRequest;
 import com.zagvladimir.controller.response.RoleResponse;
 import com.zagvladimir.domain.Role;
-import com.zagvladimir.repository.RoleRepository;
 import com.zagvladimir.service.role.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -27,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -121,7 +121,7 @@ public class RoleController {
             content = @Content)
       })
   @PostMapping
-  public ResponseEntity<Object> createRole(@RequestBody RoleCreateRequest createRequest) {
+  public ResponseEntity<Object> createRole( @RequestBody @Valid RoleCreateRequest createRequest) {
     Role role = roleService.create(roleMapper.convertCreateRequest(createRequest));
     return new ResponseEntity<>(roleMapper.toResponse(role), HttpStatus.CREATED);
   }

@@ -46,12 +46,6 @@ public class GradeServiceImpl implements GradeService {
 
   @Transactional
   @Override
-  public Grade update(Grade object) {
-    return null;
-  }
-
-  @Transactional
-  @Override
   public Long delete(Long gradeId) {
     gradeRepository.deleteById(gradeId);
     return gradeId;

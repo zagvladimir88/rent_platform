@@ -15,9 +15,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 import java.util.Set;
 
@@ -28,21 +25,16 @@ import java.util.Set;
 @ToString(exclude = {"location","roles","items","grades"})
 public class User extends AuditingEntity {
 
-  @NotBlank
-  @Size(min = 2,max = 25)
   @Column(name = "first_name")
   private String firstName;
 
-  @NotBlank
-  @Size(min = 2,max = 32)
   @Column(name = "last_name")
   private String lastName;
 
-  @Size(min = 2,max = 100)
+
   @Column(name = "user_login")
   private String userLogin;
 
-  @NotBlank()
   @Column(name = "user_password")
   private String userPassword;
 
@@ -52,7 +44,6 @@ public class User extends AuditingEntity {
   @Column(name = "mobile_number")
   private String mobileNumber;
 
-  @Email
   @Column(name = "email")
   private String email;
 

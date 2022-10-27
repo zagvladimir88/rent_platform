@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Collections;
 
 @Tag(name = "Sub categories controller")
@@ -102,7 +103,7 @@ public class SubCategoryController {
   @PostMapping
   @Transactional
   public ResponseEntity<Object> createSubCategory(
-      @RequestBody SubCategoryCreateRequest subCategoryCreateRequest) {
+      @Valid @RequestBody SubCategoryCreateRequest subCategoryCreateRequest) {
     SubCategory subCategory = subItemTypeMapper.convertCreateRequest(subCategoryCreateRequest);
     Long categoryId = subCategoryCreateRequest.getCategoryId();
     SubCategory newSubCategory = subCategoryService.create(subCategory, categoryId);

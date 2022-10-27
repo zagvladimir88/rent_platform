@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -71,7 +70,12 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User findById(Long userId) {
-    return userRepository.findById(userId).orElseThrow(EntityExistsException::new);
+    return userRepository
+        .findById(userId)
+        .orElseThrow(
+            () ->
+                new EntityNotFoundException(
+                    String.format("The user with id:%d not found", userId)));
   }
 
   @Transactional
