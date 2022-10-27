@@ -5,21 +5,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public interface CountryService {
 
-    Page<Country> findAll(Pageable pageable);
-    List<Country> findAll();
+  Page<Country> findAll(Pageable pageable);
 
-    Optional<Country> findCountryById(Long countryId);
+  List<Country> findAll();
 
-    Country create(Country country);
+  Country findCountryById(Long countryId);
 
-    Long delete(Long countryId);
+  Country create(Country country);
 
-    Country update(Country countryForUpdate);
+  Long delete(Long countryId);
+
+  Country update(Country countryForUpdate);
 }

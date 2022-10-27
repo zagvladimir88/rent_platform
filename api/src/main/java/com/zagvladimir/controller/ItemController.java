@@ -16,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,24 +37,6 @@ public class ItemController {
     private final ItemMapper itemMapper;
 
 
-    @Operation(summary = "Gets all items")
-    @ApiResponses(
-            value = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Found the items",
-                            content = {
-                                    @Content(
-                                            mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = ItemResponse.class)))
-                            })
-            })
-    @GetMapping
-    public ResponseEntity<Object> findAllItems() {
-        return new ResponseEntity<>(itemService.findAll().stream().map(itemMapper::toResponse),
-                HttpStatus.OK);
-    }
-
     @Operation(
             summary = "Gets items with pagination",
             responses = {
@@ -65,9 +48,10 @@ public class ItemController {
                                     mediaType = "application/json",
                                     array = @ArraySchema(schema = @Schema(implementation = ItemResponse.class))))
             })
-    @GetMapping("/search")
-    public ResponseEntity<Object> findAllItemsWithParams(@ParameterObject Pageable pageable) {
-        return new ResponseEntity<>(itemService.findAll(pageable).map(itemMapper::toResponse), HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<Object> findAllItems(@ParameterObject Pageable page) {
+        Page<ItemResponse> itemResponse =  itemService.findAll(page).map(itemMapper::toResponse);
+        return new ResponseEntity<>(itemResponse, HttpStatus.OK);
     }
 
     @Operation(summary = "Gets item by ID")
@@ -110,10 +94,9 @@ public class ItemController {
 
         Item item = itemMapper.convertCreateRequest(createRequest);
         Long subCategoryId = createRequest.getSubCategoryId();
+        ItemResponse itemResponse = itemMapper.toResponse(itemService.create(item,subCategoryId));
 
-        itemService.create(item,subCategoryId);
-
-        return new ResponseEntity<>(itemMapper.toResponse(itemService.findById(item.getId())), HttpStatus.CREATED);
+        return new ResponseEntity<>(itemResponse, HttpStatus.CREATED);
     }
 
     @Operation(
@@ -124,11 +107,7 @@ public class ItemController {
             })
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteItemsById(@PathVariable Long id){
-
         itemService.delete(id);
-
-        Map<String, Object> model = new HashMap<>();
-        model.put("delete item id = ", id);
-        return new ResponseEntity<>(model, HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap("The item was deleted, id:",id), HttpStatus.OK);
     }
 }

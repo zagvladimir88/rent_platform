@@ -20,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,8 +73,11 @@ public class UserController {
             })
       })
   @GetMapping("/{id}")
-  public ResponseEntity<Map<String, Object>> findUserById(@PathVariable Long id) {
-    UserResponse user = userMapper.toResponse(userService.findById(id));
+  @PreAuthorize(
+      "@userServiceImpl.findById(#id).userLogin.equals(principal.username) or hasRole('ADMIN')")
+  public ResponseEntity<Map<String, Object>> findUserById(@PathVariable String id) {
+    Long userId = Long.parseLong(id);
+    UserResponse user = userMapper.toResponse(userService.findById(userId));
     return new ResponseEntity<>(Collections.singletonMap("user", user), HttpStatus.OK);
   }
 

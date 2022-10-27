@@ -8,47 +8,52 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-    private final CategoryRepository categoryRepository;
+  private final CategoryRepository categoryRepository;
 
+  @Override
+  public Page<Category> findAll(Pageable pageable) {
+    return categoryRepository.findAll(pageable);
+  }
 
-    @Override
-    public Page<Category> findAll(Pageable pageable) {
-        return categoryRepository.findAll(pageable);
-    }
+  @Override
+  public List<Category> findAll() {
+    return categoryRepository.findAll();
+  }
 
-    @Override
-    public List<Category> findAll() {
-        return categoryRepository.findAll();
-    }
+  @Transactional
+  @Override
+  public Category create(Category category) {
+    return categoryRepository.save(category);
+  }
 
-    @Transactional
-    @Override
-    public Category create(Category category) {
-        return categoryRepository.save(category);
-    }
+  @Override
+  public Category findById(Long itemCategoryId) {
 
-    @Override
-    public Optional<Category> findById(Long itemCategoryId) {
-        return categoryRepository.findById(itemCategoryId);
-    }
+    return categoryRepository
+        .findById(itemCategoryId)
+        .orElseThrow(
+            () ->
+                new EntityNotFoundException(
+                    String.format("The category with id:%d not found", itemCategoryId)));
+  }
 
-    @Transactional
-    @Override
-    public Category update(Category category) {
-        return categoryRepository.save(category);
-    }
+  @Transactional
+  @Override
+  public Category update(Category category) {
+    return categoryRepository.save(category);
+  }
 
-    @Transactional
-    @Override
-    public Long delete(Long itemCategoryId) {
-        categoryRepository.deleteById(itemCategoryId);
-        return itemCategoryId;
-    }
+  @Transactional
+  @Override
+  public Long delete(Long itemCategoryId) {
+    categoryRepository.deleteById(itemCategoryId);
+    return itemCategoryId;
+  }
 }

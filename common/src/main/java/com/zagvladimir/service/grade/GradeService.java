@@ -1,23 +1,20 @@
 package com.zagvladimir.service.grade;
 
 import com.zagvladimir.domain.Grade;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public interface GradeService {
 
-    List<Grade> findAll();
+  Page<Grade> findAll(Pageable page);
 
-    Grade create(Grade grade, Long userId, Long itemId);
+  Grade create(Grade grade, Long userId, Long itemId);
 
-    Optional<Grade> findById(Long gradeId);
+  Grade findById(Long gradeId);
 
-    Grade update(Grade object);
+  Grade update(Grade object);
 
-    Long delete(Long gradeId);
-
-    List<Grade> search(int limit, int offset);
+  Long delete(Long gradeId);
 }

@@ -90,6 +90,6 @@ class CountryControllerTest extends BaseIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.countryName").value("TEST"));
+        .andExpect(jsonPath("$.country.countryName").value("TEST"));
   }
 }

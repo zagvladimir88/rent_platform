@@ -35,7 +35,7 @@ class RoleControllerTest extends BaseIntegrationTest {
         .andExpect(status().isOk())
         .andExpect(
             jsonPath(
-                "$.result[*].name",
+                "$.content[*].name",
                 containsInAnyOrder("ROLE_USER", "ROLE_ADMIN", "ROLE_ANONYMOUS", "ROLE_MODERATOR")));
   }
 
@@ -47,7 +47,7 @@ class RoleControllerTest extends BaseIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(
                     jsonPath(
-                            "$.result[*].name",hasItem("ROLE_ADMIN")));
+                            "$.roles[*].name",hasItem("ROLE_ADMIN")));
   }
 
   @Test
@@ -73,7 +73,7 @@ class RoleControllerTest extends BaseIntegrationTest {
                     .accept(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.[*].name",hasItem("ROLE_ADMIN")));
+            .andExpect(jsonPath("$.name").value("ROLE_TEST"));
   }
 
   @Test

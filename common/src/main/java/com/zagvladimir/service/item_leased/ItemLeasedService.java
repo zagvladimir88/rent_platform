@@ -1,12 +1,13 @@
 package com.zagvladimir.service.item_leased;
 
 import com.zagvladimir.domain.ItemLeased;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 public interface ItemLeasedService {
 
-    List<ItemLeased> findAll();
+    Page<ItemLeased> findAll(Pageable page);
 
     ItemLeased create(ItemLeased itemLeased, Long renterId);
 

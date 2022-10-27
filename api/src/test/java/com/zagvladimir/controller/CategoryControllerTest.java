@@ -58,7 +58,7 @@ class CategoryControllerTest extends BaseIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.categoryName").value("TEST"));
+        .andExpect(jsonPath("$.category.categoryName").value("TEST"));
   }
 
   @Test

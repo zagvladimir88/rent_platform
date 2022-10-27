@@ -3,11 +3,13 @@ package com.zagvladimir.service.role;
 import com.zagvladimir.domain.Role;
 import com.zagvladimir.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,8 +18,8 @@ public class RoleServiceImpl implements RoleService {
   private final RoleRepository roleRepository;
 
   @Override
-  public List<Role> findAll() {
-    return roleRepository.findAll();
+  public Page<Role> findAll(Pageable page) {
+    return roleRepository.findAll(page);
   }
 
   @Override
@@ -26,8 +28,13 @@ public class RoleServiceImpl implements RoleService {
   }
 
   @Override
-  public Optional<Role> findRoleById(Long roleId) {
-    return roleRepository.findById(roleId);
+  public Role findRoleById(Long roleId) {
+    return roleRepository
+        .findById(roleId)
+        .orElseThrow(
+            () ->
+                new EntityNotFoundException(
+                    String.format("The role with id:%d not found", roleId)));
   }
 
   @Transactional

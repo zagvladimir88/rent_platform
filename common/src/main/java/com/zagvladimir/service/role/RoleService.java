@@ -1,20 +1,20 @@
 package com.zagvladimir.service.role;
 
 import com.zagvladimir.domain.Role;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface RoleService {
 
-    List<Role> findAll();
+  Page<Role> findAll(Pageable page);
 
-    List<Role> findRolesByUserId(Long roleId);
+  List<Role> findRolesByUserId(Long roleId);
 
-    Optional<Role> findRoleById(Long roleId);
+  Role findRoleById(Long roleId);
 
-    Role create(Role role);
+  Role create(Role role);
 
-    Long delete(Long id);
-
+  Long delete(Long id);
 }

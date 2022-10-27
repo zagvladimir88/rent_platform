@@ -61,8 +61,8 @@ class GradeControllerTest extends BaseIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.description").value("TEST"))
-        .andExpect(jsonPath("$.grade").value("4.0"));
+        .andExpect(jsonPath("$.grade.description").value("TEST"))
+        .andExpect(jsonPath("$.grade.grade").value("4.0"));
   }
 
   @Test

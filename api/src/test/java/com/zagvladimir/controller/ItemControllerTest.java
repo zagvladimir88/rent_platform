@@ -35,20 +35,11 @@ class ItemControllerTest extends BaseIntegrationTest {
 
   @Test
   void findAllItems() throws Exception {
-    this.mockMvc
-        .perform(get("/api/items/"))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.[*].id", containsInAnyOrder(2, 3, 4, 5, 6, 8)));
-  }
-
-  @Test
-  void findAllItemsWithParams() throws Exception {
-    this.mockMvc
-        .perform(get("/api/items/").param("page", "0").param("size", "10"))
-        .andDo(print())
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.[*].id", containsInAnyOrder(2, 3, 4, 5, 6, 8)));
+    mockMvc.perform(MockMvcRequestBuilders.get("/api/items/")
+                    .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$['pageable']['paged']").value("true"))
+            .andExpect(jsonPath("$.content[0].itemName").value("Makita hr2470ft"));
   }
 
   @Test

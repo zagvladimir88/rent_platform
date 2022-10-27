@@ -53,11 +53,9 @@ public class SubCategoryController {
       })
   @GetMapping
   public ResponseEntity<Object> findAllISubCategories(@ParameterObject Pageable pageable) {
-
     Page<SubCategoryResponse> subCategories =
         subCategoryService.findAll(pageable).map(subItemTypeMapper::toResponse);
-    return new ResponseEntity<>(
-        Collections.singletonMap("SubCategories", subCategories), HttpStatus.OK);
+    return new ResponseEntity<>(subCategories, HttpStatus.OK);
   }
 
   @Operation(summary = "Gets sub category by ID")

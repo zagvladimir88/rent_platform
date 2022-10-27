@@ -13,15 +13,15 @@ import org.springframework.stereotype.Component;
 public class LoggingServiceAspect {
 
 
-    @Pointcut("execution(* com.zagvladimir.service.*.*(..))")
+    @Pointcut("execution(* com.zagvladimir.service.*.*.*(..))")
     public void aroundServicePointcut() {
     }
 
     @Around("aroundServicePointcut()")
     public Object logAroundMethods(ProceedingJoinPoint joinPoint) throws Throwable {
-        log.info("Method {} in {} start" ,joinPoint.getSignature().getName(), joinPoint.getSignature().getDeclaringTypeName());
+        log.info("Method {} in {} start" ,joinPoint.getSignature().getName(), joinPoint.getSignature().getDeclaringType());
         Object proceed = joinPoint.proceed();
-        log.info("Method {} finished", joinPoint.getSignature().getName());
+        log.info("Method {} in {} finished", joinPoint.getSignature().getName(),joinPoint.getSignature().getDeclaringType());
         return proceed;
     }
 }

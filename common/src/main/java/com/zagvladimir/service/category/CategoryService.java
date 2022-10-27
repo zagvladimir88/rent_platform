@@ -6,21 +6,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public interface CategoryService {
 
-    Page<Category> findAll(Pageable pageable);
+  Page<Category> findAll(Pageable pageable);
 
-    List<Category> findAll();
+  List<Category> findAll();
 
-    Category create(Category category);
+  Category create(Category category);
 
-    Optional<Category> findById(Long itemCategoryId);
+  Category findById(Long itemCategoryId);
 
-    Category update(Category category);
+  Category update(Category category);
 
-    Long delete(Long itemCategoryId);
-
+  Long delete(Long itemCategoryId);
 }

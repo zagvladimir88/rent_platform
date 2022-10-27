@@ -13,15 +13,23 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.Map;
 
 @Tag(name = "Grade controller")
 @RestController
@@ -44,10 +52,10 @@ public class GradeController {
                             })
             })
     @GetMapping
-    public ResponseEntity<Object> findAllGrades() {
-        List<GradeResponse> gradeResponseList = gradeService.findAll().stream().map(gradeMapper::toResponse).collect(Collectors.toList());
+    public ResponseEntity<Object> findAllGrades(@ParameterObject Pageable page) {
+        Page<GradeResponse> gradeResponse = gradeService.findAll(page).map(gradeMapper::toResponse);
         return new ResponseEntity<>(
-                Collections.singletonMap("Grades", gradeResponseList), HttpStatus.OK);
+                Collections.singletonMap("Grades", gradeResponse), HttpStatus.OK);
     }
 
     @Operation(summary = "Gets grade by ID",
@@ -62,9 +70,9 @@ public class GradeController {
                             })
             })
     @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> findlGradeById(@PathVariable Long id) {
-         return new ResponseEntity<>(
-                Collections.singletonMap("Grade", gradeService.findById(id).map(gradeMapper::toResponse)), HttpStatus.OK);
+    public ResponseEntity<Map<String, Object>> findGradeById(@PathVariable Long id) {
+        GradeResponse response = gradeMapper.toResponse(gradeService.findById(id));
+         return new ResponseEntity<>(Collections.singletonMap("Grade",response ), HttpStatus.OK);
     }
 
     @Operation(
@@ -82,10 +90,9 @@ public class GradeController {
         Grade newGrade = gradeMapper.convertCreateRequest(gradeCreateRequest);
         Long userId = gradeCreateRequest.getUserId();
         Long itemId = gradeCreateRequest.getItemId();
+        GradeResponse gradeResponse = gradeMapper.toResponse(gradeService.create(newGrade, userId, itemId));
 
-        gradeService.create(newGrade, userId, itemId);
-
-        return new ResponseEntity<>(gradeService.findById(newGrade.getId()).map(gradeMapper::toResponse), HttpStatus.CREATED);
+        return new ResponseEntity<>(Collections.singletonMap("grade",gradeResponse), HttpStatus.CREATED);
     }
 
     @Operation(

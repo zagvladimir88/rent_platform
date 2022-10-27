@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
   public User create(User user, Long locationId) throws MessagingException {
 
     addRole(user, roleRepository.findRoleByName("ROLE_USER"));
-    user.setLocation(locationService.findById(locationId).orElse(null));
+    user.setLocation(locationService.findById(locationId));
     user.setRegistrationDate(new Timestamp(new Date().getTime()));
     user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
     user.setStatus(Status.NOT_ACTIVE);

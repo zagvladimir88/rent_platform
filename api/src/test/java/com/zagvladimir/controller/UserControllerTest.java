@@ -6,6 +6,7 @@ import com.zagvladimir.annotations.IT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -35,15 +36,16 @@ class UserControllerTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(username="Bukowski",roles={"USER"})
   void findUserById() throws Exception {
-    int id = 4;
+    int id = 39;
 
     this.mockMvc
         .perform(get("/api/users/{id}", id))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.user.id").value(id))
-        .andExpect(jsonPath("$.user.firstName").value("Vladimir"));
+        .andExpect(jsonPath("$.user.firstName").value("Charles"));
   }
 
   @Test
