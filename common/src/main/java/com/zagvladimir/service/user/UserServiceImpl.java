@@ -115,6 +115,12 @@ public class UserServiceImpl implements UserService {
     return false;
   }
 
+  @Override
+  public boolean isActivated(String login) {
+    Optional<User> user = userRepository.findByUserLogin(login);
+    return user.map(value -> value.getStatus().equals(Status.ACTIVE)).orElse(false);
+  }
+
   private void addRole(User user, Role role) {
     Set<Role> rolesList = new HashSet<>();
     rolesList.add(role);

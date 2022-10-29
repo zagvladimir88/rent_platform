@@ -66,7 +66,7 @@ public class ApplicationExceptionHandler {
         ErrorContainer.builder()
             .exceptionId(UUIDGenerator.generatedUI())
             .errorCode(1)
-            .errorMessage("General error")
+            .errorMessage(String.format("General error %s",e.getMessage()))
             .e(e.getClass().toString())
             .build();
 

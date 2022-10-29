@@ -1,9 +1,9 @@
 package com.zagvladimir.controller;
 
-
 import com.zagvladimir.controller.requests.auth.AuthRequest;
 import com.zagvladimir.controller.requests.auth.AuthResponse;
 import com.zagvladimir.security.jwt.JwtTokenHelper;
+import com.zagvladimir.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +32,8 @@ public class AuthenticationController {
 
     private final UserDetailsService userProvider;
 
+    private final UserService userService;
+
     @Operation(
             summary = "Login user in system",
             description = "Return Auth-Token with user login",
@@ -42,16 +45,19 @@ public class AuthenticationController {
     @PostMapping
     public ResponseEntity<AuthResponse> loginUser(@RequestBody AuthRequest request) {
 
-        /*Check login and password*/
+        if(!userService.isActivated(request.getUser_login())){
+            throw new BadCredentialsException("User is not activated");
+        }
         Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUser_login(),
                         request.getUser_password()
                 )
         );
+
+
         SecurityContextHolder.getContext().setAuthentication(authenticate);
 
-        /*Generate token with answer to user*/
         return ResponseEntity.ok(
                 AuthResponse
                         .builder()
