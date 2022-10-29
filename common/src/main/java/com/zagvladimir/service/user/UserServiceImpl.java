@@ -1,12 +1,16 @@
 package com.zagvladimir.service.user;
 
+import com.zagvladimir.domain.ItemLeased;
 import com.zagvladimir.domain.Role;
 import com.zagvladimir.domain.user.User;
 import com.zagvladimir.domain.enums.Status;
+import com.zagvladimir.repository.ItemLeasedRepository;
 import com.zagvladimir.repository.RoleRepository;
 import com.zagvladimir.repository.UserRepository;
+import com.zagvladimir.service.item_leased.ItemLeasedService;
 import com.zagvladimir.service.location.LocationService;
 import com.zagvladimir.service.mail.MailSenderService;
+import com.zagvladimir.service.pdf.PDFService;
 import com.zagvladimir.util.UUIDGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +43,8 @@ public class UserServiceImpl implements UserService {
   private final RoleRepository roleRepository;
   private final BCryptPasswordEncoder passwordEncoder;
   private final MailSenderService mailSenderService;
+  private final PDFService pdfService;
+  private final ItemLeasedRepository itemLeasedRepository;
 
   @Override
   public List<User> findAll() {
@@ -120,6 +126,30 @@ public class UserServiceImpl implements UserService {
   public boolean isActivated(String login) {
     Optional<User> user = userRepository.findByCredentialsUserLogin(login);
     return user.map(value -> value.getStatus().equals(Status.ACTIVE)).orElse(false);
+  }
+
+  @Override
+  public void confirmItemBooking(Long userID) throws MessagingException {
+    User user = userRepository.findById(userID).orElseThrow(
+                            () ->
+                                    new EntityNotFoundException(
+                                            String.format("The User with id: %d not found", userID)));
+
+    Set<ItemLeased> itemsLeasedSet = user.getItemsLeased();
+    String pathToBilling = pdfService.generateAnInvoice(itemsLeasedSet,user.getId());
+
+    Map<String, Object> templateModel = new HashMap<>();
+    templateModel.put("recipientName", user.getFirstName());
+    templateModel.put("email", user.getCredentials().getEmail());
+    templateModel.put("name", user.getFirstName());
+    templateModel.put("item_name", "item name");
+
+    mailSenderService.sendConfirmBookingMail(user.getCredentials().getEmail(),"Confirm Booking",pathToBilling,templateModel);
+
+    for (ItemLeased leased : itemsLeasedSet){
+      leased.setStatus(Status.ACTIVE);
+      itemLeasedRepository.save(leased);
+    }
   }
 
   private void addRole(User user, Role role) {

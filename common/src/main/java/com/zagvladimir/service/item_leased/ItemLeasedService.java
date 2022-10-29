@@ -4,8 +4,6 @@ import com.zagvladimir.domain.ItemLeased;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import javax.mail.MessagingException;
-
 
 public interface ItemLeasedService {
 
@@ -19,5 +17,4 @@ public interface ItemLeasedService {
 
     Long delete(Long itemLeasedId);
 
-    boolean confirmItemBooking(Long itemLeasedId) throws MessagingException;
 }

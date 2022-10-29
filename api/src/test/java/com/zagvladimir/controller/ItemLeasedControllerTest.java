@@ -65,7 +65,7 @@ class ItemLeasedControllerTest extends BaseIntegrationTest {
         .perform(get("/api/items-leased/{id}", id))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.item.itemId").value("2"));
+        .andExpect(jsonPath("$.itemLeased.itemId").value("2"));
   }
 
   @Test

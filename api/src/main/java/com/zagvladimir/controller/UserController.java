@@ -2,6 +2,7 @@ package com.zagvladimir.controller;
 
 import com.zagvladimir.controller.mappers.UserMapper;
 import com.zagvladimir.controller.requests.users.UserUpdateRequest;
+import com.zagvladimir.controller.response.ItemLeasedResponse;
 import com.zagvladimir.controller.response.UserResponse;
 import com.zagvladimir.domain.user.User;
 import com.zagvladimir.exception.ErrorContainer;
@@ -24,12 +25,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Map;
@@ -145,4 +148,5 @@ public class UserController {
     UserResponse userResponse = userMapper.toResponse(userService.update(updatedUser));
     return new ResponseEntity<>(Collections.singletonMap("user", userResponse), HttpStatus.OK);
   }
+
 }
