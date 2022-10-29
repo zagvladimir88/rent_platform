@@ -26,4 +26,6 @@ public interface UserService {
   boolean activateUser(String code);
 
   boolean isActivated(String login);
+
+    void confirmItemBooking(Long userID) throws MessagingException;
 }

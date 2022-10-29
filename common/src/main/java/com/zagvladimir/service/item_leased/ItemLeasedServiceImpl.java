@@ -5,6 +5,7 @@ import com.zagvladimir.domain.enums.Status;
 import com.zagvladimir.repository.ItemLeasedRepository;
 import com.zagvladimir.service.mail.MailSenderService;
 import com.zagvladimir.service.item.ItemService;
+import com.zagvladimir.service.pdf.PDFService;
 import com.zagvladimir.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,7 @@ public class ItemLeasedServiceImpl implements ItemLeasedService {
   private final ItemService itemService;
   private final UserService userService;
   private final MailSenderService mailSenderService;
+  private final PDFService pdfService;
 
   @Override
   public Page<ItemLeased> findAll(Pageable page) {
@@ -60,27 +62,5 @@ public class ItemLeasedServiceImpl implements ItemLeasedService {
   public Long delete(Long itemLeasedId) {
     itemLeasedRepository.deleteById(itemLeasedId);
     return itemLeasedId;
-  }
-
-  @Override
-  public boolean confirmItemBooking(Long itemLeasedId) throws MessagingException {
-    ItemLeased itemLeased =
-        itemLeasedRepository
-            .findById(itemLeasedId)
-            .orElseThrow(
-                () ->
-                    new EntityNotFoundException(
-                        String.format("The itemLeased with id: %d not found", itemLeasedId)));
-    itemLeased.setStatus(Status.ACTIVE);
-    Map<String, Object> templateModel = new HashMap<>();
-    templateModel.put("recipientName", itemLeased.getRenter().getFirstName());
-    templateModel.put("email", itemLeased.getRenter().getCredentials().getEmail());
-    templateModel.put("name", itemLeased.getRenter().getFirstName());
-    templateModel.put("item_name", itemService.findById(itemLeased.getItemId()).getItemName());
-
-    mailSenderService.sendConfirmBookingMail(itemLeased.getRenter().getCredentials().getEmail(),"Confirm Booking",templateModel);
-    itemLeasedRepository.save(itemLeased);
-
-    return false;
   }
 }

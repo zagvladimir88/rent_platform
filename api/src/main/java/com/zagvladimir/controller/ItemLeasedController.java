@@ -108,19 +108,6 @@ public class ItemLeasedController {
         Collections.singletonMap("itemLeased", itemLeasedResponse), HttpStatus.OK);
   }
 
-  @PatchMapping("/{id}")
-  public ResponseEntity<Map<String, Object>> confirmItemBooking(@PathVariable("id") String id)
-      throws MessagingException {
-    Long itemLeasedId = Long.parseLong(id);
-    ItemLeasedResponse confirmedItemLeased = null;
-    if (itemLeasedService.confirmItemBooking(itemLeasedId)) {
-      confirmedItemLeased = itemLeasedMapper.toResponse(itemLeasedService.findById(itemLeasedId));
-    }
-
-    return new ResponseEntity<>(
-        Collections.singletonMap("item", confirmedItemLeased), HttpStatus.OK);
-  }
-
   @Operation(
       summary = "Delete itemLeased",
       responses = {
