@@ -23,4 +23,7 @@ jwt:
   expiration: 3600000
 
 ---
-
+gcs:
+  images:
+    pathToGCSJsonCredentials: C:\java_projects\rent_platform\common\src\main\resources\rent-platform-storage-395e699267fc.json
+    bucket: rentimages

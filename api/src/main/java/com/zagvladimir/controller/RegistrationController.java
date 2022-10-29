@@ -3,7 +3,7 @@ package com.zagvladimir.controller;
 import com.zagvladimir.controller.mappers.UserMapper;
 import com.zagvladimir.controller.requests.users.UserCreateRequest;
 import com.zagvladimir.controller.response.UserResponse;
-import com.zagvladimir.domain.User;
+import com.zagvladimir.domain.user.User;
 import com.zagvladimir.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

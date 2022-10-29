@@ -1,13 +1,19 @@
-package com.zagvladimir.domain;
+package com.zagvladimir.domain.user;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.zagvladimir.domain.AuditingEntity;
+import com.zagvladimir.domain.Grade;
+import com.zagvladimir.domain.ItemLeased;
+import com.zagvladimir.domain.Location;
+import com.zagvladimir.domain.Role;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -31,21 +37,14 @@ public class User extends AuditingEntity {
   @Column(name = "last_name")
   private String lastName;
 
-
-  @Column(name = "user_login")
-  private String userLogin;
-
-  @Column(name = "user_password")
-  private String userPassword;
+  @Embedded
+  private Credentials credentials;
 
   @Column(name = "location_details")
   private String locationDetails;
 
   @Column(name = "mobile_number")
   private String mobileNumber;
-
-  @Column(name = "email")
-  private String email;
 
   @Column(name = "registration_date")
   private Timestamp registrationDate;

@@ -3,7 +3,7 @@ package com.zagvladimir.controller;
 import com.zagvladimir.controller.mappers.UserMapper;
 import com.zagvladimir.controller.requests.users.UserUpdateRequest;
 import com.zagvladimir.controller.response.UserResponse;
-import com.zagvladimir.domain.User;
+import com.zagvladimir.domain.user.User;
 import com.zagvladimir.exception.ErrorContainer;
 import com.zagvladimir.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -75,7 +75,7 @@ public class UserController {
       })
   @GetMapping("/{id}")
   @PreAuthorize(
-      "@userServiceImpl.findById(#id).userLogin.equals(principal.username) or hasRole('ADMIN')")
+      "@userServiceImpl.findById(#id).credentials.userLogin.equals(principal.username) or hasRole('ADMIN')")
   public ResponseEntity<Map<String, Object>> findUserById(@PathVariable String id) {
     Long userId = Long.parseLong(id);
     UserResponse user = userMapper.toResponse(userService.findById(userId));

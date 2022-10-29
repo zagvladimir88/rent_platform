@@ -2,7 +2,7 @@ package com.zagvladimir.security;
 
 
 import com.zagvladimir.domain.Role;
-import com.zagvladimir.domain.User;
+import com.zagvladimir.domain.user.User;
 import com.zagvladimir.repository.RoleRepository;
 import com.zagvladimir.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ public class UserSecurityService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
             /*Find user in DB*/
-            Optional<User> searchResult = userRepository.findByUserLogin(username);
+            Optional<User> searchResult = userRepository.findByCredentialsUserLogin(username);
 
             if (searchResult.isPresent()) {
                 User user = searchResult.get();
@@ -35,8 +35,8 @@ public class UserSecurityService implements UserDetailsService {
                 /*We are creating Spring Security User object*/
 
                 return new org.springframework.security.core.userdetails.User(
-                        user.getUserLogin(),
-                        user.getUserPassword(),
+                        user.getCredentials().getUserLogin(),
+                        user.getCredentials().getUserPassword(),
 //                        ["ROLE_USER", "ROLE_ADMIN"]
                         AuthorityUtils.commaSeparatedStringToAuthorityList(
                                 roleRepository.findRolesByUserid(user.getId())

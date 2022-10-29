@@ -1,4 +1,4 @@
-package com.zagvladimir.service;
+package com.zagvladimir.service.mail;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +33,17 @@ public class MailSenderService {
         Context thymeleafContext = new Context();
         thymeleafContext.setVariables(templateModel);
         String htmlBody = thymeleafTemplateEngine.process("email-template.html", thymeleafContext);
+        send(to, subject, htmlBody);
+    }
+
+    public void sendConfirmBookingMail(String to, String subject, Map<String, Object> templateModel) throws MessagingException {
+        Context thymeleafContext = new Context();
+        thymeleafContext.setVariables(templateModel);
+        String htmlBody = thymeleafTemplateEngine.process("confirm-email-template.html", thymeleafContext);
+        send(to, subject, htmlBody);
+    }
+
+    private void send(String to, String subject, String htmlBody) throws MessagingException {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
         helper.setFrom(noreplyAddress);
@@ -41,6 +52,5 @@ public class MailSenderService {
         helper.setText(htmlBody, true);
         emailSender.send(message);
     }
-
 
 }

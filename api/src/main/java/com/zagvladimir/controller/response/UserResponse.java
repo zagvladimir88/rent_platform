@@ -1,7 +1,6 @@
 package com.zagvladimir.controller.response;
 
 import lombok.Data;
-
 import java.util.Set;
 
 @Data
@@ -13,17 +12,13 @@ public class UserResponse {
 
     private String lastName;
 
-    private String userLogin;
+    private CredentialsResponse credentials;
 
     private LocationResponse userLocation;
 
     private String locationDetails;
 
-    private String phoneNumber;
-
     private String mobileNumber;
-
-    private String email;
 
     private Set<RoleResponse> userRoles;
 

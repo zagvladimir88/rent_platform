@@ -1,6 +1,7 @@
 package com.zagvladimir.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.zagvladimir.domain.user.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import javax.persistence.*;

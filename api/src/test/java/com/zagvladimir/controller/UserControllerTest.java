@@ -54,7 +54,7 @@ class UserControllerTest extends BaseIntegrationTest {
         .perform(get("/api/users/login/strjke"))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.user.userLogin").value("strjke"));
+        .andExpect(jsonPath("$.user.credentials.userLogin").value("strjke"));
   }
 
   @Test

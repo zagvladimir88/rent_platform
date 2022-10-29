@@ -1,6 +1,5 @@
 package com.zagvladimir.controller.requests.items_leased;
 
-import com.zagvladimir.domain.enums.Status;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -35,9 +34,4 @@ public class ItemLeasedCreateRequest {
 
         @Schema(defaultValue = "8", type = "number($double)" , description = "Total Price")
         private double priceTotal;
-
-        @Schema(defaultValue = "ACTIVE", type = "string" , description = "Status")
-        private Status status = Status.ACTIVE;
-
-
 }

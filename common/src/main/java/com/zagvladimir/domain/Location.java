@@ -2,6 +2,7 @@ package com.zagvladimir.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.zagvladimir.domain.user.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

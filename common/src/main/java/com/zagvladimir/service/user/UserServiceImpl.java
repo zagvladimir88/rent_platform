@@ -1,12 +1,12 @@
 package com.zagvladimir.service.user;
 
 import com.zagvladimir.domain.Role;
-import com.zagvladimir.domain.User;
+import com.zagvladimir.domain.user.User;
 import com.zagvladimir.domain.enums.Status;
 import com.zagvladimir.repository.RoleRepository;
 import com.zagvladimir.repository.UserRepository;
 import com.zagvladimir.service.location.LocationService;
-import com.zagvladimir.service.MailSenderService;
+import com.zagvladimir.service.mail.MailSenderService;
 import com.zagvladimir.util.UUIDGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,12 +57,13 @@ public class UserServiceImpl implements UserService {
     addRole(user, roleRepository.findRoleByName("ROLE_USER"));
     user.setLocation(locationService.findById(locationId));
     user.setRegistrationDate(new Timestamp(new Date().getTime()));
-    user.setUserPassword(passwordEncoder.encode(user.getUserPassword()));
+    user.getCredentials().setUserPassword(passwordEncoder.encode(user.getCredentials().getUserPassword()));
+
     user.setStatus(Status.NOT_ACTIVE);
     user.setActivationCode(UUIDGenerator.generatedUI());
     userRepository.save(user);
 
-    if (userRepository.findUsersByEmail(user.getEmail()).isPresent()) {
+    if (userRepository.findUsersByCredentials_Email(user.getCredentials().getEmail()).isPresent()) {
       sendEmail(user);
     }
     return userRepository.findById(user.getId()).orElseThrow(IllegalArgumentException::new);
@@ -82,7 +83,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public User update(User userToUpdate) {
     userToUpdate.setModificationDate(new Timestamp(new Date().getTime()));
-    userToUpdate.setUserPassword(passwordEncoder.encode(userToUpdate.getUserPassword()));
+    userToUpdate.getCredentials().setUserPassword(passwordEncoder.encode(userToUpdate.getCredentials().getUserPassword()));
     userRepository.save(userToUpdate);
     return userRepository.findById(userToUpdate.getId()).orElseThrow(EntityNotFoundException::new);
   }
@@ -97,7 +98,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public User findByLogin(String login) {
     return userRepository
-        .findByUserLogin(login)
+        .findByCredentialsUserLogin(login)
         .orElseThrow(
             () ->
                 new EntityNotFoundException(
@@ -117,7 +118,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public boolean isActivated(String login) {
-    Optional<User> user = userRepository.findByUserLogin(login);
+    Optional<User> user = userRepository.findByCredentialsUserLogin(login);
     return user.map(value -> value.getStatus().equals(Status.ACTIVE)).orElse(false);
   }
 
@@ -131,10 +132,10 @@ public class UserServiceImpl implements UserService {
   private void sendEmail(User user) throws MessagingException {
     Map<String, Object> templateModel = new HashMap<>();
     templateModel.put("recipientName", user.getFirstName());
-    templateModel.put("email", user.getEmail());
+    templateModel.put("email", user.getCredentials().getEmail());
     templateModel.put("url", String.format(ACTIVATION_URL, user.getActivationCode()));
 
     mailSenderService.sendMessageUsingThymeleafTemplate(
-        user.getEmail(), "Activation link", templateModel);
+            user.getCredentials().getEmail(), "Activation link", templateModel);
   }
 }

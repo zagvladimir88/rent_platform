@@ -1,6 +1,6 @@
 package com.zagvladimir.service.user;
 
-import com.zagvladimir.domain.User;
+import com.zagvladimir.domain.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
