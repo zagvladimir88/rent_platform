@@ -5,7 +5,7 @@ import java.util.List;
 
 public interface ImageService {
 
-    public String uploadFile(byte[] imageBytes, Long itemId);
+    public String uploadFile(byte[] imageBytes, Long itemId, String fileExt);
 
     public List<URL> getUrls(Long itemId);
 }

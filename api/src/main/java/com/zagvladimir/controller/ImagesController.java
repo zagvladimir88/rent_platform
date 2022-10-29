@@ -1,11 +1,12 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.service.image.ImageServiceImpl;
+import com.zagvladimir.service.image.ImageService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ import java.util.Map;
 @RequestMapping("/api/images")
 public class ImagesController {
 
-  private final ImageServiceImpl imageService;
+  private final ImageService imageService;
 
   @PostMapping(
       path = "/{id}",
@@ -33,9 +34,10 @@ public class ImagesController {
   public ResponseEntity<Map<Object, Object>> uploadImage(
       @RequestPart(value = "file") MultipartFile file, @PathVariable String id) throws IOException {
 
+    String fileExtension = StringUtils.getFilenameExtension(file.getOriginalFilename());
     Long itemId = Long.parseLong(id);
     byte[] imageBytes = file.getBytes();
-    String imageUrl = imageService.uploadFile(imageBytes, itemId);
+    String imageUrl = imageService.uploadFile(imageBytes, itemId, fileExtension);
 
     return new ResponseEntity<>(Collections.singletonMap("imageUrl", imageUrl), HttpStatus.CREATED);
   }

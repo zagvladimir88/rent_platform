@@ -9,6 +9,7 @@ import com.zagvladimir.domain.Image;
 import com.zagvladimir.repository.ImageRepository;
 import com.zagvladimir.service.item.ItemService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import java.net.URL;
@@ -30,10 +31,14 @@ public class ImageServiceImpl implements ImageService {
   private final ImageRepository repository;
 
   @Override
-  public String uploadFile(byte[] imageBytes, Long itemId) {
-    String imageNameUUID = String.format("%S.jpg",UUID.randomUUID());
+  public String uploadFile(byte[] imageBytes, Long itemId, String fileExt) {
+
+    String imageNameUUID = String.format("%S.%s", UUID.randomUUID(), fileExt);
     BlobId blobId = BlobId.of(googleCSConfig.getBucket(), imageNameUUID);
-    BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("image/jpg").build();
+    BlobInfo blobInfo =
+        BlobInfo.newBuilder(blobId)
+            .setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE)
+            .build();
     Blob blob = storage.create(blobInfo, imageBytes);
     createImageInDB(imageNameUUID, itemId);
     return blob.signUrl(5L, TimeUnit.MINUTES).toString();

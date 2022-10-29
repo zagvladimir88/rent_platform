@@ -1,6 +1,5 @@
 package com.zagvladimir.controller.requests.users;
 
-import com.zagvladimir.domain.enums.Status;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -14,7 +13,7 @@ public class UserCreateRequest {
     @Schema(defaultValue = "Vladimir", type = "string" , description = "User Name")
     @NotBlank
     @Size(min = 2,max = 25)
-    private String username;
+    private String firstName;
 
     @Schema(defaultValue = "Ivanov", type = "string" , description = "Last Name")
     @NotBlank
@@ -44,7 +43,4 @@ public class UserCreateRequest {
     @Schema(defaultValue = "test@gmail.com", type = "string" , description = "User email")
     @Email
     private String email;
-
-    @Schema(defaultValue = "NOT_ACTIVE", type = "string" , description = "Status")
-    private Status status = Status.NOT_ACTIVE;
 }
