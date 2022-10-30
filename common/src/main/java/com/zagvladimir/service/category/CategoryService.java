@@ -21,4 +21,6 @@ public interface CategoryService {
   Category update(Category category);
 
   Long delete(Long itemCategoryId);
+
+  Long softDelete(Long categoryId);
 }

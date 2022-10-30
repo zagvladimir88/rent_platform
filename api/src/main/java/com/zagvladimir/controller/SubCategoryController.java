@@ -6,6 +6,8 @@ import com.zagvladimir.controller.response.SubCategoryResponse;
 import com.zagvladimir.domain.SubCategory;
 import com.zagvladimir.service.sub_category.SubCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -98,7 +101,15 @@ public class SubCategoryController {
             responseCode = "500",
             description = "sub category not created, Illegal Arguments",
             content = @Content)
+      },
+      parameters = {
+        @Parameter(
+            in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
       })
+  @PreAuthorize(value = "hasRole('ADMIN')")
   @PostMapping
   @Transactional
   public ResponseEntity<Object> createSubCategory(

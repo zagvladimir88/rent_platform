@@ -8,12 +8,15 @@ import com.zagvladimir.service.role.RoleService;
 import com.zagvladimir.service.sub_category.SubCategoryService;
 import com.zagvladimir.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,7 +56,12 @@ public class AdminController {
         @ApiResponse(responseCode = "200", description = "user was deleted", content = @Content),
         @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
         @ApiResponse(responseCode = "500", description = "Server error", content = @Content)
-      })
+      },
+          parameters = {
+                  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
+                          required = true, description = "JWT Token, can be generated in auth controller /auth")
+          })
+  @PreAuthorize(value = "hasRole('ADMIN')")
   @DeleteMapping("/users/{id}")
   public ResponseEntity<Object> deleteUsersById(@PathVariable Long id) {
     userService.delete(id);
@@ -72,7 +80,12 @@ public class AdminController {
             responseCode = "404",
             description = "sub category not found",
             content = @Content)
-      })
+      },
+          parameters = {
+                  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
+                          required = true, description = "JWT Token, can be generated in auth controller /auth")
+          })
+  @PreAuthorize(value = "hasRole('ADMIN')")
   @DeleteMapping("/sub-categories/{id}")
   public ResponseEntity<Object> deleteSubCategoryById(@PathVariable Long id) {
     subCategoryService.delete(id);
@@ -88,7 +101,12 @@ public class AdminController {
             description = "itemLeased was deleted",
             content = @Content),
         @ApiResponse(responseCode = "404", description = "itemLeased not found", content = @Content)
-      })
+      },
+          parameters = {
+                  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
+                          required = true, description = "JWT Token, can be generated in auth controller /auth")
+          })
+  @PreAuthorize(value = "hasRole('ADMIN')")
   @DeleteMapping("/items-leased/{id}")
   public ResponseEntity<Object> deleteItemLeasedById(@PathVariable Long id) {
     itemLeasedService.delete(id);
@@ -101,7 +119,12 @@ public class AdminController {
       responses = {
         @ApiResponse(responseCode = "200", description = "Item deleted", content = @Content),
         @ApiResponse(responseCode = "404", description = "Item not found", content = @Content)
-      })
+      },
+          parameters = {
+                  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
+                          required = true, description = "JWT Token, can be generated in auth controller /auth")
+          })
+  @PreAuthorize(value = "hasRole('ADMIN')")
   @DeleteMapping("/items/{id}")
   public ResponseEntity<Object> deleteItemsById(@PathVariable Long id) {
     itemService.delete(id);
@@ -114,7 +137,12 @@ public class AdminController {
       responses = {
         @ApiResponse(responseCode = "200", description = "grade was deleted", content = @Content),
         @ApiResponse(responseCode = "404", description = "grade not found", content = @Content)
-      })
+      },
+  parameters = {
+          @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
+                  required = true, description = "JWT Token, can be generated in auth controller /auth")
+  })
+  @PreAuthorize(value = "hasRole('ADMIN')")
   @DeleteMapping("/grades/{id}")
   public ResponseEntity<Object> deleteGradeById(@PathVariable Long id) {
 
@@ -134,7 +162,12 @@ public class AdminController {
             responseCode = "404",
             description = "Item Category not found",
             content = @Content)
-      })
+      },
+          parameters = {
+                  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
+                          required = true, description = "JWT Token, can be generated in auth controller /auth")
+          })
+  @PreAuthorize(value = "hasRole('ADMIN')")
   @DeleteMapping("/categories/{id}")
   public ResponseEntity<Object> deleteItemCategoryById(@PathVariable Long id) {
 
@@ -149,7 +182,12 @@ public class AdminController {
       responses = {
         @ApiResponse(responseCode = "200", description = "Role deleted", content = @Content),
         @ApiResponse(responseCode = "404", description = "Role not found", content = @Content)
-      })
+      },
+          parameters = {
+                  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
+                          required = true, description = "JWT Token, can be generated in auth controller /auth")
+          })
+  @PreAuthorize(value = "hasRole('ADMIN')")
   @DeleteMapping("/roles/{id}")
   public ResponseEntity<Object> deleteRoleById(@PathVariable Long id) {
     roleService.delete(id);

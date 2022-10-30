@@ -1,6 +1,7 @@
 package com.zagvladimir.service.category;
 
 import com.zagvladimir.domain.Category;
+import com.zagvladimir.domain.enums.Status;
 import com.zagvladimir.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -55,5 +56,19 @@ public class CategoryServiceImpl implements CategoryService {
   public Long delete(Long itemCategoryId) {
     categoryRepository.deleteById(itemCategoryId);
     return itemCategoryId;
+  }
+
+  @Override
+  public Long softDelete(Long categoryId) {
+    Category toUpdate =
+            categoryRepository
+                    .findById(categoryId)
+                    .orElseThrow(
+                            () ->
+                                    new EntityNotFoundException(
+                                            String.format("The category with id: %d not found", categoryId)));
+    toUpdate.setStatus(Status.DELETED);
+    categoryRepository.save(toUpdate);
+    return categoryId;
   }
 }

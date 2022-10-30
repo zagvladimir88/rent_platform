@@ -122,7 +122,6 @@ public class GradeController {
   public ResponseEntity<Object> softDeleteGradeById(@PathVariable String id) {
     Long gradeId = Long.parseLong(id);
     gradeService.softDelete(gradeId);
-
     return new ResponseEntity<>(
         Collections.singletonMap("The grade was deleted id", gradeId), HttpStatus.OK);
   }

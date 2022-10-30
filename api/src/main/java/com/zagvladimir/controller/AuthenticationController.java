@@ -26,44 +26,43 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
-    private final AuthenticationManager authenticationManager;
+  private final AuthenticationManager authenticationManager;
 
-    private final JwtTokenHelper tokenUtils;
+  private final JwtTokenHelper tokenUtils;
 
-    private final UserDetailsService userProvider;
+  private final UserDetailsService userProvider;
 
-    private final UserService userService;
+  private final UserService userService;
 
-    @Operation(
-            summary = "Login user in system",
-            description = "Return Auth-Token with user login",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Successful authorization", content = @Content),
-                    @ApiResponse(responseCode = "400", description = "Request error", content = @Content),
-                    @ApiResponse(responseCode = "500", description = "Server error", content = @Content)
-            })
-    @PostMapping
-    public ResponseEntity<AuthResponse> loginUser(@RequestBody AuthRequest request) {
+  @Operation(
+      summary = "Login user in system",
+      description = "Return Auth-Token with user login",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Successful authorization",
+            content = @Content),
+        @ApiResponse(responseCode = "400", description = "Request error", content = @Content),
+        @ApiResponse(responseCode = "500", description = "Server error", content = @Content)
+      })
+  @PostMapping
+  public ResponseEntity<AuthResponse> loginUser(@RequestBody AuthRequest request) {
 
-        if(!userService.isActivated(request.getUser_login())){
-            throw new BadCredentialsException("User is not activated");
-        }
-        Authentication authenticate = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUser_login(),
-                        request.getUser_password()
-                )
-        );
-
-
-        SecurityContextHolder.getContext().setAuthentication(authenticate);
-
-        return ResponseEntity.ok(
-                AuthResponse
-                        .builder()
-                        .username(request.getUser_login())
-                        .token(tokenUtils.generateToken(userProvider.loadUserByUsername(request.getUser_login())))
-                        .build()
-        );
+    if (!userService.isActivated(request.getUser_login())) {
+      throw new BadCredentialsException("User is not activated");
     }
+    Authentication authenticate =
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                request.getUser_login(), request.getUser_password()));
+
+    SecurityContextHolder.getContext().setAuthentication(authenticate);
+
+    return ResponseEntity.ok(
+        AuthResponse.builder()
+            .username(request.getUser_login())
+            .token(
+                tokenUtils.generateToken(userProvider.loadUserByUsername(request.getUser_login())))
+            .build());
+  }
 }

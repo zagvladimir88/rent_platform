@@ -113,11 +113,11 @@ public class CategoryController {
   }
 
   @Operation(
-      summary = "Delete Category",
+      summary = "Soft Delete Category",
       responses = {
         @ApiResponse(
             responseCode = "200",
-            description = "Item Category was deleted",
+            description = "Item Category status was changed to deleted",
             content = @Content),
         @ApiResponse(
             responseCode = "404",
@@ -125,11 +125,10 @@ public class CategoryController {
             content = @Content)
       })
   @DeleteMapping("/{id}")
-  public ResponseEntity<Object> deleteItemCategoryById(@PathVariable Long id) {
-
-    categoryService.delete(id);
-
+  public ResponseEntity<Object> softDeleteItemCategoryById(@PathVariable String id) {
+      Long categoryId = Long.parseLong(id);
+    categoryService.softDelete(categoryId);
     return new ResponseEntity<>(
-        Collections.singletonMap("The category was deleted, id:", id), HttpStatus.OK);
+        Collections.singletonMap("The category was deleted, id:", categoryId), HttpStatus.OK);
   }
 }

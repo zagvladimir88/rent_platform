@@ -6,11 +6,12 @@ import com.zagvladimir.controller.response.RoleResponse;
 import com.zagvladimir.domain.Role;
 import com.zagvladimir.service.role.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,9 +42,9 @@ public class RoleController {
   private final RoleService roleService;
   private final RoleMapper roleMapper;
 
-  @Operation(summary = "Gets all roles")
-  @ApiResponses(
-      value = {
+  @Operation(
+      summary = "Gets all roles",
+      responses = {
         @ApiResponse(
             responseCode = "200",
             description = "Found the roles",
@@ -51,16 +53,24 @@ public class RoleController {
                   mediaType = "application/json",
                   array = @ArraySchema(schema = @Schema(implementation = RoleResponse.class)))
             })
+      },
+      parameters = {
+        @Parameter(
+            in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
       })
+  @PreAuthorize(value = "hasRole('ADMIN')")
   @GetMapping
   public ResponseEntity<Object> findAllRoles(@ParameterObject Pageable page) {
     Page<RoleResponse> roleResponseList = roleService.findAll(page).map(roleMapper::toResponse);
     return new ResponseEntity<>(roleResponseList, HttpStatus.OK);
   }
 
-  @Operation(summary = "Gets roles by user id")
-  @ApiResponses(
-      value = {
+  @Operation(
+      summary = "Gets roles by user id",
+      responses = {
         @ApiResponse(
             responseCode = "200",
             description = "Found the roles",
@@ -69,7 +79,15 @@ public class RoleController {
                   mediaType = "application/json",
                   array = @ArraySchema(schema = @Schema(implementation = RoleResponse.class)))
             })
+      },
+      parameters = {
+        @Parameter(
+            in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
       })
+  @PreAuthorize(value = "hasRole('ADMIN')")
   @GetMapping("users/{id}")
   public ResponseEntity<Object> findRolesByUserId(@PathVariable String id) {
     Long userId = Long.parseLong(id);
@@ -80,9 +98,9 @@ public class RoleController {
     return new ResponseEntity<>(Collections.singletonMap("roles", roleResponseList), HttpStatus.OK);
   }
 
-  @Operation(summary = "Gets role by ID")
-  @ApiResponses(
-      value = {
+  @Operation(
+      summary = "Gets role by ID",
+      responses = {
         @ApiResponse(
             responseCode = "200",
             description = "Found the role by id",
@@ -91,7 +109,15 @@ public class RoleController {
                   mediaType = "application/json",
                   array = @ArraySchema(schema = @Schema(implementation = RoleResponse.class)))
             })
+      },
+      parameters = {
+        @Parameter(
+            in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
       })
+  @PreAuthorize(value = "hasRole('ADMIN')")
   @GetMapping("/{roleId}")
   public ResponseEntity<Map<String, Object>> findRoleById(@PathVariable Long roleId) {
 
@@ -118,7 +144,15 @@ public class RoleController {
             responseCode = "500",
             description = "Role not created, Illegal Arguments",
             content = @Content)
+      },
+      parameters = {
+        @Parameter(
+            in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
       })
+  @PreAuthorize(value = "hasRole('ADMIN')")
   @PostMapping
   public ResponseEntity<Object> createRole(@RequestBody @Valid RoleCreateRequest createRequest) {
     Role role = roleService.create(roleMapper.convertCreateRequest(createRequest));

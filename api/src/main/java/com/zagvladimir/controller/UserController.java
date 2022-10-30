@@ -7,11 +7,12 @@ import com.zagvladimir.domain.user.User;
 import com.zagvladimir.exception.ErrorContainer;
 import com.zagvladimir.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,15 @@ public class UserController {
                 @Content(
                     mediaType = "application/json",
                     array = @ArraySchema(schema = @Schema(implementation = UserResponse.class))))
+      },
+      parameters = {
+        @Parameter(
+            in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
       })
+  @PreAuthorize(value = "hasRole('ADMIN')")
   @GetMapping
   public ResponseEntity<Object> findAllUsers(@ParameterObject Pageable pageable) {
     Page<UserResponse> users = userService.findAll(pageable).map(userMapper::toResponse);
@@ -82,9 +91,9 @@ public class UserController {
     return new ResponseEntity<>(Collections.singletonMap("user", user), HttpStatus.OK);
   }
 
-  @Operation(summary = "Gets user by Login")
-  @ApiResponses(
-      value = {
+  @Operation(
+      summary = "Gets user by Login",
+      responses = {
         @ApiResponse(
             responseCode = "200",
             description = "Found the user by login",
@@ -101,7 +110,15 @@ public class UserController {
                   mediaType = "application/json",
                   array = @ArraySchema(schema = @Schema(implementation = ErrorContainer.class)))
             })
+      },
+      parameters = {
+        @Parameter(
+            in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
       })
+  @PreAuthorize(value = "hasRole('ADMIN')")
   @GetMapping("/login/{login}")
   public ResponseEntity<Map<String, Object>> findByLogin(@PathVariable String login) {
     UserResponse userResponse = userMapper.toResponse(userService.findByLogin(login));
@@ -118,6 +135,7 @@ public class UserController {
         @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
         @ApiResponse(responseCode = "500", description = "Server error", content = @Content)
       })
+  @PreAuthorize("@userServiceImpl.findById(#id).credentials.userLogin.equals(principal.username) or hasRole('ADMIN')")
   @PatchMapping("/{id}")
   public ResponseEntity<Object> softDeleteUsersById(@PathVariable Long id) {
     userService.softDelete(id);

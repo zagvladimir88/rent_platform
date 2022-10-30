@@ -27,6 +27,7 @@ class UserControllerTest extends BaseIntegrationTest {
   @Autowired private ObjectMapper objectMapper;
 
   @Test
+  @WithMockUser(username="admin",roles={"ADMIN"})
   void findAllUsers() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get("/api/users/")
                     .contentType(MediaType.APPLICATION_JSON))
@@ -49,6 +50,7 @@ class UserControllerTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(username="admin",roles={"ADMIN"})
   void findByLogin() throws Exception {
     this.mockMvc
         .perform(get("/api/users/login/strjke"))
@@ -85,6 +87,7 @@ class UserControllerTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(username="admin",roles={"ADMIN"})
   void softDeleteUsersById() throws Exception {
     this.mockMvc
             .perform(

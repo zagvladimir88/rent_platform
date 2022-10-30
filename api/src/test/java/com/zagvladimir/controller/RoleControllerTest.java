@@ -6,6 +6,7 @@ import com.zagvladimir.annotations.IT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -28,6 +29,7 @@ class RoleControllerTest extends BaseIntegrationTest {
   private ObjectMapper objectMapper;
 
   @Test
+  @WithMockUser(username="GigaChad",roles={"ADMIN"})
   void findAllRoles() throws Exception {
     this.mockMvc
         .perform(get("/api/roles/"))
@@ -40,6 +42,7 @@ class RoleControllerTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(username="GigaChad",roles={"ADMIN"})
   void findRolesByUserId() throws Exception {
     this.mockMvc
             .perform(get("/api/roles/users/4"))
@@ -51,6 +54,7 @@ class RoleControllerTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(username="GigaChad",roles={"ADMIN"})
   void findRoleById() throws Exception {
     this.mockMvc
             .perform(get("/api/roles/4"))
@@ -62,6 +66,7 @@ class RoleControllerTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(username="GigaChad",roles={"ADMIN"})
   void createRole() throws Exception {
     Map<String,Object> body = new HashMap<>();
     body.put("name","ROLE_TEST");

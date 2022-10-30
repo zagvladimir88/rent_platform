@@ -6,6 +6,7 @@ import com.zagvladimir.annotations.IT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -23,6 +24,7 @@ class AdminControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username="admin",roles={"ADMIN"})
     void deleteUsersById() throws Exception {
         this.mockMvc
                 .perform(
@@ -34,6 +36,7 @@ class AdminControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username="admin",roles={"ADMIN"})
     void deleteSubCategoryById() throws Exception {
         Long id = 1L;
         this.mockMvc
@@ -46,6 +49,7 @@ class AdminControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username="admin",roles={"ADMIN"})
     void deleteItemLeasedById() throws Exception {
         Long id = 1L;
         this.mockMvc
@@ -58,6 +62,7 @@ class AdminControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username="admin",roles={"ADMIN"})
     void deleteItemsById() throws Exception {
         int itemId = 4;
         this.mockMvc
@@ -70,6 +75,7 @@ class AdminControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username="admin",roles={"ADMIN"})
     void deleteGradeById() throws Exception {
         Long id = 1L;
         this.mockMvc
@@ -82,6 +88,7 @@ class AdminControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username="admin",roles={"ADMIN"})
     void deleteItemCategoryById() throws Exception {
         Long id = 1L;
         this.mockMvc
@@ -94,6 +101,7 @@ class AdminControllerTest extends BaseIntegrationTest {
     }
 
     @Test
+    @WithMockUser(username="admin",roles={"ADMIN"})
     void deleteRoleById() throws Exception {
         this.mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/admin/roles/{2}", "2")
