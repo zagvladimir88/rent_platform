@@ -209,7 +209,7 @@ public class UserController {
     @Transactional
     public ResponseEntity<Object> userChangeCredentials(
             @PathVariable Long id, @Valid @RequestBody UserChangeCredentialsRequest request) {
-        User updatedUser = userMapper.convertChangeCredentialsRequest(request, userService.findById(id));
+        User updatedUser = userMapper.convertUpdateRequest(request, userService.findById(id));
         UserResponse userResponse = userMapper.toResponse(userService.update(updatedUser));
         return new ResponseEntity<>(Collections.singletonMap("user", userResponse), HttpStatus.OK);
     }
@@ -230,7 +230,7 @@ public class UserController {
                             content = @Content)
             },
             parameters = {
-                    @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
+                    @Parameter(in = ParameterIn.HEADER,  name = "X-Auth-Token",
                             required = true, description = "JWT Token, can be generated in auth controller /auth")
             })
     @PreAuthorize("@userServiceImpl.findById(#id).credentials.userLogin.equals(principal.username) or hasRole('ADMIN')")
@@ -238,7 +238,7 @@ public class UserController {
     @Transactional
     public ResponseEntity<Object> userChangeAddress(
             @PathVariable Long id, @Valid @RequestBody UserChangeAddressRequest request) {
-        User updatedUser = userMapper.convertChangeAddressRequest(request, userService.findById(id));
+        User updatedUser = userMapper.convertUpdateRequest(request, userService.findById(id));
         UserResponse userResponse = userMapper.toResponse(userService.update(updatedUser));
         return new ResponseEntity<>(Collections.singletonMap("user", userResponse), HttpStatus.OK);
     }

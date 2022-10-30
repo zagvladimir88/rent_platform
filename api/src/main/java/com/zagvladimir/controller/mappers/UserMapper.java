@@ -39,13 +39,13 @@ public interface UserMapper {
 
     @Mapping(source = "userPassword",target = "credentials.userPassword")
     @Mapping(source = "userLogin",target = "credentials.userLogin")
-    User convertChangeCredentialsRequest(UserChangeCredentialsRequest request,@MappingTarget User user);
+    User convertUpdateRequest(UserChangeCredentialsRequest request,@MappingTarget User user);
 
     @Mapping(source = "addressLine1",target = "address.addressLine1")
     @Mapping(source = "addressLine2",target = "address.addressLine2")
     @Mapping(source = "state",target = "address.state")
     @Mapping(source = "city",target = "address.city")
     @Mapping(source = "postalCode",target = "address.postalCode")
-    User convertChangeAddressRequest(UserChangeAddressRequest request, @MappingTarget User user);
+    User convertUpdateRequest(UserChangeAddressRequest request, @MappingTarget User user);
 
 }

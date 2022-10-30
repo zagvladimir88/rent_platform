@@ -24,7 +24,6 @@
         <mapstruct.version>1.5.3.Final</mapstruct.version>
         <testcontainers.version>1.17.5</testcontainers.version>
         <testcontainers.postgresql.version>1.17.5</testcontainers.postgresql.version>
-
     </properties>
 
     <dependencies>

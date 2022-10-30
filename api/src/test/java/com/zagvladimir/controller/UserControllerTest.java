@@ -67,6 +67,7 @@ class UserControllerTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(username = "admin", roles = {"ADMIN"})
   void updateUser() throws Exception {
     Map<?, ?> map =
         objectMapper.readValue(
@@ -99,6 +100,7 @@ class UserControllerTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(username = "admin", roles = {"ADMIN"})
   void userChangeCredentials() throws Exception {
     Map<?, ?> map =
         objectMapper.readValue(
@@ -115,6 +117,7 @@ class UserControllerTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(username = "admin", roles = {"ADMIN"})
   void userChangeAddress() throws Exception {
     Map<?, ?> map =
         objectMapper.readValue(
