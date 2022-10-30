@@ -32,7 +32,7 @@ class UserControllerTest extends BaseIntegrationTest {
                     .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$['pageable']['paged']").value("true"))
-            .andExpect(jsonPath("$.content[0].firstName").value("Oleg"));
+            .andExpect(jsonPath("$.content[0].firstName").value("Evgenii"));
   }
 
   @Test
@@ -65,8 +65,11 @@ class UserControllerTest extends BaseIntegrationTest {
     body.put("lastName", "Popov");
     body.put("userLogin", "joniq");
     body.put("userPassword", "555555");
-    body.put("locationId", "1");
-    body.put("locationDetails", "20 30 5");
+    body.put("addressLine1", "Microdistrict 17");
+    body.put("addressLine2", "House 5-2");
+    body.put("state", "Gomelskaya");
+    body.put("city", "Zhlobin");
+    body.put("postalCode", "247210");
     body.put("mobileNumber", "+375256145343");
     body.put("email", "evgeniiArgs@gmail.com");
 

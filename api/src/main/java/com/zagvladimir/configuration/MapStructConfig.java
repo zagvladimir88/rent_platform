@@ -24,11 +24,6 @@ public class MapStructConfig {
     }
 
      @Bean
-    public LocationMapper locationMapper(){
-        return Mappers.getMapper(LocationMapper.class);
-    }
-
-     @Bean
     public ItemMapper itemMapper(){
         return Mappers.getMapper(ItemMapper.class);
     }
@@ -47,11 +42,4 @@ public class MapStructConfig {
     public GradeMapper gradeMapper(){
         return Mappers.getMapper(GradeMapper.class);
     }
-
-     @Bean
-    public CountryMapper countryMapper(){
-        return Mappers.getMapper(CountryMapper.class);
-    }
-
-
 }

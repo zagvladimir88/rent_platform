@@ -1,4 +1,4 @@
-package com.zagvladimir.controller.response;
+package com.zagvladimir.controller.response.user;
 
 import lombok.Getter;
 import lombok.Setter;
