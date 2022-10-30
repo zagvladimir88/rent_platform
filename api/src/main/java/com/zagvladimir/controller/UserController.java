@@ -1,6 +1,8 @@
 package com.zagvladimir.controller;
 
 import com.zagvladimir.controller.mappers.UserMapper;
+import com.zagvladimir.controller.requests.users.UserChangeAddressRequest;
+import com.zagvladimir.controller.requests.users.UserChangeCredentialsRequest;
 import com.zagvladimir.controller.requests.users.UserUpdateRequest;
 import com.zagvladimir.controller.response.user.UserResponse;
 import com.zagvladimir.domain.user.User;
@@ -141,9 +143,13 @@ public class UserController {
             content = @Content),
         @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
         @ApiResponse(responseCode = "500", description = "Server error", content = @Content)
-      })
+      },
+          parameters = {
+                  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
+                          required = true, description = "JWT Token, can be generated in auth controller /auth")
+          })
   @PreAuthorize("@userServiceImpl.findById(#id).credentials.userLogin.equals(principal.username) or hasRole('ADMIN')")
-  @PatchMapping("/{id}")
+  @PatchMapping("/delete/{id}")
   public ResponseEntity<Object> softDeleteUsersById(@PathVariable Long id) {
     userService.softDelete(id);
     return new ResponseEntity<>(
@@ -164,13 +170,76 @@ public class UserController {
             responseCode = "500",
             description = "User not updated, Illegal Arguments",
             content = @Content)
-      })
+      },
+          parameters = {
+                  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
+                          required = true, description = "JWT Token, can be generated in auth controller /auth")
+          })
+  @PreAuthorize("@userServiceImpl.findById(#id).credentials.userLogin.equals(principal.username) or hasRole('ADMIN')")
   @PutMapping(value = "/{id}")
   @Transactional
   public ResponseEntity<Object> updateUser(
-      @PathVariable Long id, @Valid @RequestBody UserUpdateRequest userUpdateRequest) {
-    User updatedUser = userMapper.convertUpdateRequest(userUpdateRequest, userService.findById(id));
+      @PathVariable Long id, @Valid @RequestBody UserUpdateRequest request) {
+    User updatedUser = userMapper.convertUpdateRequest(request, userService.findById(id));
     UserResponse userResponse = userMapper.toResponse(userService.update(updatedUser));
     return new ResponseEntity<>(Collections.singletonMap("user", userResponse), HttpStatus.OK);
   }
+
+    @Operation(
+            summary = "Change user credentials",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "credentials update successfully",
+                            content =
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = UserResponse.class))),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "User not updated, Illegal Arguments",
+                            content = @Content)
+            },
+            parameters = {
+                    @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
+                            required = true, description = "JWT Token, can be generated in auth controller /auth")
+            })
+    @PreAuthorize("@userServiceImpl.findById(#id).credentials.userLogin.equals(principal.username) or hasRole('ADMIN')")
+    @PatchMapping(value = "/{id}/change-credential")
+    @Transactional
+    public ResponseEntity<Object> userChangeCredentials(
+            @PathVariable Long id, @Valid @RequestBody UserChangeCredentialsRequest request) {
+        User updatedUser = userMapper.convertChangeCredentialsRequest(request, userService.findById(id));
+        UserResponse userResponse = userMapper.toResponse(userService.update(updatedUser));
+        return new ResponseEntity<>(Collections.singletonMap("user", userResponse), HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Change user address",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "User update successfully",
+                            content =
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = UserResponse.class))),
+                    @ApiResponse(
+                            responseCode = "500",
+                            description = "User not updated, Illegal Arguments",
+                            content = @Content)
+            },
+            parameters = {
+                    @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
+                            required = true, description = "JWT Token, can be generated in auth controller /auth")
+            })
+    @PreAuthorize("@userServiceImpl.findById(#id).credentials.userLogin.equals(principal.username) or hasRole('ADMIN')")
+    @PatchMapping(value = "/{id}/change-address")
+    @Transactional
+    public ResponseEntity<Object> userChangeAddress(
+            @PathVariable Long id, @Valid @RequestBody UserChangeAddressRequest request) {
+        User updatedUser = userMapper.convertChangeAddressRequest(request, userService.findById(id));
+        UserResponse userResponse = userMapper.toResponse(userService.update(updatedUser));
+        return new ResponseEntity<>(Collections.singletonMap("user", userResponse), HttpStatus.OK);
+    }
 }

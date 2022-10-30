@@ -1,6 +1,5 @@
 package com.zagvladimir.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zagvladimir.BaseIntegrationTest;
 import com.zagvladimir.annotations.IT;
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 @IT

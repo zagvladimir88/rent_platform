@@ -10,7 +10,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.notNullValue;

@@ -1,5 +1,6 @@
 package com.zagvladimir.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zagvladimir.BaseIntegrationTest;
 import com.zagvladimir.annotations.IT;
@@ -9,10 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -91,10 +91,45 @@ class UserControllerTest extends BaseIntegrationTest {
   void softDeleteUsersById() throws Exception {
     this.mockMvc
         .perform(
-            MockMvcRequestBuilders.patch("/api/users/{2}", "2")
+            MockMvcRequestBuilders.patch("/api/users/delete/{2}", "2")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isOk());
+  }
+
+  @Test
+  void userChangeCredentials() throws Exception {
+    Map<?, ?> map =
+        objectMapper.readValue(
+            Paths.get("src/test/resources/json_for_test/userChangeCredentials.json").toFile(), Map.class);
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.patch("/api/users/2/change-credential")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(map))
+                .accept(MediaType.APPLICATION_JSON))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.user.credentials.userLogin").value("TEST_NEW_LOGIN"));
+  }
+
+  @Test
+  void userChangeAddress() throws Exception {
+    Map<?, ?> map =
+        objectMapper.readValue(
+            Paths.get("src/test/resources/json_for_test/userChangeAddess.json").toFile(), Map.class);
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.patch("/api/users/2/change-address")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(map))
+                .accept(MediaType.APPLICATION_JSON))
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.user.address.addressLine1").value("Microdistrict 20"))
+        .andExpect(jsonPath("$.user.address.addressLine2").value("House 20-83"))
+        .andExpect(jsonPath("$.user.address.city").value("Zhlobin"))
+        .andExpect(jsonPath("$.user.address.postalCode").value("247210"));
   }
 }

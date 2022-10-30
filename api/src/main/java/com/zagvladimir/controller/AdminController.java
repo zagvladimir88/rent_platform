@@ -81,10 +81,11 @@ public class AdminController {
           })
   @PreAuthorize(value = "hasRole('ADMIN')")
   @DeleteMapping("/users/{id}")
-  public ResponseEntity<Object> deleteUsersById(@PathVariable Long id) {
-    userService.delete(id);
+  public ResponseEntity<Object> deleteUsersById(@PathVariable String id) {
+    Long userId = Long.parseLong(id);
+    userService.delete(userId);
     return new ResponseEntity<>(
-        Collections.singletonMap("The user was deleted, id:", id), HttpStatus.OK);
+        Collections.singletonMap("The user was deleted, id:", userId), HttpStatus.OK);
   }
 
   @Operation(
@@ -105,10 +106,11 @@ public class AdminController {
           })
   @PreAuthorize(value = "hasRole('ADMIN')")
   @DeleteMapping("/sub-categories/{id}")
-  public ResponseEntity<Object> deleteSubCategoryById(@PathVariable Long id) {
-    subCategoryService.delete(id);
+  public ResponseEntity<Object> deleteSubCategoryById(@PathVariable String id) {
+    Long subCategoryId = Long.parseLong(id);
+    subCategoryService.delete(subCategoryId);
     return new ResponseEntity<>(
-        Collections.singletonMap("The sub category was deleted, id:", id), HttpStatus.OK);
+        Collections.singletonMap("The sub category was deleted, id:", subCategoryId), HttpStatus.OK);
   }
 
   @Operation(
@@ -126,10 +128,11 @@ public class AdminController {
           })
   @PreAuthorize(value = "hasRole('ADMIN')")
   @DeleteMapping("/items-leased/{id}")
-  public ResponseEntity<Object> deleteItemLeasedById(@PathVariable Long id) {
-    itemLeasedService.delete(id);
+  public ResponseEntity<Object> deleteItemLeasedById(@PathVariable String id) {
+    Long itemLeasedId = Long.parseLong(id);
+    itemLeasedService.delete(itemLeasedId);
     return new ResponseEntity<>(
-        Collections.singletonMap("The location was deleted, id:", id), HttpStatus.OK);
+        Collections.singletonMap("The location was deleted, id:", itemLeasedId), HttpStatus.OK);
   }
 
   @Operation(
@@ -144,10 +147,11 @@ public class AdminController {
           })
   @PreAuthorize(value = "hasRole('ADMIN')")
   @DeleteMapping("/items/{id}")
-  public ResponseEntity<Object> deleteItemsById(@PathVariable Long id) {
-    itemService.delete(id);
+  public ResponseEntity<Object> deleteItemsById(@PathVariable String id) {
+    Long itemId = Long.parseLong(id);
+    itemService.delete(itemId);
     return new ResponseEntity<>(
-        Collections.singletonMap("The item was deleted, id:", id), HttpStatus.OK);
+        Collections.singletonMap("The item was deleted, id:", itemId), HttpStatus.OK);
   }
 
   @Operation(
@@ -162,11 +166,11 @@ public class AdminController {
   })
   @PreAuthorize(value = "hasRole('ADMIN')")
   @DeleteMapping("/grades/{id}")
-  public ResponseEntity<Object> deleteGradeById(@PathVariable Long id) {
+  public ResponseEntity<Object> deleteGradeById(@PathVariable String id) {
+    Long gradeId = Long.parseLong(id);
+    gradeService.delete(gradeId);
 
-    gradeService.delete(id);
-
-    return new ResponseEntity<>(id, HttpStatus.OK);
+    return new ResponseEntity<>(Collections.singletonMap("The grade was deleted, id:", gradeId), HttpStatus.OK);
   }
 
   @Operation(
@@ -187,12 +191,12 @@ public class AdminController {
           })
   @PreAuthorize(value = "hasRole('ADMIN')")
   @DeleteMapping("/categories/{id}")
-  public ResponseEntity<Object> deleteItemCategoryById(@PathVariable Long id) {
-
-    categoryService.delete(id);
+  public ResponseEntity<Object> deleteItemCategoryById(@PathVariable String id) {
+    Long categoryId = Long.parseLong(id);
+    categoryService.delete(categoryId);
 
     return new ResponseEntity<>(
-        Collections.singletonMap("The category was deleted, id:", id), HttpStatus.OK);
+        Collections.singletonMap("The category was deleted, id:", categoryId), HttpStatus.OK);
   }
 
   @Operation(
@@ -207,9 +211,10 @@ public class AdminController {
           })
   @PreAuthorize(value = "hasRole('ADMIN')")
   @DeleteMapping("/roles/{id}")
-  public ResponseEntity<Object> deleteRoleById(@PathVariable Long id) {
-    roleService.delete(id);
+  public ResponseEntity<Object> deleteRoleById(@PathVariable String id) {
+    Long roleId = Long.parseLong(id);
+    roleService.delete(roleId);
     return new ResponseEntity<>(
-        Collections.singletonMap("role has been deleted id:", id), HttpStatus.OK);
+        Collections.singletonMap("role has been deleted id:", roleId), HttpStatus.OK);
   }
 }
