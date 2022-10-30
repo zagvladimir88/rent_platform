@@ -1,24 +1,22 @@
 package com.zagvladimir.domain.user;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.zagvladimir.domain.AuditingEntity;
 import com.zagvladimir.domain.Grade;
 import com.zagvladimir.domain.ItemLeased;
-import com.zagvladimir.domain.Location;
 import com.zagvladimir.domain.Role;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.sql.Timestamp;
@@ -28,7 +26,7 @@ import java.util.Set;
 @Entity
 @EqualsAndHashCode(exclude = {"roles","items","itemsLeased","grades"})
 @Table(name = "users")
-@ToString(exclude = {"location","roles","items","grades"})
+@ToString(exclude = {"roles","items","grades"})
 public class User extends AuditingEntity {
 
   @Column(name = "first_name")
@@ -40,8 +38,13 @@ public class User extends AuditingEntity {
   @Embedded
   private Credentials credentials;
 
-  @Column(name = "location_details")
-  private String locationDetails;
+  @Embedded
+  @AttributeOverrides({
+          @AttributeOverride(name = "addressLine1", column = @Column(name = "address_line1")),
+          @AttributeOverride(name = "addressLine2", column = @Column(name = "address_line2")),
+          @AttributeOverride(name = "postalCode", column = @Column(name = "postal_code"))
+  })
+  private Address address;
 
   @Column(name = "mobile_number")
   private String mobileNumber;
@@ -51,11 +54,6 @@ public class User extends AuditingEntity {
 
   @Column(name = "activation_code")
   private String activationCode;
-
-  @ManyToOne
-  @JoinColumn(name = "location_id")
-  @JsonBackReference
-  private Location location;
 
   @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
   @JsonIgnoreProperties("users")

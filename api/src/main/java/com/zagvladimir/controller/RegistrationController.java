@@ -2,7 +2,7 @@ package com.zagvladimir.controller;
 
 import com.zagvladimir.controller.mappers.UserMapper;
 import com.zagvladimir.controller.requests.users.UserCreateRequest;
-import com.zagvladimir.controller.response.UserResponse;
+import com.zagvladimir.controller.response.user.UserResponse;
 import com.zagvladimir.domain.user.User;
 import com.zagvladimir.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -62,7 +62,7 @@ public class RegistrationController {
       throws MessagingException {
     User newUser = userMapper.convertCreateRequest(createRequest);
     UserResponse response =
-        userMapper.toResponse(userService.create(newUser, createRequest.getLocationId()));
+        userMapper.toResponse(userService.create(newUser));
     return new ResponseEntity<>(response, HttpStatus.CREATED);
   }
 

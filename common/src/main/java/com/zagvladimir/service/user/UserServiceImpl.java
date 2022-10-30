@@ -7,7 +7,6 @@ import com.zagvladimir.domain.enums.Status;
 import com.zagvladimir.repository.ItemLeasedRepository;
 import com.zagvladimir.repository.RoleRepository;
 import com.zagvladimir.repository.UserRepository;
-import com.zagvladimir.service.location.LocationService;
 import com.zagvladimir.service.mail.MailSenderService;
 import com.zagvladimir.service.pdf.PDFService;
 import com.zagvladimir.util.UUIDGenerator;
@@ -38,7 +37,6 @@ public class UserServiceImpl implements UserService {
   private static final String ACTIVATION_URL =
       "http://localhost:8080/api/registration/activate/%s/";
   private final UserRepository userRepository;
-  private final LocationService locationService;
   private final RoleRepository roleRepository;
   private final BCryptPasswordEncoder passwordEncoder;
   private final MailSenderService mailSenderService;
@@ -57,10 +55,9 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public User create(User user, Long locationId) throws MessagingException {
+  public User create(User user) throws MessagingException {
 
     addRole(user, roleRepository.findRoleByName("ROLE_USER"));
-    user.setLocation(locationService.findById(locationId));
     user.setRegistrationDate(new Timestamp(new Date().getTime()));
     user.getCredentials()
         .setUserPassword(passwordEncoder.encode(user.getCredentials().getUserPassword()));

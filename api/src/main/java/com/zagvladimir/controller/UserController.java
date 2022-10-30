@@ -2,7 +2,7 @@ package com.zagvladimir.controller;
 
 import com.zagvladimir.controller.mappers.UserMapper;
 import com.zagvladimir.controller.requests.users.UserUpdateRequest;
-import com.zagvladimir.controller.response.UserResponse;
+import com.zagvladimir.controller.response.user.UserResponse;
 import com.zagvladimir.domain.user.User;
 import com.zagvladimir.exception.ErrorContainer;
 import com.zagvladimir.service.user.UserService;

@@ -13,7 +13,7 @@ public interface UserService {
 
   Page<User> findAll(Pageable page);
 
-  User create(User user, Long locationID) throws MessagingException;
+  User create(User user) throws MessagingException;
 
   User findById(Long userId);
 

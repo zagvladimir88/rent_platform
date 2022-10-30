@@ -1,5 +1,6 @@
-package com.zagvladimir.controller.response;
+package com.zagvladimir.controller.response.user;
 
+import com.zagvladimir.controller.response.RoleResponse;
 import lombok.Data;
 import java.util.Set;
 
@@ -14,9 +15,7 @@ public class UserResponse {
 
     private CredentialsResponse credentials;
 
-    private LocationResponse userLocation;
-
-    private String locationDetails;
+    private AddressResponse address;
 
     private String mobileNumber;
 

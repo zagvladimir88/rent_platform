@@ -37,22 +37,25 @@ alter table locations
 
 create table if not exists users
 (
-    id   bigserial  constraint  users_pk primary  key,
-    first_name varchar(25)  not null,
-    last_name  varchar(32)  not null,
-    user_password varchar(200) not null,
-    location_id   integer constraint users_location_id_fk
-            references locations
-            on update cascade
-            on delete cascade,
-    location_details  varchar,
+    id                bigserial
+        constraint users_pk
+            primary key,
+    first_name        varchar(25)                               not null,
+    last_name         varchar(32)                               not null,
+    user_password     varchar(200)                              not null,
+    address_line1      varchar(200),
+    address_line2     varchar(200),
     mobile_number     varchar(15),
-    email             varchar(255) not null,
-    registration_date timestamp(6) default CURRENT_TIMESTAMP(6)                          not null,
+    email             varchar(255)                              not null,
+    registration_date timestamp(6) default CURRENT_TIMESTAMP(6) not null,
     creation_date     timestamp(6) default CURRENT_TIMESTAMP(6),
     modification_date timestamp(6) default CURRENT_TIMESTAMP(6),
-    status            varchar(25)  default 'ACTIVE':: character varying,
-    user_login        varchar(100) not null
+    status            varchar(25)  default 'NOT_ACTIVE'::character varying,
+    user_login        varchar(100)                              not null,
+    activation_code   varchar(40),
+    state             varchar(25),
+    city              varchar(25),
+    postal_code       varchar(10)
 );
 
 alter table users
@@ -66,9 +69,6 @@ create index if not exists users_first_name_index
 
 create unique index if not exists users_user_login_uindex
     on users (user_login);
-
-alter table users
-    add activation_code varchar(40);
 
 create table categories
 (

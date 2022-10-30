@@ -30,11 +30,25 @@ public class UserCreateRequest {
     @Size(min = 6,max = 200)
     private String userPassword;
 
-    @Schema(defaultValue = "2", type = "Long" , description = "Location id")
-    private long locationId;
+    @Size(min = 2,max = 200)
+    @Schema(defaultValue = "Microdistrict 17", type = "string" , description = "User address first line")
+    private String addressLine1;
 
-    @Schema(defaultValue = "19 4 33", type = "string" , description = "User address first line")
-    private String locationDetails;
+    @Size(min = 2,max = 200)
+    @Schema(defaultValue = "House 5-2", type = "string" , description = "User address second line")
+    private String addressLine2;
+
+    @Size(min = 2,max = 25)
+    @Schema(defaultValue = "Gomelskaya", type = "string" , description = "State")
+    private String state;
+
+    @Size(min = 2,max = 25)
+    @Schema(defaultValue = "Zhlobin", type = "string" , description = "City")
+    private String city;
+
+    @Size(min = 2,max = 10)
+    @Schema(defaultValue = "247210", type = "string" , description = "Postal code")
+    private String postalCode;
 
     @Schema(defaultValue = "+375291544444", type = "string" , description = "User mobile number")
     private String mobileNumber;
