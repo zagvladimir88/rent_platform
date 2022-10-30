@@ -29,7 +29,6 @@ public class PDFServiceImpl implements PDFService {
   private static final String PATH_LOGO = "common/src/main/resources/logo.jpg";
   private final ItemService itemService;
 
-
   @Override
   public String generateAnInvoice(Set<ItemLeased> itemLeased, Long renterId) {
     String pathToBilling = String.format("%s%d%s", DEST, renterId, ".pdf");
@@ -45,16 +44,54 @@ public class PDFServiceImpl implements PDFService {
     }
     Document doc = new Document(pdfDoc);
 
-    Table table = new Table(UnitValue.createPercentArray(6)).useAllAvailableWidth();
+    String[] columns = {
+      "Item", "Price", "Amount", "Date of receiving", "Return date", "Total Price"
+    };
 
-    table.addCell("Item");
-    table.addCell("Price");
-    table.addCell("Amount");
-    table.addCell("Date of receiving");
-    table.addCell("Return date");
-    table.addCell("Total Price");
+    Table table = generateTable(itemLeased, columns);
+    Image image = new Image(ImageDataFactory.create(imageDataBytes(PATH_LOGO)));
+    image.setWidth(200);
+    image.setHeight(150);
 
-    double totalSum = 0.0;
+    doc.add(image);
+    doc.add(table);
+    doc.add(
+        new Paragraph(
+            String.format(
+                "Total: %f", itemLeased.stream().mapToDouble(ItemLeased::getPriceTotal).sum())));
+    doc.add(
+        new Paragraph(
+            "This calculation is preliminary, the exact calculation will be made by the manager in the office."));
+    doc.close();
+
+    return pathToBilling;
+  }
+
+  private byte[] imageDataBytes(String pathToImageFile) {
+    BufferedImage bImage = null;
+    try {
+      bImage = ImageIO.read(new File(pathToImageFile));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    try {
+      ImageIO.write(bImage, "jpg", bos);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    return bos.toByteArray();
+  }
+
+  private Table generateTable(Set<ItemLeased> itemLeased, String[] columns) {
+    Table table = new Table(UnitValue.createPercentArray(columns.length)).useAllAvailableWidth();
+
+    for (String column : columns) {
+      table.addCell(column);
+    }
+
     for (ItemLeased leased : itemLeased) {
       table.addCell(itemService.findById(leased.getItemId()).getItemName());
       table.addCell(String.format("%8.2f", leased.getPricePerDay()));
@@ -67,36 +104,7 @@ public class PDFServiceImpl implements PDFService {
       table.addCell(leased.getTimeFrom().toString());
       table.addCell(leased.getTimeTo().toString());
       table.addCell(String.format("%8.2f", leased.getPriceTotal()));
-      totalSum += leased.getPriceTotal();
     }
-
-    BufferedImage bImage = null;
-    try {
-      bImage = ImageIO.read(new File(PATH_LOGO));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-
-
-    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-    try {
-      ImageIO.write(bImage, "jpg", bos);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-
-    byte[] data = bos.toByteArray();
-    Image image = new Image(ImageDataFactory.create(data));
-    image.setWidth(200);
-    image.setHeight(150);
-    doc.add(image);
-    doc.add(table);
-    doc.add(new Paragraph(String.format("Total: %f", totalSum)));
-    doc.add(
-        new Paragraph(
-            "This calculation is preliminary, the exact calculation will be made by the manager in the office."));
-    doc.close();
-
-    return pathToBilling;
+    return table;
   }
 }
