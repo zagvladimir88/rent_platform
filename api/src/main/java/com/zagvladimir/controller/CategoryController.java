@@ -113,7 +113,7 @@ public class CategoryController {
   }
 
   @Operation(
-      summary = "Delete Item Category",
+      summary = "Delete Category",
       responses = {
         @ApiResponse(
             responseCode = "200",

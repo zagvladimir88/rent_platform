@@ -1,6 +1,5 @@
 package com.zagvladimir.controller;
 
-
 import com.zagvladimir.controller.mappers.GradeMapper;
 import com.zagvladimir.controller.requests.grade.GradeCreateRequest;
 import com.zagvladimir.controller.response.GradeResponse;
@@ -19,8 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,75 +36,94 @@ import java.util.Map;
 @RequestMapping("/api/grades")
 public class GradeController {
 
-    private final GradeService gradeService;
-    private final GradeMapper gradeMapper;
+  private final GradeService gradeService;
+  private final GradeMapper gradeMapper;
 
-    @Operation(summary = "Gets all grades",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Found the grades",
-                            content = {
-                                    @Content(
-                                            mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = GradeResponse.class)))
-                            })
+  @Operation(
+      summary = "Gets all grades",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Found the grades",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = GradeResponse.class)))
             })
-    @GetMapping
-    public ResponseEntity<Object> findAllGrades(@ParameterObject Pageable page) {
-        Page<GradeResponse> gradeResponse = gradeService.findAll(page).map(gradeMapper::toResponse);
-        return new ResponseEntity<>(
-                Collections.singletonMap("Grades", gradeResponse), HttpStatus.OK);
-    }
+      })
+  @GetMapping
+  public ResponseEntity<Object> findAllGrades(@ParameterObject Pageable page) {
+    Page<GradeResponse> gradeResponse = gradeService.findAll(page).map(gradeMapper::toResponse);
+    return new ResponseEntity<>(Collections.singletonMap("Grades", gradeResponse), HttpStatus.OK);
+  }
 
-    @Operation(summary = "Gets grade by ID",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Found the grade by id",
-                            content = {
-                                    @Content(
-                                            mediaType = "application/json",
-                                            array = @ArraySchema(schema = @Schema(implementation = GradeResponse.class)))
-                            })
+  @Operation(
+      summary = "Gets grade by ID",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Found the grade by id",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = GradeResponse.class)))
             })
-    @GetMapping("/{id}")
-    public ResponseEntity<Map<String, Object>> findGradeById(@PathVariable Long id) {
-        GradeResponse response = gradeMapper.toResponse(gradeService.findById(id));
-         return new ResponseEntity<>(Collections.singletonMap("Grade",response ), HttpStatus.OK);
-    }
+      })
+  @GetMapping("/{id}")
+  public ResponseEntity<Map<String, Object>> findGradeById(@PathVariable Long id) {
+    GradeResponse response = gradeMapper.toResponse(gradeService.findById(id));
+    return new ResponseEntity<>(Collections.singletonMap("Grade", response), HttpStatus.OK);
+  }
 
-    @Operation(
-            summary = "Create new grade",
-            responses = {
-                    @ApiResponse( responseCode = "201", description = "grade was created successfully",content =
-                    @Content(mediaType = "application/json", schema = @Schema(implementation = GradeResponse.class))),
-                    @ApiResponse( responseCode = "409", description = "grade not created, Conflict", content = @Content),
-                    @ApiResponse( responseCode = "500", description = "grade not created, Illegal Arguments", content = @Content)
-            })
-    @PostMapping
-    @Transactional
-    public ResponseEntity<Object> createGrade(@RequestBody @Valid GradeCreateRequest gradeCreateRequest) {
+  @Operation(
+      summary = "Create new grade",
+      responses = {
+        @ApiResponse(
+            responseCode = "201",
+            description = "grade was created successfully",
+            content =
+                @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = GradeResponse.class))),
+        @ApiResponse(
+            responseCode = "409",
+            description = "grade not created, Conflict",
+            content = @Content),
+        @ApiResponse(
+            responseCode = "500",
+            description = "grade not created, Illegal Arguments",
+            content = @Content)
+      })
+  @PostMapping
+  @Transactional
+  public ResponseEntity<Object> createGrade(
+      @RequestBody @Valid GradeCreateRequest gradeCreateRequest) {
 
-        Grade newGrade = gradeMapper.convertCreateRequest(gradeCreateRequest);
-        Long userId = gradeCreateRequest.getUserId();
-        Long itemId = gradeCreateRequest.getItemId();
-        GradeResponse gradeResponse = gradeMapper.toResponse(gradeService.create(newGrade, userId, itemId));
+    Grade newGrade = gradeMapper.convertCreateRequest(gradeCreateRequest);
+    Long userId = gradeCreateRequest.getUserId();
+    Long itemId = gradeCreateRequest.getItemId();
+    GradeResponse gradeResponse =
+        gradeMapper.toResponse(gradeService.create(newGrade, userId, itemId));
 
-        return new ResponseEntity<>(Collections.singletonMap("grade",gradeResponse), HttpStatus.CREATED);
-    }
+    return new ResponseEntity<>(
+        Collections.singletonMap("grade", gradeResponse), HttpStatus.CREATED);
+  }
 
-    @Operation(
-            summary = "Delete grade",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "grade was deleted", content = @Content),
-                    @ApiResponse(responseCode = "404", description = "grade not found", content = @Content)
-            })
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteGradeById(@PathVariable Long id) {
+  @Operation(
+      summary = "Soft delete grade",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Status changed to deleted",
+            content = @Content),
+        @ApiResponse(responseCode = "404", description = "grade not found", content = @Content)
+      })
+  @PatchMapping("/{id}")
+  public ResponseEntity<Object> softDeleteGradeById(@PathVariable String id) {
+    Long gradeId = Long.parseLong(id);
+    gradeService.softDelete(gradeId);
 
-        gradeService.delete(id);
-
-        return new ResponseEntity<>(id, HttpStatus.OK);
-    }
+    return new ResponseEntity<>(
+        Collections.singletonMap("The grade was deleted id", gradeId), HttpStatus.OK);
+  }
 }

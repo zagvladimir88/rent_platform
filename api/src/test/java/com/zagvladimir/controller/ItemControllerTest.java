@@ -98,16 +98,4 @@ class ItemControllerTest extends BaseIntegrationTest {
         .andExpect(jsonPath("$.itemName", is("Makita hr2470ft-TEST")))
         .andExpect(jsonPath("$.brand", is("Makita")));
   }
-
-  @Test
-  void deleteItemsById() throws Exception {
-    int itemId = 4;
-    this.mockMvc
-        .perform(
-            MockMvcRequestBuilders.delete("/api/items/{itemId}", itemId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(status().isOk());
-  }
 }

@@ -19,7 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -111,24 +110,5 @@ public class SubCategoryController {
     return new ResponseEntity<>(
         Collections.singletonMap("subCategory", subItemTypeMapper.toResponse(newSubCategory)),
         HttpStatus.CREATED);
-  }
-
-  @Operation(
-      summary = "Delete sub category",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "sub category deleted",
-            content = @Content),
-        @ApiResponse(
-            responseCode = "404",
-            description = "sub category not found",
-            content = @Content)
-      })
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Object> deleteSubCategoryById(@PathVariable Long id) {
-    subCategoryService.delete(id);
-    return new ResponseEntity<>(
-        Collections.singletonMap("The sub category was deleted, id:", id), HttpStatus.OK);
   }
 }

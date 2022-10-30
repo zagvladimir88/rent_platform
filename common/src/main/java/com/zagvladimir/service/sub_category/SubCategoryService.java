@@ -21,5 +21,4 @@ public interface SubCategoryService {
     SubCategory update(SubCategory subCategory);
 
     Long delete(Long subItemTypeId);
-
 }

@@ -58,17 +58,6 @@ class UserControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  void deleteUsersById() throws Exception {
-    this.mockMvc
-        .perform(
-            MockMvcRequestBuilders.delete("/api/users/{2}", "2")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(status().isOk());
-  }
-
-  @Test
   void updateUser() throws Exception {
     Map<String, Object> body = new HashMap<>();
     body.put("status", "ACTIVE");
@@ -90,5 +79,16 @@ class UserControllerTest extends BaseIntegrationTest {
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.user.firstName").value("Evgenii"));
+  }
+
+  @Test
+  void softDeleteUsersById() throws Exception {
+    this.mockMvc
+            .perform(
+                    MockMvcRequestBuilders.patch("/api/users/{2}", "2")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
+            .andDo(print())
+            .andExpect(status().isOk());
   }
 }

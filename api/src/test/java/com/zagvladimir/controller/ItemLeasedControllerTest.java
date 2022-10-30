@@ -67,16 +67,4 @@ class ItemLeasedControllerTest extends BaseIntegrationTest {
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.itemLeased.itemId").value("2"));
   }
-
-  @Test
-  void deleteItemLeasedById() throws Exception {
-    Long id = 1L;
-    this.mockMvc
-        .perform(
-            MockMvcRequestBuilders.delete("/api/items-leased/{id}", id)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(status().isOk());
-  }
 }

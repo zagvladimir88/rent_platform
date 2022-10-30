@@ -75,14 +75,4 @@ class RoleControllerTest extends BaseIntegrationTest {
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.name").value("ROLE_TEST"));
   }
-
-  @Test
-  void deleteRoleById() throws Exception {
-    this.mockMvc.perform(MockMvcRequestBuilders
-                    .delete("/api/roles/{2}", "2")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .accept(MediaType.APPLICATION_JSON))
-            .andDo(print())
-            .andExpect(status().isOk());
-  }
 }

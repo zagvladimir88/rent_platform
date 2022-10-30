@@ -15,4 +15,6 @@ public interface GradeService {
   Grade findById(Long gradeId);
 
   Long delete(Long gradeId);
+
+    Long softDelete(Long gradeId);
 }

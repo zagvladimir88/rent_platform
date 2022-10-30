@@ -7,7 +7,6 @@ import com.zagvladimir.domain.enums.Status;
 import com.zagvladimir.repository.ItemLeasedRepository;
 import com.zagvladimir.repository.RoleRepository;
 import com.zagvladimir.repository.UserRepository;
-import com.zagvladimir.service.item_leased.ItemLeasedService;
 import com.zagvladimir.service.location.LocationService;
 import com.zagvladimir.service.mail.MailSenderService;
 import com.zagvladimir.service.pdf.PDFService;
@@ -63,7 +62,8 @@ public class UserServiceImpl implements UserService {
     addRole(user, roleRepository.findRoleByName("ROLE_USER"));
     user.setLocation(locationService.findById(locationId));
     user.setRegistrationDate(new Timestamp(new Date().getTime()));
-    user.getCredentials().setUserPassword(passwordEncoder.encode(user.getCredentials().getUserPassword()));
+    user.getCredentials()
+        .setUserPassword(passwordEncoder.encode(user.getCredentials().getUserPassword()));
 
     user.setStatus(Status.NOT_ACTIVE);
     user.setActivationCode(UUIDGenerator.generatedUI());
@@ -89,7 +89,9 @@ public class UserServiceImpl implements UserService {
   @Override
   public User update(User userToUpdate) {
     userToUpdate.setModificationDate(new Timestamp(new Date().getTime()));
-    userToUpdate.getCredentials().setUserPassword(passwordEncoder.encode(userToUpdate.getCredentials().getUserPassword()));
+    userToUpdate
+        .getCredentials()
+        .setUserPassword(passwordEncoder.encode(userToUpdate.getCredentials().getUserPassword()));
     userRepository.save(userToUpdate);
     return userRepository.findById(userToUpdate.getId()).orElseThrow(EntityNotFoundException::new);
   }
@@ -130,13 +132,16 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public void confirmItemBooking(Long userID) throws MessagingException {
-    User user = userRepository.findById(userID).orElseThrow(
-                            () ->
-                                    new EntityNotFoundException(
-                                            String.format("The User with id: %d not found", userID)));
+    User user =
+        userRepository
+            .findById(userID)
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        String.format("The User with id: %d not found", userID)));
 
     Set<ItemLeased> itemsLeasedSet = user.getItemsLeased();
-    String pathToBilling = pdfService.generateAnInvoice(itemsLeasedSet,user.getId());
+    String pathToBilling = pdfService.generateAnInvoice(itemsLeasedSet, user.getId());
 
     Map<String, Object> templateModel = new HashMap<>();
     templateModel.put("recipientName", user.getFirstName());
@@ -144,12 +149,27 @@ public class UserServiceImpl implements UserService {
     templateModel.put("name", user.getFirstName());
     templateModel.put("item_name", "item name");
 
-    mailSenderService.sendConfirmBookingMail(user.getCredentials().getEmail(),"Confirm Booking",pathToBilling,templateModel);
+    mailSenderService.sendConfirmBookingMail(
+        user.getCredentials().getEmail(), "Confirm Booking", pathToBilling, templateModel);
 
-    for (ItemLeased leased : itemsLeasedSet){
+    for (ItemLeased leased : itemsLeasedSet) {
       leased.setStatus(Status.ACTIVE);
       itemLeasedRepository.save(leased);
     }
+  }
+
+  @Override
+  public Long softDelete(Long userId) {
+    User toUpdate =
+        userRepository
+            .findById(userId)
+            .orElseThrow(
+                () ->
+                    new EntityNotFoundException(
+                        String.format("The user with id: %d not found", userId)));
+    toUpdate.setStatus(Status.DELETED);
+    userRepository.save(toUpdate);
+    return userId;
   }
 
   private void addRole(User user, Role role) {
@@ -166,6 +186,6 @@ public class UserServiceImpl implements UserService {
     templateModel.put("url", String.format(ACTIVATION_URL, user.getActivationCode()));
 
     mailSenderService.sendMessageUsingThymeleafTemplate(
-            user.getCredentials().getEmail(), "Activation link", templateModel);
+        user.getCredentials().getEmail(), "Activation link", templateModel);
   }
 }

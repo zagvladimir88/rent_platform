@@ -66,11 +66,11 @@ class GradeControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  void deleteGradeById() throws Exception {
-    Long id = 1L;
+  void softDeleteGradeById() throws Exception {
+    Long gradeId = 8L;
     this.mockMvc
         .perform(
-            MockMvcRequestBuilders.delete("/api/grades/{id}", id)
+            MockMvcRequestBuilders.patch("/api/grades/{id}", gradeId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())

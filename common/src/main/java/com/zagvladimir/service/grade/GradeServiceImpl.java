@@ -1,6 +1,7 @@
 package com.zagvladimir.service.grade;
 
 import com.zagvladimir.domain.Grade;
+import com.zagvladimir.domain.enums.Status;
 import com.zagvladimir.repository.GradeRepository;
 import com.zagvladimir.service.item.ItemService;
 import com.zagvladimir.service.user.UserService;
@@ -48,6 +49,20 @@ public class GradeServiceImpl implements GradeService {
   @Override
   public Long delete(Long gradeId) {
     gradeRepository.deleteById(gradeId);
+    return gradeId;
+  }
+
+  @Override
+  public Long softDelete(Long gradeId) {
+    Grade toUpdate =
+            gradeRepository
+                    .findById(gradeId)
+                    .orElseThrow(
+                            () ->
+                                    new EntityNotFoundException(
+                                            String.format("The grade with id: %d not found", gradeId)));
+    toUpdate.setStatus(Status.DELETED);
+    gradeRepository.save(toUpdate);
     return gradeId;
   }
 }

@@ -27,5 +27,7 @@ public interface UserService {
 
   boolean isActivated(String login);
 
-    void confirmItemBooking(Long userID) throws MessagingException;
+  void confirmItemBooking(Long userID) throws MessagingException;
+
+    Long softDelete(Long userId);
 }

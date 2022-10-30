@@ -17,16 +17,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.Map;
@@ -106,21 +103,5 @@ public class ItemLeasedController {
         itemLeasedMapper.toResponse(itemLeasedService.findById(id));
     return new ResponseEntity<>(
         Collections.singletonMap("itemLeased", itemLeasedResponse), HttpStatus.OK);
-  }
-
-  @Operation(
-      summary = "Delete itemLeased",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "itemLeased was deleted",
-            content = @Content),
-        @ApiResponse(responseCode = "404", description = "itemLeased not found", content = @Content)
-      })
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Object> deleteItemLeasedById(@PathVariable Long id) {
-    itemLeasedService.delete(id);
-    return new ResponseEntity<>(
-        Collections.singletonMap("The location was deleted, id:", id), HttpStatus.OK);
   }
 }

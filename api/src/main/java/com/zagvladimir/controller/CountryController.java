@@ -55,8 +55,8 @@ public class CountryController {
       })
   @GetMapping
   public ResponseEntity<Object> findAllCountries(@ParameterObject Pageable pageable) {
-    Page<CountryResponse> countryResponse = countryService.findAll(pageable)
-            .map(countryMapper::toResponse);
+    Page<CountryResponse> countryResponse =
+        countryService.findAll(pageable).map(countryMapper::toResponse);
     return new ResponseEntity<>(countryResponse, HttpStatus.OK);
   }
 
@@ -76,9 +76,8 @@ public class CountryController {
   public ResponseEntity<Map<String, Object>> findCountryById(@PathVariable String id) {
 
     long userId = Long.parseLong(id);
-    CountryResponse countryResponse =countryMapper.toResponse(
-            countryService.findCountryById(userId)
-    );
+    CountryResponse countryResponse =
+        countryMapper.toResponse(countryService.findCountryById(userId));
 
     return new ResponseEntity<>(
         Collections.singletonMap("country", countryResponse), HttpStatus.OK);
@@ -106,7 +105,7 @@ public class CountryController {
   @PostMapping
   @Transactional
   public ResponseEntity<Object> createCountry(
-       @RequestBody @Valid CountryCreateRequest countryCreateRequest) {
+      @RequestBody @Valid CountryCreateRequest countryCreateRequest) {
 
     Country newCountry = countryMapper.toResponse(countryCreateRequest);
     CountryResponse countryResponse = countryMapper.toResponse(countryService.create(newCountry));

@@ -62,15 +62,5 @@ class SubCategoryControllerTest extends BaseIntegrationTest {
         .andExpect(jsonPath("$.subCategory.subCategoryName").value("TEST"));
   }
 
-  @Test
-  void deleteSubCategoryById() throws Exception {
-    Long id = 1L;
-    this.mockMvc
-        .perform(
-            MockMvcRequestBuilders.delete("/api/sub-categories/{id}", id)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(status().isOk());
-  }
+
 }

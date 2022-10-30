@@ -18,7 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -121,21 +120,8 @@ public class RoleController {
             content = @Content)
       })
   @PostMapping
-  public ResponseEntity<Object> createRole( @RequestBody @Valid RoleCreateRequest createRequest) {
+  public ResponseEntity<Object> createRole(@RequestBody @Valid RoleCreateRequest createRequest) {
     Role role = roleService.create(roleMapper.convertCreateRequest(createRequest));
     return new ResponseEntity<>(roleMapper.toResponse(role), HttpStatus.CREATED);
-  }
-
-  @Operation(
-      summary = "Delete Role",
-      responses = {
-        @ApiResponse(responseCode = "200", description = "Role deleted", content = @Content),
-        @ApiResponse(responseCode = "404", description = "Role not found", content = @Content)
-      })
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Object> deleteRoleById(@PathVariable Long id) {
-    roleService.delete(id);
-    return new ResponseEntity<>(
-        Collections.singletonMap("role has been deleted id:", id), HttpStatus.OK);
   }
 }
