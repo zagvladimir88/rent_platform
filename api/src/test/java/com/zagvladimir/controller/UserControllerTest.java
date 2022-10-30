@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,17 +28,21 @@ class UserControllerTest extends BaseIntegrationTest {
   @Autowired private ObjectMapper objectMapper;
 
   @Test
-  @WithMockUser(username="admin",roles={"ADMIN"})
+  @WithMockUser(
+      username = "admin",
+      roles = {"ADMIN"})
   void findAllUsers() throws Exception {
-    mockMvc.perform(MockMvcRequestBuilders.get("/api/users/")
-                    .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$['pageable']['paged']").value("true"))
-            .andExpect(jsonPath("$.content[0].firstName").value("Evgenii"));
+    mockMvc
+        .perform(MockMvcRequestBuilders.get("/api/users/").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$['pageable']['paged']").value("true"))
+        .andExpect(jsonPath("$.content[0].firstName").value("Evgenii"));
   }
 
   @Test
-  @WithMockUser(username="Bukowski",roles={"USER"})
+  @WithMockUser(
+      username = "Bukowski",
+      roles = {"USER"})
   void findUserById() throws Exception {
     int id = 39;
 
@@ -50,7 +55,9 @@ class UserControllerTest extends BaseIntegrationTest {
   }
 
   @Test
-  @WithMockUser(username="admin",roles={"ADMIN"})
+  @WithMockUser(
+      username = "admin",
+      roles = {"ADMIN"})
   void findByLogin() throws Exception {
     this.mockMvc
         .perform(get("/api/users/login/strjke"))
@@ -61,40 +68,33 @@ class UserControllerTest extends BaseIntegrationTest {
 
   @Test
   void updateUser() throws Exception {
-    Map<String, Object> body = new HashMap<>();
-    body.put("status", "ACTIVE");
-    body.put("firstName", "Evgenii");
-    body.put("lastName", "Popov");
-    body.put("userLogin", "joniq");
-    body.put("userPassword", "555555");
-    body.put("addressLine1", "Microdistrict 17");
-    body.put("addressLine2", "House 5-2");
-    body.put("state", "Gomelskaya");
-    body.put("city", "Zhlobin");
-    body.put("postalCode", "247210");
-    body.put("mobileNumber", "+375256145343");
-    body.put("email", "evgeniiArgs@gmail.com");
-
+    Map<?, ?> map =
+        objectMapper.readValue(
+            Paths.get("src/test/resources/json_for_test/userCreate.json").toFile(), Map.class);
     mockMvc
         .perform(
             MockMvcRequestBuilders.put("/api/users/2")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body))
+                .content(objectMapper.writeValueAsString(map))
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.user.firstName").value("Evgenii"));
+        .andExpect(jsonPath("$.user.firstName").value("Vladimir"))
+        .andExpect(jsonPath("$.user.lastName").value("Ivanov"))
+        .andExpect(jsonPath("$.user.credentials.userLogin").value("JsonTestLogin"));
   }
 
   @Test
-  @WithMockUser(username="admin",roles={"ADMIN"})
+  @WithMockUser(
+      username = "admin",
+      roles = {"ADMIN"})
   void softDeleteUsersById() throws Exception {
     this.mockMvc
-            .perform(
-                    MockMvcRequestBuilders.patch("/api/users/{2}", "2")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON))
-            .andDo(print())
-            .andExpect(status().isOk());
+        .perform(
+            MockMvcRequestBuilders.patch("/api/users/{2}", "2")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+        .andDo(print())
+        .andExpect(status().isOk());
   }
 }

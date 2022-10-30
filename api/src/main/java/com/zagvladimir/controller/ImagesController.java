@@ -87,15 +87,7 @@ public class ImagesController {
             }),
         @ApiResponse(responseCode = "404", description = "Item not found", content = @Content),
         @ApiResponse(responseCode = "500", content = @Content())
-      },
-      parameters = {
-        @Parameter(
-            in = ParameterIn.HEADER,
-            name = "X-Auth-Token",
-            required = true,
-            description = "JWT Token, can be generated in auth controller /auth")
       })
-  @PreAuthorize(value = "hasRole('ADMIN')")
   @GetMapping("/{id}")
   public ResponseEntity<Map<Object, Object>> getImageUrls(@PathVariable String id) {
     Long itemId = Long.parseLong(id);

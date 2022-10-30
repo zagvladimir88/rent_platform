@@ -10,6 +10,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,16 +49,15 @@ class SubCategoryControllerTest extends BaseIntegrationTest {
   @Test
   @WithMockUser(username="admin",roles={"ADMIN"})
   void createSubCategory() throws Exception {
-    Map<String, Object> body = new HashMap<>();
-    body.put("subCategoryName", "TEST");
-    body.put("categoryId", "2");
-    body.put("status", "ACTIVE");
+    Map<?, ?> map =
+            objectMapper.readValue(
+                    Paths.get("src/test/resources/json_for_test/subCategoryCreate.json").toFile(), Map.class);
 
     mockMvc
         .perform(
             MockMvcRequestBuilders.post("/api/sub-categories/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body))
+                .content(objectMapper.writeValueAsString(map))
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isCreated())

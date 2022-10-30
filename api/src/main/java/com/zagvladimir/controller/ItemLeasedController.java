@@ -6,6 +6,8 @@ import com.zagvladimir.controller.response.ItemLeasedResponse;
 import com.zagvladimir.domain.ItemLeased;
 import com.zagvladimir.service.item_leased.ItemLeasedService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,7 +53,7 @@ public class ItemLeasedController {
             })
       })
   @GetMapping
-  public ResponseEntity<Object> findAllItems(@ParameterObject Pageable page) {
+  public ResponseEntity<Object> findAllItemsLeased(@ParameterObject Pageable page) {
     Page<ItemLeasedResponse> itemLeasedResponses =
         itemLeasedService.findAll(page).map(itemLeasedMapper::toResponse);
     return new ResponseEntity<>(itemLeasedResponses, HttpStatus.OK);
@@ -74,7 +77,15 @@ public class ItemLeasedController {
             responseCode = "500",
             description = "itemLeased not created, Illegal Arguments",
             content = @Content)
-      })
+      },
+          parameters = {
+                  @Parameter(
+                          in = ParameterIn.HEADER,
+                          name = "X-Auth-Token",
+                          required = true,
+                          description = "JWT Token, can be generated in auth controller /auth")
+          })
+  @PreAuthorize(value = "hasAnyRole('USER', 'MANAGER','ADMIN')")
   @PostMapping
   public ResponseEntity<Object> createItemLeased(
       @Valid @RequestBody ItemLeasedCreateRequest createRequest) {

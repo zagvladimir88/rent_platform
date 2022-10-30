@@ -24,5 +24,13 @@ public interface UserMapper {
     @Mapping(source = "postalCode",target = "address.postalCode")
     User convertCreateRequest(UserCreateRequest userCreateRequest);
 
+    @Mapping(source = "userPassword",target = "credentials.userPassword")
+    @Mapping(source = "userLogin",target = "credentials.userLogin")
+    @Mapping(source = "email",target = "credentials.email")
+    @Mapping(source = "addressLine1",target = "address.addressLine1")
+    @Mapping(source = "addressLine2",target = "address.addressLine2")
+    @Mapping(source = "state",target = "address.state")
+    @Mapping(source = "city",target = "address.city")
+    @Mapping(source = "postalCode",target = "address.postalCode")
     User convertUpdateRequest(UserUpdateRequest userUpdateRequest, @MappingTarget User user);
 }

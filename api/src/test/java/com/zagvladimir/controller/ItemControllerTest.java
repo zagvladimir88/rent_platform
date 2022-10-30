@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.persistence.EntityNotFoundException;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,20 +81,23 @@ class ItemControllerTest extends BaseIntegrationTest {
   @Test
   @WithMockUser(username="admin",roles={"ADMIN"})
   void createItem() throws Exception {
-    Map<String, Object> body = new HashMap<>();
-    body.put("itemName", "Makita hr2470ft-TEST");
-    body.put("subCategoryId", 5);
-    body.put("brand", "Makita");
-    body.put("description", "Rotary Hammer makita hr2470ft");
-    body.put("pricePerDay", 6.0);
-    body.put("available", true);
-    body.put("status", "ACTIVE");
+//    Map<String, Object> body = new HashMap<>();
+//    body.put("itemName", "Makita hr2470ft-TEST");
+//    body.put("subCategoryId", 5);
+//    body.put("brand", "Makita");
+//    body.put("description", "Rotary Hammer makita hr2470ft");
+//    body.put("pricePerDay", 6.0);
+//    body.put("available", true);
+//    body.put("status", "ACTIVE");
+    Map<?, ?> map =
+            objectMapper.readValue(
+                    Paths.get("src/test/resources/json_for_test/itemCreate.json").toFile(), Map.class);
 
     mockMvc
         .perform(
             MockMvcRequestBuilders.post("/api/items/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body))
+                .content(objectMapper.writeValueAsString(map))
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isCreated())

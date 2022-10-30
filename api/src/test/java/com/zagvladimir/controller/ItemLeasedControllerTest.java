@@ -6,9 +6,11 @@ import com.zagvladimir.annotations.IT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,7 +28,7 @@ class ItemLeasedControllerTest extends BaseIntegrationTest {
   @Autowired private ObjectMapper objectMapper;
 
   @Test
-  void findAllItems() throws Exception {
+  void findAllItemsLeased() throws Exception {
     this.mockMvc
         .perform(get("/api/items-leased/"))
         .andDo(print())
@@ -35,22 +37,18 @@ class ItemLeasedControllerTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(username="admin",roles={"ADMIN"})
   void createItem() throws Exception {
-    Map<String, Object> body = new HashMap<>();
-    body.put("itemId", "3");
-    body.put("renterId", "6");
-    body.put("timeFrom", "2022-09-06T13:20:05.000+00:00");
-    body.put("timeTo", "2022-09-06T15:20:11.000+00:00");
-    body.put("pricePerDay", "9.0");
-    body.put("discount", "1");
-    body.put("priceTotal", "9");
-    body.put("status", "ACTIVE");
+    Map<?, ?> map =
+        objectMapper.readValue(
+            Paths.get("src/test/resources/json_for_test/itemLeasedCreate.json").toFile(),
+            Map.class);
 
     mockMvc
         .perform(
             MockMvcRequestBuilders.post("/api/items-leased/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body))
+                .content(objectMapper.writeValueAsString(map))
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isCreated())

@@ -1,0 +1,13 @@
+{
+  "firstName": "Vladimir",
+  "lastName": "Ivanov",
+  "userLogin": "testLogin",
+  "userPassword": "testPassword",
+  "addressLine1": "Microdistrict 17",
+  "addressLine2": "House 5-2",
+  "state": "Gomelskaya",
+  "city": "Zhlobin",
+  "postalCode": "247210",
+  "mobileNumber": "+375291544444",
+  "email": "test@gmail.com"
+}

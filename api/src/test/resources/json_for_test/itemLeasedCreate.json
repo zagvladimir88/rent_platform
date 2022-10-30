@@ -1,0 +1,9 @@
+{
+  "itemId": 3,
+  "renterId": 6,
+  "timeFrom": "2022-09-06T13:20:05.000+00:00",
+  "timeTo": "2022-09-06T13:20:05.000+00:00",
+  "pricePerDay": 9.0,
+  "discount": 1,
+  "priceTotal": 9
+}

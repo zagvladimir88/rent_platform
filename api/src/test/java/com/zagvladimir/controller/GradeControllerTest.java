@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,18 +47,15 @@ class GradeControllerTest extends BaseIntegrationTest {
 
   @Test
   void createGrade() throws Exception {
-    Map<String, Object> body = new HashMap<>();
-    body.put("itemId", "2");
-    body.put("userId", "6");
-    body.put("description", "TEST");
-    body.put("grade", "4");
-    body.put("status", "ACTIVE");
+    Map<?, ?> map =
+        objectMapper.readValue(
+            Paths.get("src/test/resources/json_for_test/gradeCreate.json").toFile(), Map.class);
 
     mockMvc
         .perform(
             MockMvcRequestBuilders.post("/api/grades/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body))
+                .content(objectMapper.writeValueAsString(map))
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isCreated())

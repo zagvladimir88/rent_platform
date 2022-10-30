@@ -41,6 +41,24 @@ public class AdminController {
   private final GradeService gradeService;
   private final RoleService roleService;
 
+  @Operation(
+      summary = "confirmation of user orders",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "confirmation was successfully",
+            content = @Content),
+        @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
+        @ApiResponse(responseCode = "500", description = "Server error", content = @Content)
+      },
+      parameters = {
+        @Parameter(
+            in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
+      })
+  @PreAuthorize(value = "hasAnyRole('ADMIN', 'MANAGER')")
   @PatchMapping("/confirm/{clientId}")
   public ResponseEntity<Map<String, Object>> confirmItemBooking(
       @PathVariable("clientId") String clientId) throws MessagingException {

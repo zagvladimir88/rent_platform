@@ -81,7 +81,14 @@ public class UserController {
                   mediaType = "application/json",
                   array = @ArraySchema(schema = @Schema(implementation = UserResponse.class)))
             })
-      })
+      },
+          parameters = {
+                  @Parameter(
+                          in = ParameterIn.HEADER,
+                          name = "X-Auth-Token",
+                          required = true,
+                          description = "JWT Token, can be generated in auth controller /auth")
+          })
   @GetMapping("/{id}")
   @PreAuthorize(
       "@userServiceImpl.findById(#id).credentials.userLogin.equals(principal.username) or hasRole('ADMIN')")
