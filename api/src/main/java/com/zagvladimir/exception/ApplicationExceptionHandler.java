@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ApplicationExceptionHandler {
 
+  //TODO: add AccessDeniedException
+
   @ExceptionHandler({
     NoSuchEntityException.class,
     EmptyResultDataAccessException.class,

@@ -16,5 +16,7 @@ public interface GradeService {
 
   Long delete(Long gradeId);
 
-    Long softDelete(Long gradeId);
+  Long softDelete(Long gradeId);
+
+  String getLoginWhoRatedByGradeId(Long id);
 }

@@ -42,14 +42,8 @@ public class ImagesController {
             responseCode = "200",
             description = "Image upload successfully",
             content = @Content()),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Item not found, Conflict",
-            content = @Content()),
-        @ApiResponse(
-                responseCode = "500",
-                description = "Server error",
-                content = @Content())
+        @ApiResponse(responseCode = "404", description = "Item not found", content = @Content()),
+        @ApiResponse(responseCode = "500", description = "Server error", content = @Content())
       },
       parameters = {
         @Parameter(
@@ -58,14 +52,10 @@ public class ImagesController {
             required = true,
             description = "JWT Token, can be generated in auth controller /auth")
       })
-  @PreAuthorize(value = "hasRole('ADMIN')")
-  @PostMapping(
-      path = "/{id}",
-      consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
-      produces = {MediaType.APPLICATION_JSON_VALUE})
+//  @PostAuthorize(value = "hasRole('ADMIN')")
+  @PostMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<Map<Object, Object>> uploadImage(
-      @RequestPart(value = "file") MultipartFile file, @PathVariable String id) throws IOException {
-
+      @PathVariable String id, @RequestPart("file") MultipartFile file) throws IOException {
     String fileExtension = StringUtils.getFilenameExtension(file.getOriginalFilename());
     Long itemId = Long.parseLong(id);
     byte[] imageBytes = file.getBytes();
@@ -81,13 +71,12 @@ public class ImagesController {
             responseCode = "200",
             description = "Images successfully found",
             content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema()))
+              @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema()))
             }),
         @ApiResponse(responseCode = "404", description = "Item not found", content = @Content),
         @ApiResponse(responseCode = "500", content = @Content())
       })
+  @PreAuthorize(value = "hasRole('USER')")
   @GetMapping("/{id}")
   public ResponseEntity<Map<Object, Object>> getImageUrls(@PathVariable String id) {
     Long itemId = Long.parseLong(id);

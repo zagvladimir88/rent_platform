@@ -65,4 +65,13 @@ public class GradeServiceImpl implements GradeService {
     gradeRepository.save(toUpdate);
     return gradeId;
   }
+
+  @Override
+  public String getLoginWhoRatedByGradeId(Long id) {
+    String login = gradeRepository.getLoginWhoRatedByGradeId(id);
+    if(login == null) {
+      throw new EntityNotFoundException("user not found");
+    }
+    return login;
+  }
 }

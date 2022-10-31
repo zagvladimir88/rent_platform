@@ -4,6 +4,7 @@ import com.zagvladimir.controller.mappers.ItemLeasedMapper;
 import com.zagvladimir.controller.requests.items_leased.ItemLeasedCreateRequest;
 import com.zagvladimir.controller.response.ItemLeasedResponse;
 import com.zagvladimir.domain.ItemLeased;
+import com.zagvladimir.repository.ItemLeasedRepository;
 import com.zagvladimir.service.item_leased.ItemLeasedService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -29,7 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Tag(name = "Items Leased controller")
 @RestController
@@ -38,6 +41,7 @@ import java.util.Map;
 public class ItemLeasedController {
 
   private final ItemLeasedService itemLeasedService;
+  private final ItemLeasedRepository repository;
   private final ItemLeasedMapper itemLeasedMapper;
 
   @Operation(
@@ -49,9 +53,10 @@ public class ItemLeasedController {
             content = {
               @Content(
                   mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = ItemLeased.class)))
+                  array = @ArraySchema(schema = @Schema(implementation = ItemLeasedResponse.class)))
             })
       })
+  @PreAuthorize("hasRole('ADMIN')")
   @GetMapping
   public ResponseEntity<Object> findAllItemsLeased(@ParameterObject Pageable page) {
     Page<ItemLeasedResponse> itemLeasedResponses =
@@ -68,7 +73,7 @@ public class ItemLeasedController {
             content =
                 @Content(
                     mediaType = "application/json",
-                    schema = @Schema(implementation = ItemLeased.class))),
+                    schema = @Schema(implementation = ItemLeasedResponse.class))),
         @ApiResponse(
             responseCode = "409",
             description = "itemLeased not created, Conflict",
@@ -78,13 +83,13 @@ public class ItemLeasedController {
             description = "itemLeased not created, Illegal Arguments",
             content = @Content)
       },
-          parameters = {
-                  @Parameter(
-                          in = ParameterIn.HEADER,
-                          name = "X-Auth-Token",
-                          required = true,
-                          description = "JWT Token, can be generated in auth controller /auth")
-          })
+      parameters = {
+        @Parameter(
+            in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
+      })
   @PreAuthorize(value = "hasAnyRole('USER', 'MANAGER','ADMIN')")
   @PostMapping
   public ResponseEntity<Object> createItemLeased(
@@ -105,14 +110,55 @@ public class ItemLeasedController {
             content = {
               @Content(
                   mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = ItemLeased.class)))
+                  array = @ArraySchema(schema = @Schema(implementation = ItemLeasedResponse.class)))
             })
+      },
+      parameters = {
+        @Parameter(
+            in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
       })
+  @PreAuthorize(
+      "@itemLeasedServiceImpl.getRenterName(#id).equals(principal.username) or hasRole('ADMIN')")
   @GetMapping("/{id}")
-  public ResponseEntity<Map<String, Object>> findItemLeasedById(@PathVariable Long id) {
+  public ResponseEntity<Map<String, Object>> findItemLeasedById(@PathVariable String id) {
+    Long itemLeasedId = Long.parseLong(id);
     ItemLeasedResponse itemLeasedResponse =
-        itemLeasedMapper.toResponse(itemLeasedService.findById(id));
+        itemLeasedMapper.toResponse(itemLeasedService.findById(itemLeasedId));
     return new ResponseEntity<>(
         Collections.singletonMap("itemLeased", itemLeasedResponse), HttpStatus.OK);
+  }
+
+  @Operation(
+      summary = "Gets all itemsLeased by renter id",
+      responses = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Found the itemsLeased",
+            content = {
+              @Content(
+                  mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = ItemLeasedResponse.class)))
+            })
+      },
+      parameters = {
+        @Parameter(
+            in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
+      })
+  @PreAuthorize(
+      "@userServiceImpl.findById(#id).credentials.userLogin.equals(principal.username) or hasRole('ADMIN')")
+  @GetMapping("/user/{id}")
+  public ResponseEntity<Object> findAllItemsLeasedByUserId(@PathVariable String id) {
+    Long userId = Long.parseLong(id);
+    List<ItemLeasedResponse> itemLeasedResponses =
+        itemLeasedService.findAllByRenterId(userId).stream()
+            .map(itemLeasedMapper::toResponse)
+            .collect(Collectors.toList());
+    return new ResponseEntity<>(itemLeasedResponses, HttpStatus.OK);
   }
 }
