@@ -54,6 +54,7 @@ public class GradeController {
                   array = @ArraySchema(schema = @Schema(implementation = GradeResponse.class)))
             })
       })
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @GetMapping
   public ResponseEntity<Object> findAllGrades(@ParameterObject Pageable page) {
     Page<GradeResponse> gradeResponse = gradeService.findAll(page).map(gradeMapper::toResponse);

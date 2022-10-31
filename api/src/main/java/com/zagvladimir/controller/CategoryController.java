@@ -135,6 +135,7 @@ public class CategoryController {
             description = "Item Category not found",
             content = @Content)
       })
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Object> softDeleteItemCategoryById(@PathVariable String id) {
       Long categoryId = Long.parseLong(id);
