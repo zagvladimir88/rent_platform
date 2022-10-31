@@ -4,6 +4,8 @@ import com.zagvladimir.domain.ItemLeased;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 
 public interface ItemLeasedService {
 
@@ -16,5 +18,9 @@ public interface ItemLeasedService {
     ItemLeased update(ItemLeased object);
 
     Long delete(Long itemLeasedId);
+
+    String getRenterName(Long id);
+
+    List<ItemLeased> findAllByRenterId(Long useId);
 
 }

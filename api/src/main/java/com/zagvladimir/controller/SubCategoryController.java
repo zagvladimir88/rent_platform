@@ -109,7 +109,7 @@ public class SubCategoryController {
             required = true,
             description = "JWT Token, can be generated in auth controller /auth")
       })
-  @PreAuthorize(value = "hasRole('ADMIN')")
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @PostMapping
   @Transactional
   public ResponseEntity<Object> createSubCategory(

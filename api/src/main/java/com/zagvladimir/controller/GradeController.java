@@ -6,6 +6,8 @@ import com.zagvladimir.controller.response.GradeResponse;
 import com.zagvladimir.domain.Grade;
 import com.zagvladimir.service.grade.GradeService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -93,7 +96,15 @@ public class GradeController {
             responseCode = "500",
             description = "grade not created, Illegal Arguments",
             content = @Content)
+      },
+      parameters = {
+        @Parameter(
+            in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
       })
+  @PreAuthorize("hasAnyRole('ADMIN','MANAGER','USER')")
   @PostMapping
   @Transactional
   public ResponseEntity<Object> createGrade(
@@ -117,7 +128,15 @@ public class GradeController {
             description = "Status changed to deleted",
             content = @Content),
         @ApiResponse(responseCode = "404", description = "grade not found", content = @Content)
+      },
+      parameters = {
+        @Parameter(
+            in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
       })
+  @PreAuthorize("@gradeServiceImpl.getLoginWhoRatedByGradeId(#id).equals(principal.username) or hasAnyRole('ADMIN','MANAGER')")
   @PatchMapping("/{id}")
   public ResponseEntity<Object> softDeleteGradeById(@PathVariable String id) {
     Long gradeId = Long.parseLong(id);

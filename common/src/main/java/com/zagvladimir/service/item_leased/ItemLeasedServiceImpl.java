@@ -3,9 +3,6 @@ package com.zagvladimir.service.item_leased;
 import com.zagvladimir.domain.ItemLeased;
 import com.zagvladimir.domain.enums.Status;
 import com.zagvladimir.repository.ItemLeasedRepository;
-import com.zagvladimir.service.mail.MailSenderService;
-import com.zagvladimir.service.item.ItemService;
-import com.zagvladimir.service.pdf.PDFService;
 import com.zagvladimir.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -13,20 +10,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ItemLeasedServiceImpl implements ItemLeasedService {
 
   private final ItemLeasedRepository itemLeasedRepository;
-  private final ItemService itemService;
   private final UserService userService;
-  private final MailSenderService mailSenderService;
-  private final PDFService pdfService;
+
 
   @Override
   public Page<ItemLeased> findAll(Pageable page) {
@@ -62,5 +55,15 @@ public class ItemLeasedServiceImpl implements ItemLeasedService {
   public Long delete(Long itemLeasedId) {
     itemLeasedRepository.deleteById(itemLeasedId);
     return itemLeasedId;
+  }
+
+  @Override
+  public String getRenterName(Long id) {
+    return itemLeasedRepository.getRenterName(id);
+  }
+
+  @Override
+  public List<ItemLeased> findAllByRenterId(Long useId) {
+    return itemLeasedRepository.findAllByRenterId(useId);
   }
 }

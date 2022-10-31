@@ -27,6 +27,7 @@ class ItemLeasedControllerTest extends BaseIntegrationTest {
   @Autowired private ObjectMapper objectMapper;
 
   @Test
+  @WithMockUser(username="serg123",roles={"ADMIN"})
   void findAllItemsLeased() throws Exception {
     this.mockMvc
         .perform(get("/api/items-leased/"))
@@ -56,6 +57,7 @@ class ItemLeasedControllerTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(username="admin",roles={"ADMIN"})
   void findItemLeasedById() throws Exception {
     Long id = 1L;
     this.mockMvc
