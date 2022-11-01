@@ -1,6 +1,6 @@
 # @Rentals
 
-RestService for tool rental platform.  **In progress**
+RestService for tool rental platform.  **In progress 70%**
 
 
 ## Functionality
