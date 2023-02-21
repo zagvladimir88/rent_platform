@@ -21,7 +21,7 @@ Basic
 # Technology:
 * Spring Boot, Security, Data Jpa , Email
 * PostgreSQL
-* Actuator, Pmotheus micrometr for metrics
+* Actuator, Protheus micrometr for metrics
 * ITEXT7 for generating billing
 * GCS for hosting image
 * Validation
