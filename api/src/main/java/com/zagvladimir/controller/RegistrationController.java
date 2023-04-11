@@ -1,6 +1,5 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.mappers.UserMapper;
 import com.zagvladimir.dto.requests.users.UserCreateRequest;
 import com.zagvladimir.dto.response.user.UserResponse;
 import com.zagvladimir.service.user.UserService;
@@ -8,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,26 +34,12 @@ public class RegistrationController {
 
   @Autowired private UserService userService;
 
-  @Autowired private UserMapper userMapper;
-
-  @Operation(
-      summary = "Registered a new User",
-      responses = {
-        @ApiResponse(
-            responseCode = "201",
-            description = "User registered successfully",
-            content =
-                @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = UserResponse.class))),
-        @ApiResponse(
-            responseCode = "409",
-            description = "User not registered, Conflict",
-            content = @Content),
-        @ApiResponse(
-            responseCode = "500",
-            description = "User not registered, Illegal Arguments",
-            content = @Content)
+  @Operation(summary = "Registered a new User")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "User registered successfully", content =
+                @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class))),
+        @ApiResponse(responseCode = "409", description = "User not registered, Conflict", content = @Content),
+        @ApiResponse(responseCode = "500", description = "User not registered, Illegal Arguments", content = @Content)
       })
   @PostMapping
   @Transactional
@@ -62,6 +48,7 @@ public class RegistrationController {
     return new ResponseEntity<>(userService.create(createRequest), HttpStatus.CREATED);
   }
 
+  @Operation(summary = "Activate a User")
   @GetMapping("/activate/{code}")
   public ResponseEntity<Object> activate(@PathVariable String code) {
     boolean isActivated = userService.activateUser(code);

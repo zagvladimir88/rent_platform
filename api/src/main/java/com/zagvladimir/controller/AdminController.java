@@ -63,17 +63,17 @@ public class AdminController {
                 Collections.singletonMap("user", "Confirm successfully"), HttpStatus.OK);
     }
 
-    @Operation(
-            summary = "Delete user",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "user was deleted", content = @Content),
-                    @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
-                    @ApiResponse(responseCode = "500", description = "Server error", content = @Content)
-            },
-            parameters = {
-                    @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
-                            required = true, description = "JWT Token, can be generated in auth controller /auth")
-            })
+
+    @Operation(summary = "Delete user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "user was deleted", content = @Content),
+            @ApiResponse(responseCode = "404", description = "User not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Server error", content = @Content)})
+    @Parameter(
+            in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
     @PreAuthorize(value = "hasRole('ADMIN')")
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Object> deleteUsersById(@PathVariable String id) {
@@ -83,22 +83,15 @@ public class AdminController {
                 Collections.singletonMap("The user was deleted, id:", userId), HttpStatus.OK);
     }
 
-    @Operation(
-            summary = "Delete sub category",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "sub category deleted",
-                            content = @Content),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "sub category not found",
-                            content = @Content)
-            },
-            parameters = {
-                    @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
-                            required = true, description = "JWT Token, can be generated in auth controller /auth")
-            })
+    @Operation(summary = "Delete sub category")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",description = "sub category deleted", content = @Content),
+            @ApiResponse(responseCode = "404", description = "sub category not found", content = @Content)})
+    @Parameter(
+            in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
     @PreAuthorize(value = "hasRole('ADMIN')")
     @DeleteMapping("/sub-categories/{id}")
     public ResponseEntity<Object> deleteSubCategoryById(@PathVariable String id) {
@@ -108,19 +101,15 @@ public class AdminController {
                 Collections.singletonMap("The sub category was deleted, id:", subCategoryId), HttpStatus.OK);
     }
 
-    @Operation(
-            summary = "Delete itemLeased",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "itemLeased was deleted",
-                            content = @Content),
-                    @ApiResponse(responseCode = "404", description = "itemLeased not found", content = @Content)
-            },
-            parameters = {
-                    @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
-                            required = true, description = "JWT Token, can be generated in auth controller /auth")
-            })
+    @Operation(summary = "Delete itemLeased")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "itemLeased was deleted", content = @Content),
+            @ApiResponse(responseCode = "404", description = "itemLeased not found", content = @Content)})
+    @Parameter(
+            in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
     @PreAuthorize(value = "hasRole('ADMIN')")
     @DeleteMapping("/items-leased/{id}")
     public ResponseEntity<Object> deleteItemLeasedById(@PathVariable String id) {
@@ -130,16 +119,15 @@ public class AdminController {
                 Collections.singletonMap("The location was deleted, id:", itemLeasedId), HttpStatus.OK);
     }
 
-    @Operation(
-            summary = "Delete Item",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Item deleted", content = @Content),
-                    @ApiResponse(responseCode = "404", description = "Item not found", content = @Content)
-            },
-            parameters = {
-                    @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
-                            required = true, description = "JWT Token, can be generated in auth controller /auth")
-            })
+    @Operation(summary = "Delete Item")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Item deleted", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Item not found", content = @Content)})
+    @Parameter(
+            in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
     @PreAuthorize(value = "hasRole('ADMIN')")
     @DeleteMapping("/items/{id}")
     public ResponseEntity<Object> deleteItemsById(@PathVariable String id) {
@@ -149,16 +137,13 @@ public class AdminController {
                 Collections.singletonMap("The item was deleted, id:", itemId), HttpStatus.OK);
     }
 
-    @Operation(
-            summary = "Delete grade",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "grade was deleted", content = @Content),
-                    @ApiResponse(responseCode = "404", description = "grade not found", content = @Content)
-            },
-            parameters = {
-                    @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
+    @Operation(summary = "Delete grade")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "grade was deleted", content = @Content),
+            @ApiResponse(responseCode = "404", description = "grade not found", content = @Content)})
+    @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
                             required = true, description = "JWT Token, can be generated in auth controller /auth")
-            })
+
     @PreAuthorize(value = "hasRole('ADMIN')")
     @DeleteMapping("/grades/{id}")
     public ResponseEntity<Object> deleteGradeById(@PathVariable String id) {
@@ -168,22 +153,14 @@ public class AdminController {
         return new ResponseEntity<>(Collections.singletonMap("The grade was deleted, id:", gradeId), HttpStatus.OK);
     }
 
-    @Operation(
-            summary = "Delete Category",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Item Category was deleted",
-                            content = @Content),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Item Category not found",
-                            content = @Content)
-            },
-            parameters = {
-                    @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
-                            required = true, description = "JWT Token, can be generated in auth controller /auth")
-            })
+    @Operation(summary = "Delete Category")
+    @ApiResponses(value = {
+                    @ApiResponse(responseCode = "200", description = "Item Category was deleted", content = @Content),
+                    @ApiResponse(responseCode = "404", description = "Item Category not found", content = @Content)})
+    @Parameter(in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
     @PreAuthorize(value = "hasRole('ADMIN')")
     @DeleteMapping("/categories/{id}")
     public ResponseEntity<Object> deleteItemCategoryById(@PathVariable String id) {
@@ -194,16 +171,14 @@ public class AdminController {
                 Collections.singletonMap("The category was deleted, id:", categoryId), HttpStatus.OK);
     }
 
-    @Operation(
-            summary = "Delete Role",
-            responses = {
-                    @ApiResponse(responseCode = "200", description = "Role deleted", content = @Content),
-                    @ApiResponse(responseCode = "404", description = "Role not found", content = @Content)
-            },
-            parameters = {
-                    @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token",
-                            required = true, description = "JWT Token, can be generated in auth controller /auth")
-            })
+    @Operation(summary = "Delete Role")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Role deleted", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Role not found", content = @Content)})
+    @Parameter(in = ParameterIn.HEADER,
+            name = "X-Auth-Token",
+            required = true,
+            description = "JWT Token, can be generated in auth controller /auth")
     @PreAuthorize(value = "hasRole('ADMIN')")
     @DeleteMapping("/roles/{id}")
     public ResponseEntity<Object> deleteRoleById(@PathVariable String id) {

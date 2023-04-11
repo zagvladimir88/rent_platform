@@ -7,6 +7,7 @@ import com.zagvladimir.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,21 +29,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthenticationController {
 
   private final AuthenticationManager authenticationManager;
-
   private final JwtTokenHelper tokenUtils;
-
   private final UserDetailsService userProvider;
-
   private final UserService userService;
 
-  @Operation(
-      summary = "Login user in system",
-      description = "Return Auth-Token with user login",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Successful authorization",
-            content = @Content),
+  @Operation(summary = "Login user in system",description = "Return Auth-Token with user login")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successful authorization", content = @Content),
         @ApiResponse(responseCode = "400", description = "Request error", content = @Content),
         @ApiResponse(responseCode = "500", description = "Server error", content = @Content)
       })

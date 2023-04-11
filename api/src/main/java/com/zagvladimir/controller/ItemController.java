@@ -1,6 +1,5 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.mappers.ItemMapper;
 import com.zagvladimir.dto.requests.items.ItemCreateRequest;
 import com.zagvladimir.dto.response.ItemResponse;
 import com.zagvladimir.exception.ErrorContainer;
@@ -38,72 +37,35 @@ public class ItemController {
 
   private final ItemService itemService;
 
-  private final ItemMapper itemMapper;
 
-  @Operation(
-      summary = "Gets items with pagination",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Found the items",
-            content =
-                @Content(
-                    mediaType = "application/json",
-                    array = @ArraySchema(schema = @Schema(implementation = ItemResponse.class))))
-      })
+  @Operation(summary = "Gets items with pagination")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Found the items", content =
+            @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ItemResponse.class))))})
   @GetMapping
   public ResponseEntity<Object> findAllItems(@ParameterObject Pageable page) {
     return new ResponseEntity<>(itemService.findAll(page), HttpStatus.OK);
   }
 
   @Operation(summary = "Gets item by ID")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Found the item by id",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = ItemResponse.class)))
-            }),
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Found the item by id", content = {
+              @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ItemResponse.class)))}),
         @ApiResponse(responseCode = "404", description = "Item not found", content = @Content),
-        @ApiResponse(
-            responseCode = "500",
-            description = "Item not found",
-            content = @Content(schema = @Schema(implementation = ErrorContainer.class)))
+        @ApiResponse(responseCode = "500", description = "Item not found", content = @Content(schema = @Schema(implementation = ErrorContainer.class)))
       })
   @GetMapping("/{id}")
   public ResponseEntity< Object> findByItemId(@PathVariable Long id) {
     return new ResponseEntity<>(itemService.findById(id), HttpStatus.OK);
   }
 
-  @Operation(
-      summary = "Create new Item",
-      responses = {
-        @ApiResponse(
-            responseCode = "201",
-            description = "Item create successfully",
-            content =
-                @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ItemResponse.class))),
-        @ApiResponse(
-            responseCode = "409",
-            description = "Item not created, Conflict",
-            content = @Content),
-        @ApiResponse(
-            responseCode = "500",
-            description = "Item not created, Illegal Arguments",
-            content = @Content)
-      },
-          parameters = {
-                  @Parameter(
-                          in = ParameterIn.HEADER,
-                          name = "X-Auth-Token",
-                          required = true,
-                          description = "JWT Token, can be generated in auth controller /auth")
-          })
+  @Operation(summary = "Create new Item")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Item create successfully", content =
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ItemResponse.class))),
+        @ApiResponse(responseCode = "409", description = "Item not created, Conflict", content = @Content),
+        @ApiResponse(responseCode = "500", description = "Item not created, Illegal Arguments", content = @Content)})
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true, description = "JWT Token, can be generated in auth controller /auth")
   @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @PostMapping
   @Transactional
