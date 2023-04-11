@@ -4,8 +4,6 @@ import com.zagvladimir.dto.requests.role.RoleCreateRequest;
 import com.zagvladimir.dto.response.RoleResponse;
 import com.zagvladimir.service.role.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,7 +15,6 @@ import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,8 +37,6 @@ public class RoleController {
   @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Found the roles", content = {
               @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RoleResponse.class)))})})
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true, description = "JWT Token, can be generated in auth controller /auth")
-  @PreAuthorize(value = "hasRole('ADMIN')")
   @GetMapping
   public ResponseEntity<Object> findAllRoles(@ParameterObject Pageable page) {
     return new ResponseEntity<>(roleService.findAll(page), HttpStatus.OK);
@@ -51,8 +46,6 @@ public class RoleController {
   @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Found the roles", content = {
               @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RoleResponse.class)))})})
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true, description = "JWT Token, can be generated in auth controller /auth")
-  @PreAuthorize(value = "hasRole('ADMIN')")
   @GetMapping("users/{id}")
   public ResponseEntity<Object> findRolesByUserId(@PathVariable String id) {
     Long userId = Long.parseLong(id);
@@ -63,8 +56,6 @@ public class RoleController {
       @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Found the role by id", content = {
               @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RoleResponse.class)))})})
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true, description = "JWT Token, can be generated in auth controller /auth")
-  @PreAuthorize(value = "hasRole('ADMIN')")
   @GetMapping("/{roleId}")
   public ResponseEntity<Object> findRoleById(@PathVariable Long roleId) {
     return new ResponseEntity<>(roleService.findRoleById(roleId), HttpStatus.OK);
@@ -76,9 +67,7 @@ public class RoleController {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = RoleResponse.class))),
         @ApiResponse(responseCode = "409", description = "Role not created, Conflict", content = @Content),
         @ApiResponse(responseCode = "500", description = "Role not created, Illegal Arguments", content = @Content)})
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true, description = "JWT Token, can be generated in auth controller /auth")
-  @PreAuthorize(value = "hasRole('ADMIN')")
-  @PostMapping
+ @PostMapping
   public ResponseEntity<Object> createRole(@RequestBody @Valid RoleCreateRequest createRequest) {
     return new ResponseEntity<>(roleService.create(createRequest), HttpStatus.CREATED);
   }

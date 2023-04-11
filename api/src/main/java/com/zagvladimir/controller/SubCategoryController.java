@@ -4,8 +4,6 @@ import com.zagvladimir.dto.requests.sub_category.SubCategoryCreateRequest;
 import com.zagvladimir.dto.response.SubCategoryResponse;
 import com.zagvladimir.service.sub_category.SubCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,8 +15,6 @@ import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,10 +57,7 @@ public class SubCategoryController {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = SubCategoryResponse.class))),
         @ApiResponse(responseCode = "409", description = "sub category not created, Conflict", content = @Content),
         @ApiResponse(responseCode = "500", description = "sub category not created, Illegal Arguments", content = @Content)})
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true, description = "JWT Token, can be generated in auth controller /auth")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @PostMapping
-  @Transactional
   public ResponseEntity<Object> createSubCategory(
       @Valid @RequestBody SubCategoryCreateRequest subCategoryCreateRequest) {
     return new ResponseEntity<>(subCategoryService.create(subCategoryCreateRequest),

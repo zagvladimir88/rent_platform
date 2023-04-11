@@ -29,7 +29,6 @@ public class ApplicationExceptionHandler {
   //TODO: add AccessDeniedException
 
   @ExceptionHandler({
-    NoSuchEntityException.class,
     EmptyResultDataAccessException.class,
     NoSuchElementException.class,
     EntityNotFoundException.class
