@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
@@ -37,66 +38,34 @@ public class CategoryController {
 
   private final CategoryService categoryService;
 
-  @Operation(
-      summary = "Gets all Items Category",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Found the ItemsCategory",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = CategoryResponse.class)))
-            })
-      })
+  @Operation(summary = "Gets all Items Category")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "200",
+                description = "Found the ItemsCategory", content = {
+                @Content(mediaType = "application/json",
+                        array = @ArraySchema(schema = @Schema(implementation = CategoryResponse.class)))})})
   @GetMapping
   public ResponseEntity<Object> findAllItemCategories(@ParameterObject Pageable pageable) {
       return new ResponseEntity<>(categoryService.findAll(pageable), HttpStatus.OK);
   }
 
-  @Operation(
-      summary = "Gets Item Category by ID",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Found the Item Category by id",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = CategoryResponse.class)))
-            })
-      })
+  @Operation(summary = "Gets Item Category by ID")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Found the Item Category by id", content = {
+              @Content(mediaType = "application/json",
+                  array = @ArraySchema(schema = @Schema(implementation = CategoryResponse.class)))})})
   @GetMapping("/{id}")
   public ResponseEntity<Object> findItemCategoryById(@PathVariable Long id) {
     return new ResponseEntity<>(categoryService.findById(id), HttpStatus.OK);
   }
 
-  @Operation(
-      summary = "Create new Item Category",
-      responses = {
-        @ApiResponse(
-            responseCode = "201",
-            description = "ItemCategory was created successfully",
-            content =
-                @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = CategoryResponse.class))),
-        @ApiResponse(
-            responseCode = "409",
-            description = "ItemCategory not created, Conflict",
-            content = @Content),
-        @ApiResponse(
-            responseCode = "500",
-            description = "ItemCategory not created, Illegal Arguments",
-            content = @Content)
-      },
-          parameters = {
-                  @Parameter(
-                          in = ParameterIn.HEADER,
-                          name = "X-Auth-Token",
-                          required = true,
-                          description = "JWT Token, can be generated in auth controller /auth")
-          })
+  @Operation(summary = "Create new Item Category")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "ItemCategory was created successfully", content =
+                @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryResponse.class))),
+        @ApiResponse(responseCode = "409", description = "ItemCategory not created, Conflict", content = @Content),
+        @ApiResponse(responseCode = "500", description = "ItemCategory not created, Illegal Arguments", content = @Content)})
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true, description = "JWT Token, can be generated in auth controller /auth")
   @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @PostMapping
   @Transactional
@@ -105,18 +74,10 @@ public class CategoryController {
     return new ResponseEntity<>(categoryService.create(categoryCreateRequest), HttpStatus.CREATED);
   }
 
-  @Operation(
-      summary = "Soft Delete Category",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Item Category status was changed to deleted",
-            content = @Content),
-        @ApiResponse(
-            responseCode = "404",
-            description = "Item Category not found",
-            content = @Content)
-      })
+  @Operation(summary = "Soft Delete Category")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Item Category status was changed to deleted", content = @Content),
+        @ApiResponse(responseCode = "404", description = "Item Category not found", content = @Content)})
   @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Object> softDeleteItemCategoryById(@PathVariable String id) {

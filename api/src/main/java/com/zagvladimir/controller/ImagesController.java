@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,24 +36,16 @@ public class ImagesController {
 
   private final ImageService imageService;
 
-  @Operation(
-      summary = "Upload image for item",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Image upload successfully",
-            content = @Content()),
+  @Operation(summary = "Upload image for item")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Image upload successfully", content = @Content()),
         @ApiResponse(responseCode = "404", description = "Item not found", content = @Content()),
-        @ApiResponse(responseCode = "500", description = "Server error", content = @Content())
-      },
-      parameters = {
-        @Parameter(
+        @ApiResponse(responseCode = "500", description = "Server error", content = @Content())})
+  @Parameter(
             in = ParameterIn.HEADER,
             name = "X-Auth-Token",
             required = true,
             description = "JWT Token, can be generated in auth controller /auth")
-      })
-//  @PostAuthorize(value = "hasRole('ADMIN')")
   @PostMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<Map<Object, Object>> uploadImage(
       @PathVariable String id, @RequestPart("file") MultipartFile file) throws IOException {
@@ -64,15 +57,10 @@ public class ImagesController {
     return new ResponseEntity<>(Collections.singletonMap("imageUrl", imageUrl), HttpStatus.CREATED);
   }
 
-  @Operation(
-      summary = "Gets image urls by item ID",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Images successfully found",
-            content = {
-              @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema()))
-            }),
+  @Operation(summary = "Gets image urls by item ID")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Images successfully found", content = {
+              @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema()))}),
         @ApiResponse(responseCode = "404", description = "Item not found", content = @Content),
         @ApiResponse(responseCode = "500", content = @Content())
       })

@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
@@ -38,50 +39,23 @@ public class ItemLeasedController {
   private final ItemLeasedRepository repository;
   private final ItemLeasedMapper itemLeasedMapper;
 
-  @Operation(
-      summary = "Gets all itemsLeased",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Found the itemsLeased",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = ItemLeasedResponse.class)))
-            })
-      })
+  @Operation(summary = "Gets all itemsLeased")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Found the itemsLeased", content = {
+              @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ItemLeasedResponse.class)))})})
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping
   public ResponseEntity<Object> findAllItemsLeased(@ParameterObject Pageable page) {
     return new ResponseEntity<>(itemLeasedService.findAll(page), HttpStatus.OK);
   }
 
-  @Operation(
-      summary = "Create new itemLeased",
-      responses = {
-        @ApiResponse(
-            responseCode = "201",
-            description = "itemLeased create successfully",
-            content =
-                @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = ItemLeasedResponse.class))),
-        @ApiResponse(
-            responseCode = "409",
-            description = "itemLeased not created, Conflict",
-            content = @Content),
-        @ApiResponse(
-            responseCode = "500",
-            description = "itemLeased not created, Illegal Arguments",
-            content = @Content)
-      },
-      parameters = {
-        @Parameter(
-            in = ParameterIn.HEADER,
-            name = "X-Auth-Token",
-            required = true,
-            description = "JWT Token, can be generated in auth controller /auth")
-      })
+  @Operation(summary = "Create new itemLeased")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "itemLeased create successfully", content =
+                @Content(mediaType = "application/json", schema = @Schema(implementation = ItemLeasedResponse.class))),
+        @ApiResponse(responseCode = "409", description = "itemLeased not created, Conflict", content = @Content),
+        @ApiResponse(responseCode = "500", description = "itemLeased not created, Illegal Arguments", content = @Content)})
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true, description = "JWT Token, can be generated in auth controller /auth")
   @PreAuthorize(value = "hasAnyRole('USER', 'MANAGER','ADMIN')")
   @PostMapping
   public ResponseEntity<Object> createItemLeased(
@@ -89,25 +63,11 @@ public class ItemLeasedController {
     return new ResponseEntity<>(itemLeasedService.create(createRequest), HttpStatus.CREATED);
   }
 
-  @Operation(
-      summary = "Gets itemLeased by ID",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Found the itemLeased by id",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = ItemLeasedResponse.class)))
-            })
-      },
-      parameters = {
-        @Parameter(
-            in = ParameterIn.HEADER,
-            name = "X-Auth-Token",
-            required = true,
-            description = "JWT Token, can be generated in auth controller /auth")
-      })
+  @Operation(summary = "Gets itemLeased by ID")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Found the itemLeased by id", content = {
+              @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ItemLeasedResponse.class)))})})
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true, description = "JWT Token, can be generated in auth controller /auth")
   @PreAuthorize(
       "@itemLeasedServiceImpl.getRenterName(#id).equals(principal.username) or hasRole('ADMIN')")
   @GetMapping("/{id}")
@@ -116,25 +76,11 @@ public class ItemLeasedController {
     return new ResponseEntity<>(itemLeasedService.findById(itemLeasedId), HttpStatus.OK);
   }
 
-  @Operation(
-      summary = "Gets all itemsLeased by renter id",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Found the itemsLeased",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = ItemLeasedResponse.class)))
-            })
-      },
-      parameters = {
-        @Parameter(
-            in = ParameterIn.HEADER,
-            name = "X-Auth-Token",
-            required = true,
-            description = "JWT Token, can be generated in auth controller /auth")
-      })
+  @Operation(summary = "Gets all itemsLeased by renter id")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Found the itemsLeased", content = {
+              @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = ItemLeasedResponse.class)))})})
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true, description = "JWT Token, can be generated in auth controller /auth")
   @PreAuthorize(
       "@userServiceImpl.findById(#id).credentials.userLogin.equals(principal.username) or hasRole('ADMIN')")
   @GetMapping("/user/{id}")

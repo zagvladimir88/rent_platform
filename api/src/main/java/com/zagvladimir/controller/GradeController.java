@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
@@ -39,67 +40,32 @@ public class GradeController {
   private final GradeService gradeService;
   private final GradeMapper gradeMapper;
 
-  @Operation(
-      summary = "Gets all grades",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Found the grades",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = GradeResponse.class)))
-            })
-      })
+  @Operation(summary = "Gets all grades")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Found the grades", content = {
+              @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GradeResponse.class)))})})
   @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @GetMapping
   public ResponseEntity<Object> findAllGrades(@ParameterObject Pageable page) {
     return new ResponseEntity<>(gradeService.findAll(page), HttpStatus.OK);
   }
 
-  @Operation(
-      summary = "Gets grade by ID",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Found the grade by id",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array = @ArraySchema(schema = @Schema(implementation = GradeResponse.class)))
-            })
-      })
+  @Operation(summary = "Gets grade by ID")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Found the grade by id", content = {
+              @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = GradeResponse.class)))})})
   @GetMapping("/{id}")
   public ResponseEntity<Object> findGradeById(@PathVariable Long id) {
     return new ResponseEntity<>(gradeService.findById(id), HttpStatus.OK);
   }
 
-  @Operation(
-      summary = "Create new grade",
-      responses = {
-        @ApiResponse(
-            responseCode = "201",
-            description = "grade was created successfully",
-            content =
-                @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = GradeResponse.class))),
-        @ApiResponse(
-            responseCode = "409",
-            description = "grade not created, Conflict",
-            content = @Content),
-        @ApiResponse(
-            responseCode = "500",
-            description = "grade not created, Illegal Arguments",
-            content = @Content)
-      },
-      parameters = {
-        @Parameter(
-            in = ParameterIn.HEADER,
-            name = "X-Auth-Token",
-            required = true,
-            description = "JWT Token, can be generated in auth controller /auth")
-      })
+  @Operation(summary = "Create new grade")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "grade was created successfully", content =
+                @Content(mediaType = "application/json", schema = @Schema(implementation = GradeResponse.class))),
+        @ApiResponse(responseCode = "409", description = "grade not created, Conflict", content = @Content),
+        @ApiResponse(responseCode = "500", description = "grade not created, Illegal Arguments", content = @Content)})
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true, description = "JWT Token, can be generated in auth controller /auth")
   @PreAuthorize("hasAnyRole('ADMIN','MANAGER','USER')")
   @PostMapping
   @Transactional
@@ -109,22 +75,11 @@ public class GradeController {
     return new ResponseEntity<>(gradeService.create(gradeCreateRequest), HttpStatus.CREATED);
   }
 
-  @Operation(
-      summary = "Soft delete grade",
-      responses = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Status changed to deleted",
-            content = @Content),
-        @ApiResponse(responseCode = "404", description = "grade not found", content = @Content)
-      },
-      parameters = {
-        @Parameter(
-            in = ParameterIn.HEADER,
-            name = "X-Auth-Token",
-            required = true,
-            description = "JWT Token, can be generated in auth controller /auth")
-      })
+  @Operation(summary = "Soft delete grade")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Status changed to deleted", content = @Content),
+        @ApiResponse(responseCode = "404", description = "grade not found", content = @Content)})
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true, description = "JWT Token, can be generated in auth controller /auth")
   @PreAuthorize("@gradeServiceImpl.getLoginWhoRatedByGradeId(#id).equals(principal.username) or hasAnyRole('ADMIN','MANAGER')")
   @PatchMapping("/{id}")
   public ResponseEntity<Object> softDeleteGradeById(@PathVariable String id) {

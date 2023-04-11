@@ -38,68 +38,31 @@ public class SubCategoryController {
 
 
   @Operation(summary = "Gets all Sub Category")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Found the sub category",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array =
-                      @ArraySchema(schema = @Schema(implementation = SubCategoryResponse.class)))
-            })
-      })
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Found the sub category", content = {
+              @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SubCategoryResponse.class)))})})
   @GetMapping
   public ResponseEntity<Object> findAllISubCategories(@ParameterObject Pageable pageable) {
     return new ResponseEntity<>( subCategoryService.findAll(pageable), HttpStatus.OK);
   }
 
   @Operation(summary = "Gets sub category by ID")
-  @ApiResponses(
-      value = {
-        @ApiResponse(
-            responseCode = "200",
-            description = "Found the sub category by id",
-            content = {
-              @Content(
-                  mediaType = "application/json",
-                  array =
-                      @ArraySchema(schema = @Schema(implementation = SubCategoryResponse.class)))
-            })
-      })
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Found the sub category by id", content = {
+              @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SubCategoryResponse.class)))})})
   @GetMapping("/{id}")
   public ResponseEntity<Object> findSubCategoryById(@PathVariable String id) {
     long itemTypeCategoryId = Long.parseLong(id);
     return new ResponseEntity<>(subCategoryService.findById(itemTypeCategoryId), HttpStatus.OK);
   }
 
-  @Operation(
-      summary = "Create new sub category",
-      responses = {
-        @ApiResponse(
-            responseCode = "201",
-            description = "sub category create successfully",
-            content =
-                @Content(
-                    mediaType = "application/json",
-                    schema = @Schema(implementation = SubCategoryResponse.class))),
-        @ApiResponse(
-            responseCode = "409",
-            description = "sub category not created, Conflict",
-            content = @Content),
-        @ApiResponse(
-            responseCode = "500",
-            description = "sub category not created, Illegal Arguments",
-            content = @Content)
-      },
-      parameters = {
-        @Parameter(
-            in = ParameterIn.HEADER,
-            name = "X-Auth-Token",
-            required = true,
-            description = "JWT Token, can be generated in auth controller /auth")
-      })
+  @Operation(summary = "Create new sub category")
+  @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "sub category create successfully", content =
+                @Content(mediaType = "application/json", schema = @Schema(implementation = SubCategoryResponse.class))),
+        @ApiResponse(responseCode = "409", description = "sub category not created, Conflict", content = @Content),
+        @ApiResponse(responseCode = "500", description = "sub category not created, Illegal Arguments", content = @Content)})
+  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true, description = "JWT Token, can be generated in auth controller /auth")
   @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @PostMapping
   @Transactional
