@@ -3,11 +3,12 @@ package com.zagvladimir.service.grade;
 import com.zagvladimir.domain.Grade;
 import com.zagvladimir.domain.enums.Status;
 import com.zagvladimir.domain.user.User;
-import com.zagvladimir.mappers.UserMapper;
+import com.zagvladimir.dto.requests.grade.GradeCreateRequest;
+import com.zagvladimir.dto.response.GradeResponse;
+import com.zagvladimir.mappers.GradeMapper;
 import com.zagvladimir.repository.GradeRepository;
 import com.zagvladimir.repository.UserRepository;
 import com.zagvladimir.service.item.ItemService;
-import com.zagvladimir.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,31 +24,35 @@ public class GradeServiceImpl implements GradeService {
 
   private final GradeRepository gradeRepository;
   private final ItemService itemService;
-  private final UserService userService;
   private final UserRepository userRepository;
-  private final UserMapper userMapper;
+  private final GradeMapper gradeMapper;
 
   @Override
-  public Page<Grade> findAll(Pageable page) {
-    return gradeRepository.findAll(page);
+  public Page<GradeResponse> findAll(Pageable page) {
+    return gradeRepository.findAll(page).map(gradeMapper::toResponse);
   }
 
   @Transactional
   @Override
-  public Grade create(Grade grade, Long userId, Long itemId) {
+  public GradeResponse create(GradeCreateRequest gradeCreateRequest) {
+    Long userId = gradeCreateRequest.getUserId();
+    Long itemId = gradeCreateRequest.getItemId();
+    Grade newGrade = gradeMapper.convertCreateRequest(gradeCreateRequest);
     Optional<User> optionalUser = userRepository.findById(userId);
     if(optionalUser.isPresent()) {
-      grade.setUser(optionalUser.get());
-      grade.setItem(itemService.findById(itemId));
+      newGrade.setUser(optionalUser.get());
+      newGrade.setItem(itemService.findById(itemId));
     }else throw new EntityNotFoundException("User with id: " + userId + " not found");
-    return gradeRepository.save(grade);
+
+        return gradeMapper.toResponse(gradeRepository.save(newGrade));
   }
 
   @Override
-  public Grade findById(Long gradeId) {
+  public GradeResponse findById(Long gradeId) {
 
     return gradeRepository
         .findById(gradeId)
+            .map(gradeMapper::toResponse)
         .orElseThrow(
             () ->
                 new EntityNotFoundException(

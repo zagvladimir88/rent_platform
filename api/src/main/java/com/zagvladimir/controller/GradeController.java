@@ -3,7 +3,6 @@ package com.zagvladimir.controller;
 import com.zagvladimir.mappers.GradeMapper;
 import com.zagvladimir.dto.requests.grade.GradeCreateRequest;
 import com.zagvladimir.dto.response.GradeResponse;
-import com.zagvladimir.domain.Grade;
 import com.zagvladimir.service.grade.GradeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,7 +14,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.Collections;
-import java.util.Map;
 
 @Tag(name = "Grade controller")
 @RestController
@@ -57,8 +54,7 @@ public class GradeController {
   @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @GetMapping
   public ResponseEntity<Object> findAllGrades(@ParameterObject Pageable page) {
-    Page<GradeResponse> gradeResponse = gradeService.findAll(page).map(gradeMapper::toResponse);
-    return new ResponseEntity<>(Collections.singletonMap("Grades", gradeResponse), HttpStatus.OK);
+    return new ResponseEntity<>(gradeService.findAll(page), HttpStatus.OK);
   }
 
   @Operation(
@@ -74,9 +70,8 @@ public class GradeController {
             })
       })
   @GetMapping("/{id}")
-  public ResponseEntity<Map<String, Object>> findGradeById(@PathVariable Long id) {
-    GradeResponse response = gradeMapper.toResponse(gradeService.findById(id));
-    return new ResponseEntity<>(Collections.singletonMap("Grade", response), HttpStatus.OK);
+  public ResponseEntity<Object> findGradeById(@PathVariable Long id) {
+    return new ResponseEntity<>(gradeService.findById(id), HttpStatus.OK);
   }
 
   @Operation(
@@ -111,14 +106,7 @@ public class GradeController {
   public ResponseEntity<Object> createGrade(
       @RequestBody @Valid GradeCreateRequest gradeCreateRequest) {
 
-    Grade newGrade = gradeMapper.convertCreateRequest(gradeCreateRequest);
-    Long userId = gradeCreateRequest.getUserId();
-    Long itemId = gradeCreateRequest.getItemId();
-    GradeResponse gradeResponse =
-        gradeMapper.toResponse(gradeService.create(newGrade, userId, itemId));
-
-    return new ResponseEntity<>(
-        Collections.singletonMap("grade", gradeResponse), HttpStatus.CREATED);
+    return new ResponseEntity<>(gradeService.create(gradeCreateRequest), HttpStatus.CREATED);
   }
 
   @Operation(

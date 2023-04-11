@@ -35,7 +35,7 @@ public class ItemLeasedServiceImpl implements ItemLeasedService {
     if(optionalUser.isPresent()) {
       itemLeased.setRenter(optionalUser.get());
       itemLeased.setStatus(Status.NOT_ACTIVE);
-    } else this new EntityNotFoundException("User with id: " + renterId + "not found");
+    } else throw  new EntityNotFoundException("User with id: " + renterId + "not found");
     return itemLeasedRepository.save(itemLeased);
   }
 

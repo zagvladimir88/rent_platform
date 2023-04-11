@@ -1,6 +1,5 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.mappers.ItemCategoryMapper;
 import com.zagvladimir.dto.requests.category.CategoryCreateRequest;
 import com.zagvladimir.dto.response.CategoryResponse;
 import com.zagvladimir.service.category.CategoryService;
@@ -37,7 +36,6 @@ import java.util.Collections;
 public class CategoryController {
 
   private final CategoryService categoryService;
-  private final ItemCategoryMapper itemCategoryMapper;
 
   @Operation(
       summary = "Gets all Items Category",
