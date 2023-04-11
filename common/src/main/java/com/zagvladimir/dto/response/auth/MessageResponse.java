@@ -1,4 +1,4 @@
-package com.zagvladimir.payload.response;
+package com.zagvladimir.dto.response.auth;
 
 public class MessageResponse {
   private String message;

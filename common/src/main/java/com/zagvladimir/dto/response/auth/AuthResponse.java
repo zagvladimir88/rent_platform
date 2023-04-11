@@ -1,4 +1,4 @@
-package com.zagvladimir.dto.requests.auth;
+package com.zagvladimir.dto.response.auth;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,12 +1,10 @@
-package com.zagvladimir.payload.response;
+package com.zagvladimir.dto.response.auth;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 public class JwtResponse {
   private String token;
   private String type = "Bearer";

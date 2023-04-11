@@ -1,4 +1,4 @@
-package com.zagvladimir.payload.response;
+package com.zagvladimir.dto.response.auth;
 
 import lombok.Getter;
 import lombok.Setter;

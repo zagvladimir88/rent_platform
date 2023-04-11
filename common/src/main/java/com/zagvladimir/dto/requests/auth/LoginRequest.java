@@ -1,27 +1,20 @@
 package com.zagvladimir.dto.requests.auth;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.validation.constraints.NotBlank;
 
+@Getter
+@Setter
 public class LoginRequest {
+
+	@Schema(defaultValue = "strjke", type = "string" , description = "login")
 	@NotBlank
-  private String username;
+    private String username;
 
+	@Schema(defaultValue = "test", type = "string" , description = "password")
 	@NotBlank
-	private String password;
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    private String password;
 }
