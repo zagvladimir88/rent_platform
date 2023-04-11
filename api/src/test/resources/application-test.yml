@@ -25,5 +25,5 @@ jwt:
 ---
 gcs:
   images:
-    pathToGCSJsonCredentials: C:\java_projects\rent_platform\common\src\main\resources\rent-platform-storage-395e699267fc.json
+    pathToGCSJsonCredentials: C:\Users\strjk\IdeaProjects\rent_platform\common\src\main\resources\rent-platform-storage-395e699267fc.json
     bucket: rentimages

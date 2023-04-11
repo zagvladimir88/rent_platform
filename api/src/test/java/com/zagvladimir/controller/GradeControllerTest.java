@@ -27,6 +27,7 @@ class GradeControllerTest extends BaseIntegrationTest {
   @Autowired private ObjectMapper objectMapper;
 
   @Test
+  @WithMockUser(username="admin",roles={"ADMIN"})
   void findAllGrades() throws Exception {
     this.mockMvc
         .perform(get("/api/grades/"))

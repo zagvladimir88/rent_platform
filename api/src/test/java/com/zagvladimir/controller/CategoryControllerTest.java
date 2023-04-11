@@ -64,6 +64,7 @@ class CategoryControllerTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(username="admin",roles={"ADMIN"})
   void deleteItemCategoryById() throws Exception {
     Long id = 1L;
     this.mockMvc

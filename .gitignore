@@ -24,3 +24,4 @@ hs_err_pid*
 /api/src/main/resources/google_auth.json
 /common/src/main/resources/mail.properties
 /common/src/main/resources/rent-platform-storage-395e699267fc.json
+/api/src/test/resources/rent-platform-storage-395e699267fc.json
