@@ -42,7 +42,7 @@ class SubCategoryControllerTest extends BaseIntegrationTest {
         .perform(get("/api/sub-categories/{id}", id))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.subCategory.subCategoryName").value("TEST1"));
+        .andExpect(jsonPath("$.subCategoryName").value("TEST1"));
   }
 
   @Test
@@ -60,7 +60,7 @@ class SubCategoryControllerTest extends BaseIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.subCategory.subCategoryName").value("TEST"));
+        .andExpect(jsonPath("$.subCategoryName").value("TEST"));
   }
 
 

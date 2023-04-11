@@ -1,6 +1,7 @@
 package com.zagvladimir.service.role;
 
-import com.zagvladimir.domain.Role;
+import com.zagvladimir.dto.requests.role.RoleCreateRequest;
+import com.zagvladimir.dto.response.RoleResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -8,13 +9,13 @@ import java.util.List;
 
 public interface RoleService {
 
-  Page<Role> findAll(Pageable page);
+  Page<RoleResponse> findAll(Pageable page);
 
-  List<Role> findRolesByUserId(Long roleId);
+  List<RoleResponse> findRolesByUserId(Long roleId);
 
-  Role findRoleById(Long roleId);
+  RoleResponse findRoleById(Long roleId);
 
-  Role create(Role role);
+  RoleResponse create(RoleCreateRequest request);
 
   Long delete(Long id);
 }

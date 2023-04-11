@@ -1,8 +1,8 @@
 package com.zagvladimir.service.user;
 
-import com.zagvladimir.domain.user.User;
 import com.zagvladimir.dto.requests.users.UserChangeAddressRequest;
 import com.zagvladimir.dto.requests.users.UserChangeCredentialsRequest;
+import com.zagvladimir.dto.requests.users.UserCreateRequest;
 import com.zagvladimir.dto.requests.users.UserUpdateRequest;
 import com.zagvladimir.dto.response.user.UserResponse;
 import org.springframework.data.domain.Page;
@@ -17,7 +17,7 @@ public interface UserService {
 
   Page<UserResponse> findAll(Pageable page);
 
-  User create(User user) throws MessagingException;
+  UserResponse create(UserCreateRequest request) throws MessagingException;
 
   UserResponse findById(Long userId);
 

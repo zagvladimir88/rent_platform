@@ -6,6 +6,7 @@ import com.zagvladimir.domain.user.User;
 import com.zagvladimir.domain.enums.Status;
 import com.zagvladimir.dto.requests.users.UserChangeAddressRequest;
 import com.zagvladimir.dto.requests.users.UserChangeCredentialsRequest;
+import com.zagvladimir.dto.requests.users.UserCreateRequest;
 import com.zagvladimir.dto.requests.users.UserUpdateRequest;
 import com.zagvladimir.dto.response.user.UserResponse;
 import com.zagvladimir.mappers.UserMapper;
@@ -62,8 +63,8 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public User create(User user) throws MessagingException {
-
+  public UserResponse create(UserCreateRequest request) throws MessagingException {
+    User user = userMapper.convertCreateRequest(request);
     addRole(user, roleRepository.findRoleByName("ROLE_USER"));
     user.setRegistrationDate(new Timestamp(new Date().getTime()));
     user.getCredentials()
@@ -76,7 +77,7 @@ public class UserServiceImpl implements UserService {
     if (userRepository.findUsersByCredentials_Email(user.getCredentials().getEmail()).isPresent()) {
       sendEmail(user);
     }
-    return userRepository.findById(user.getId()).orElseThrow(IllegalArgumentException::new);
+    return userRepository.findById(user.getId()).map(userMapper::toResponse).orElseThrow(IllegalArgumentException::new);
   }
 
   @Override
