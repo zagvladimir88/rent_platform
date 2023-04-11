@@ -213,4 +213,28 @@ alter table images
 create unique index if not exists images_id_uindex
     on images (id);
 
+create table if not exists refreshtoken
+(
+    id                bigserial
+        constraint refreshtoken_pk
+        primary key,
+    user_id           bigint
+        constraint refreshtoken_users_id_fk
+        references users,
+    token             varchar,
+    expirydate        timestamp,
+    modification_date timestamp(6),
+    creation_date     timestamp(6),
+    status            varchar(25) default 'ACTIVE'::character varying
+);
+
+alter table refreshtoken
+    owner to test;
+
+create unique index if not exists refreshtoken_id_uindex
+    on refreshtoken (id);
+
+create unique index if not exists refreshtoken_token_uindex
+    on refreshtoken (token);
+
 

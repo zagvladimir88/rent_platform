@@ -4,8 +4,6 @@ import com.zagvladimir.dto.requests.category.CategoryCreateRequest;
 import com.zagvladimir.dto.response.CategoryResponse;
 import com.zagvladimir.service.category.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,8 +15,6 @@ import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,10 +61,7 @@ public class CategoryController {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = CategoryResponse.class))),
         @ApiResponse(responseCode = "409", description = "ItemCategory not created, Conflict", content = @Content),
         @ApiResponse(responseCode = "500", description = "ItemCategory not created, Illegal Arguments", content = @Content)})
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true, description = "JWT Token, can be generated in auth controller /auth")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @PostMapping
-  @Transactional
   public ResponseEntity<Object> createItemCategory(
       @RequestBody @Valid CategoryCreateRequest categoryCreateRequest) {
     return new ResponseEntity<>(categoryService.create(categoryCreateRequest), HttpStatus.CREATED);
@@ -78,7 +71,6 @@ public class CategoryController {
   @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Item Category status was changed to deleted", content = @Content),
         @ApiResponse(responseCode = "404", description = "Item Category not found", content = @Content)})
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @DeleteMapping("/{id}")
   public ResponseEntity<Object> softDeleteItemCategoryById(@PathVariable String id) {
       Long categoryId = Long.parseLong(id);

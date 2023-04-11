@@ -1,5 +1,6 @@
 package com.zagvladimir.service.user;
 
+import com.zagvladimir.dto.requests.auth.SignupRequest;
 import com.zagvladimir.dto.requests.users.UserChangeAddressRequest;
 import com.zagvladimir.dto.requests.users.UserChangeCredentialsRequest;
 import com.zagvladimir.dto.requests.users.UserCreateRequest;
@@ -36,4 +37,6 @@ public interface UserService {
   void confirmItemBooking(Long userID) throws MessagingException;
 
     Long softDelete(Long userId);
+
+  void create(SignupRequest signUpRequest) throws MessagingException;
 }

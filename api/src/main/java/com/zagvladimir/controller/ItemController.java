@@ -5,8 +5,6 @@ import com.zagvladimir.dto.response.ItemResponse;
 import com.zagvladimir.exception.ErrorContainer;
 import com.zagvladimir.service.item.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,8 +16,6 @@ import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,10 +61,7 @@ public class ItemController {
                 @Content(mediaType = "application/json", schema = @Schema(implementation = ItemResponse.class))),
         @ApiResponse(responseCode = "409", description = "Item not created, Conflict", content = @Content),
         @ApiResponse(responseCode = "500", description = "Item not created, Illegal Arguments", content = @Content)})
-  @Parameter(in = ParameterIn.HEADER, name = "X-Auth-Token", required = true, description = "JWT Token, can be generated in auth controller /auth")
-  @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
   @PostMapping
-  @Transactional
   public ResponseEntity<Object> createItem(@RequestBody @Valid ItemCreateRequest createRequest) {
     return new ResponseEntity<>(itemService.create(createRequest), HttpStatus.CREATED);
   }

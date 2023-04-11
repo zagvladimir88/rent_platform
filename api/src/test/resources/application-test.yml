@@ -18,10 +18,10 @@ server:
 
 ---
 
-jwt:
-  secret: qwepuisdhfaksdjflsdfn12321___**
-  expiration: 3600000
-
+app:
+  jwtSecret: bezKoderSecretKey
+  jwtExpirationMs: 86400000
+  jwtRefreshExpirationMs: 86400000
 ---
 gcs:
   images:

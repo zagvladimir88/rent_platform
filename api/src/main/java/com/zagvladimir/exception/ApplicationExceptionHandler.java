@@ -1,7 +1,9 @@
 package com.zagvladimir.exception;
 
+import com.zagvladimir.security.exception.TokenRefreshException;
 import com.zagvladimir.util.UUIDGenerator;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.api.ErrorMessage;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
@@ -10,16 +12,13 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -29,7 +28,6 @@ public class ApplicationExceptionHandler {
   //TODO: add AccessDeniedException
 
   @ExceptionHandler({
-    NoSuchEntityException.class,
     EmptyResultDataAccessException.class,
     NoSuchElementException.class,
     EntityNotFoundException.class
@@ -121,5 +119,18 @@ public class ApplicationExceptionHandler {
     }
     return new ResponseEntity<>(
         Collections.singletonMap("error", messages), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(value = TokenRefreshException.class)
+  @ResponseStatus(HttpStatus.FORBIDDEN)
+  public ResponseEntity<Object> handleTokenRefreshException(TokenRefreshException ex, WebRequest request) {
+    ErrorContainer error =
+            ErrorContainer.builder()
+                    .exceptionId(UUIDGenerator.generatedUI())
+                    .errorCode(1)
+                    .errorMessage(ex.getMessage())
+                    .e(ex.getClass().toString())
+                    .build();
+    return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.FORBIDDEN);
   }
 }
