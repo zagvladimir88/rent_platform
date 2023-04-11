@@ -1,4 +1,4 @@
-package com.zagvladimir.payload.request;
+package com.zagvladimir.dto.requests.auth;
 
 import javax.validation.constraints.NotBlank;
 

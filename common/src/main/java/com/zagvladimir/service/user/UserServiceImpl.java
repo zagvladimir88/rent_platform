@@ -2,8 +2,10 @@ package com.zagvladimir.service.user;
 
 import com.zagvladimir.domain.ItemLeased;
 import com.zagvladimir.domain.Role;
+import com.zagvladimir.domain.user.Credentials;
 import com.zagvladimir.domain.user.User;
 import com.zagvladimir.domain.enums.Status;
+import com.zagvladimir.dto.requests.auth.SignupRequest;
 import com.zagvladimir.dto.requests.users.UserChangeAddressRequest;
 import com.zagvladimir.dto.requests.users.UserChangeCredentialsRequest;
 import com.zagvladimir.dto.requests.users.UserCreateRequest;
@@ -213,6 +215,30 @@ public class UserServiceImpl implements UserService {
     toUpdate.setStatus(Status.DELETED);
     userRepository.save(toUpdate);
     return userId;
+  }
+
+  @Override
+  @Transactional
+  public void create(SignupRequest signUpRequest) throws MessagingException {
+
+    Credentials credentials = new Credentials();
+    credentials.setUserLogin(signUpRequest.getUserLogin());
+    credentials.setEmail(signUpRequest.getEmail());
+    credentials.setUserPassword(passwordEncoder.encode(signUpRequest.getUserPassword()));
+
+    User user = userMapper.convertSignUpRequest(signUpRequest);
+    user.setCredentials(credentials);
+
+    addRole(user, roleRepository.findRoleByName("ROLE_USER"));
+
+    user.setRegistrationDate(new Timestamp(new Date().getTime()));
+    user.setStatus(Status.NOT_ACTIVE);
+    user.setActivationCode(UUIDGenerator.generatedUI());
+    userRepository.save(user);
+
+    if (userRepository.findUsersByCredentials_Email(user.getCredentials().getEmail()).isPresent()) {
+      sendEmail(user);
+    }
   }
 
   private void addRole(User user, Role role) {
