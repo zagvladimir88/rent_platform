@@ -1,7 +1,7 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.controller.requests.auth.AuthRequest;
-import com.zagvladimir.controller.requests.auth.AuthResponse;
+import com.zagvladimir.dto.requests.auth.AuthRequest;
+import com.zagvladimir.dto.requests.auth.AuthResponse;
 import com.zagvladimir.security.jwt.JwtTokenHelper;
 import com.zagvladimir.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;

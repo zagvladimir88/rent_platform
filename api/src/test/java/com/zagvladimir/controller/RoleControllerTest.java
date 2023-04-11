@@ -50,7 +50,7 @@ class RoleControllerTest extends BaseIntegrationTest {
         .perform(get("/api/roles/users/4"))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.roles[*].name", hasItem("ROLE_ADMIN")));
+        .andExpect(jsonPath("$.[*].name", hasItem("ROLE_ADMIN")));
   }
 
   @Test
@@ -62,7 +62,7 @@ class RoleControllerTest extends BaseIntegrationTest {
         .perform(get("/api/roles/4"))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.role.name", allOf(startsWith("ROLE_"))));
+        .andExpect(jsonPath("$.name", allOf(startsWith("ROLE_"))));
   }
 
   @Test

@@ -2,8 +2,12 @@ package com.zagvladimir.service.item_leased;
 
 import com.zagvladimir.domain.ItemLeased;
 import com.zagvladimir.domain.enums.Status;
+import com.zagvladimir.domain.user.User;
+import com.zagvladimir.dto.requests.items_leased.ItemLeasedCreateRequest;
+import com.zagvladimir.dto.response.ItemLeasedResponse;
+import com.zagvladimir.mappers.ItemLeasedMapper;
 import com.zagvladimir.repository.ItemLeasedRepository;
-import com.zagvladimir.service.user.UserService;
+import com.zagvladimir.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,32 +16,41 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ItemLeasedServiceImpl implements ItemLeasedService {
 
   private final ItemLeasedRepository itemLeasedRepository;
-  private final UserService userService;
+  private final UserRepository userRepository;
+  private final ItemLeasedMapper itemLeasedMapper;
 
 
   @Override
-  public Page<ItemLeased> findAll(Pageable page) {
-    return itemLeasedRepository.findAll(page);
+  public Page<ItemLeasedResponse> findAll(Pageable page) {
+    return itemLeasedRepository.findAll(page).map(itemLeasedMapper::toResponse);
   }
 
   @Override
   @Transactional
-  public ItemLeased create(ItemLeased itemLeased, Long renterId) {
-    itemLeased.setRenter(userService.findById(renterId));
-    itemLeased.setStatus(Status.NOT_ACTIVE);
-    return itemLeasedRepository.save(itemLeased);
+  public ItemLeasedResponse create(ItemLeasedCreateRequest request) {
+    ItemLeased itemLeased = itemLeasedMapper.convertCreateRequest(request);
+    Long renterId = request.getRenterId();
+    Optional<User> optionalUser = userRepository.findById(renterId);
+    if(optionalUser.isPresent()) {
+      itemLeased.setRenter(optionalUser.get());
+      itemLeased.setStatus(Status.NOT_ACTIVE);
+    } else throw  new EntityNotFoundException("User with id: " + renterId + "not found");
+    return itemLeasedMapper.toResponse(itemLeasedRepository.save(itemLeased));
   }
 
   @Override
-  public ItemLeased findById(Long itemLeasedId) {
+  public ItemLeasedResponse findById(Long itemLeasedId) {
     return itemLeasedRepository
         .findById(itemLeasedId)
+            .map(itemLeasedMapper::toResponse)
         .orElseThrow(
             () ->
                 new EntityNotFoundException(
@@ -63,7 +76,9 @@ public class ItemLeasedServiceImpl implements ItemLeasedService {
   }
 
   @Override
-  public List<ItemLeased> findAllByRenterId(Long useId) {
-    return itemLeasedRepository.findAllByRenterId(useId);
+  public List<ItemLeasedResponse> findAllByRenterId(Long userId) {
+    return itemLeasedRepository.findAllByRenterId(userId).stream()
+            .map(itemLeasedMapper::toResponse)
+            .collect(Collectors.toList());
   }
 }

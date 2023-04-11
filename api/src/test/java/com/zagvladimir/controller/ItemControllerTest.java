@@ -51,7 +51,7 @@ class ItemControllerTest extends BaseIntegrationTest {
         .perform(get("/api/items/{id}", itemId))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.item.id", is(itemId)));
+        .andExpect(jsonPath("$.id", is(itemId)));
   }
 
   @Test

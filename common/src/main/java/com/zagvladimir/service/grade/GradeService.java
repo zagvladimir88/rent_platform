@@ -1,6 +1,7 @@
 package com.zagvladimir.service.grade;
 
-import com.zagvladimir.domain.Grade;
+import com.zagvladimir.dto.requests.grade.GradeCreateRequest;
+import com.zagvladimir.dto.response.GradeResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -8,11 +9,11 @@ import org.springframework.stereotype.Service;
 @Service
 public interface GradeService {
 
-  Page<Grade> findAll(Pageable page);
+  Page<GradeResponse> findAll(Pageable page);
 
-  Grade create(Grade grade, Long userId, Long itemId);
+  GradeResponse create(GradeCreateRequest request);
 
-  Grade findById(Long gradeId);
+  GradeResponse findById(Long gradeId);
 
   Long delete(Long gradeId);
 

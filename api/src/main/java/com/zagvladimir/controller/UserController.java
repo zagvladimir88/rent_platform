@@ -1,11 +1,10 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.controller.mappers.UserMapper;
-import com.zagvladimir.controller.requests.users.UserChangeAddressRequest;
-import com.zagvladimir.controller.requests.users.UserChangeCredentialsRequest;
-import com.zagvladimir.controller.requests.users.UserUpdateRequest;
-import com.zagvladimir.controller.response.user.UserResponse;
-import com.zagvladimir.domain.user.User;
+import com.zagvladimir.mappers.UserMapper;
+import com.zagvladimir.dto.requests.users.UserChangeAddressRequest;
+import com.zagvladimir.dto.requests.users.UserChangeCredentialsRequest;
+import com.zagvladimir.dto.requests.users.UserUpdateRequest;
+import com.zagvladimir.dto.response.user.UserResponse;
 import com.zagvladimir.exception.ErrorContainer;
 import com.zagvladimir.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,7 +18,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.api.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -68,8 +66,7 @@ public class UserController {
   @PreAuthorize(value = "hasRole('ADMIN')")
   @GetMapping
   public ResponseEntity<Object> findAllUsers(@ParameterObject Pageable pageable) {
-    Page<UserResponse> users = userService.findAll(pageable).map(userMapper::toResponse);
-    return new ResponseEntity<>(users, HttpStatus.OK);
+    return new ResponseEntity<>(userService.findAll(pageable), HttpStatus.OK);
   }
 
   @Operation(
@@ -96,8 +93,7 @@ public class UserController {
       "@userServiceImpl.findById(#id).credentials.userLogin.equals(principal.username) or hasRole('ADMIN')")
   public ResponseEntity<Map<String, Object>> findUserById(@PathVariable String id) {
     Long userId = Long.parseLong(id);
-    UserResponse user = userMapper.toResponse(userService.findById(userId));
-    return new ResponseEntity<>(Collections.singletonMap("user", user), HttpStatus.OK);
+    return new ResponseEntity<>(Collections.singletonMap("user", userService.findById(userId)), HttpStatus.OK);
   }
 
   @Operation(
@@ -130,8 +126,7 @@ public class UserController {
   @PreAuthorize(value = "hasRole('ADMIN')")
   @GetMapping("/login/{login}")
   public ResponseEntity<Map<String, Object>> findByLogin(@PathVariable String login) {
-    UserResponse userResponse = userMapper.toResponse(userService.findByLogin(login));
-    return new ResponseEntity<>(Collections.singletonMap("user", userResponse), HttpStatus.OK);
+    return new ResponseEntity<>(Collections.singletonMap("user", userService.findByLogin(login)), HttpStatus.OK);
   }
 
   @Operation(
@@ -180,9 +175,7 @@ public class UserController {
   @Transactional
   public ResponseEntity<Object> updateUser(
       @PathVariable Long id, @Valid @RequestBody UserUpdateRequest request) {
-    User updatedUser = userMapper.convertUpdateRequest(request, userService.findById(id));
-    UserResponse userResponse = userMapper.toResponse(userService.update(updatedUser));
-    return new ResponseEntity<>(Collections.singletonMap("user", userResponse), HttpStatus.OK);
+    return new ResponseEntity<>(Collections.singletonMap("user", userService.update(request,id)), HttpStatus.OK);
   }
 
     @Operation(
@@ -209,9 +202,7 @@ public class UserController {
     @Transactional
     public ResponseEntity<Object> userChangeCredentials(
             @PathVariable Long id, @Valid @RequestBody UserChangeCredentialsRequest request) {
-        User updatedUser = userMapper.convertUpdateRequest(request, userService.findById(id));
-        UserResponse userResponse = userMapper.toResponse(userService.update(updatedUser));
-        return new ResponseEntity<>(Collections.singletonMap("user", userResponse), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap("user", userService.update(request,id)), HttpStatus.OK);
     }
 
     @Operation(
@@ -238,8 +229,6 @@ public class UserController {
     @Transactional
     public ResponseEntity<Object> userChangeAddress(
             @PathVariable Long id, @Valid @RequestBody UserChangeAddressRequest request) {
-        User updatedUser = userMapper.convertUpdateRequest(request, userService.findById(id));
-        UserResponse userResponse = userMapper.toResponse(userService.update(updatedUser));
-        return new ResponseEntity<>(Collections.singletonMap("user", userResponse), HttpStatus.OK);
+        return new ResponseEntity<>(Collections.singletonMap("user", userService.update(request,id)), HttpStatus.OK);
     }
 }

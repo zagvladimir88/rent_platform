@@ -1,9 +1,8 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.controller.mappers.ItemMapper;
-import com.zagvladimir.controller.requests.items.ItemCreateRequest;
-import com.zagvladimir.controller.response.ItemResponse;
-import com.zagvladimir.domain.Item;
+import com.zagvladimir.mappers.ItemMapper;
+import com.zagvladimir.dto.requests.items.ItemCreateRequest;
+import com.zagvladimir.dto.response.ItemResponse;
 import com.zagvladimir.exception.ErrorContainer;
 import com.zagvladimir.service.item.ItemService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,7 +16,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.Map;
 
 @Tag(name = "Items controller")
 @RestController
@@ -57,8 +53,7 @@ public class ItemController {
       })
   @GetMapping
   public ResponseEntity<Object> findAllItems(@ParameterObject Pageable page) {
-    Page<ItemResponse> itemResponse = itemService.findAll(page).map(itemMapper::toResponse);
-    return new ResponseEntity<>(itemResponse, HttpStatus.OK);
+    return new ResponseEntity<>(itemService.findAll(page), HttpStatus.OK);
   }
 
   @Operation(summary = "Gets item by ID")
@@ -79,9 +74,8 @@ public class ItemController {
             content = @Content(schema = @Schema(implementation = ErrorContainer.class)))
       })
   @GetMapping("/{id}")
-  public ResponseEntity<Map<String, Object>> findByItemId(@PathVariable Long id) {
-    ItemResponse itemResponse = itemMapper.toResponse(itemService.findById(id));
-    return new ResponseEntity<>(Collections.singletonMap("item", itemResponse), HttpStatus.OK);
+  public ResponseEntity< Object> findByItemId(@PathVariable Long id) {
+    return new ResponseEntity<>(itemService.findById(id), HttpStatus.OK);
   }
 
   @Operation(
@@ -114,11 +108,6 @@ public class ItemController {
   @PostMapping
   @Transactional
   public ResponseEntity<Object> createItem(@RequestBody @Valid ItemCreateRequest createRequest) {
-
-    Item item = itemMapper.convertCreateRequest(createRequest);
-    Long subCategoryId = createRequest.getSubCategoryId();
-    ItemResponse itemResponse = itemMapper.toResponse(itemService.create(item, subCategoryId));
-
-    return new ResponseEntity<>(itemResponse, HttpStatus.CREATED);
+    return new ResponseEntity<>(itemService.create(createRequest), HttpStatus.CREATED);
   }
 }

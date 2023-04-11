@@ -32,7 +32,7 @@ class CategoryControllerTest extends BaseIntegrationTest {
         .perform(get("/api/item-categories/"))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.result[*]", notNullValue()));
+        .andExpect(jsonPath("$.[*]", notNullValue()));
   }
 
   @Test
@@ -42,7 +42,7 @@ class CategoryControllerTest extends BaseIntegrationTest {
         .perform(get("/api/item-categories/{id}", id))
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.itemCategory.categoryName").value("TEST1"));
+        .andExpect(jsonPath("$.categoryName").value("TEST1"));
   }
 
   @Test
@@ -60,7 +60,7 @@ class CategoryControllerTest extends BaseIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
         .andDo(print())
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.category.categoryName").value("TEST"));
+        .andExpect(jsonPath("$.categoryName").value("TEST"));
   }
 
   @Test

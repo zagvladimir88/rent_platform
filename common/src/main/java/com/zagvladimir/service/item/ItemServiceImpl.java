@@ -1,6 +1,9 @@
 package com.zagvladimir.service.item;
 
 import com.zagvladimir.domain.Item;
+import com.zagvladimir.dto.requests.items.ItemCreateRequest;
+import com.zagvladimir.dto.response.ItemResponse;
+import com.zagvladimir.mappers.ItemMapper;
 import com.zagvladimir.repository.ItemRepository;
 import com.zagvladimir.repository.SubCategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final SubCategoryRepository subCategoryRepository;
+    private final ItemMapper itemMapper;
 
     @Override
     public List<Item> findAll() {
@@ -26,20 +30,24 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Page<Item> findAll(Pageable pageable) {
-        return itemRepository.findAll(pageable);
+    public Page<ItemResponse> findAll(Pageable pageable) {
+        return itemRepository.findAll(pageable).map(itemMapper::toResponse);
     }
 
     @Transactional
     @Override
-    public Item create(Item item, Long subCategoryId) {
+    public ItemResponse create(ItemCreateRequest request) {
+        Item item = itemMapper.convertCreateRequest(request);
+        Long subCategoryId = request.getSubCategoryId();
         item.setSubCategory(subCategoryRepository.findById(subCategoryId).orElseThrow(EntityNotFoundException::new));
-        return itemRepository.save(item);
+        return itemMapper.toResponse(itemRepository.save(item));
     }
 
     @Override
-    public Item findById(Long itemId) {
-        return itemRepository.findById(itemId).orElseThrow(EntityNotFoundException::new);
+    public ItemResponse findById(Long itemId) {
+        return itemMapper.toResponse(itemRepository.findById(itemId)
+                .orElseThrow(EntityNotFoundException::new)
+        );
     }
 
     @Transactional

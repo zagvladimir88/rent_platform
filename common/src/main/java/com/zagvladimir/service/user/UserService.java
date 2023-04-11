@@ -1,6 +1,10 @@
 package com.zagvladimir.service.user;
 
-import com.zagvladimir.domain.user.User;
+import com.zagvladimir.dto.requests.users.UserChangeAddressRequest;
+import com.zagvladimir.dto.requests.users.UserChangeCredentialsRequest;
+import com.zagvladimir.dto.requests.users.UserCreateRequest;
+import com.zagvladimir.dto.requests.users.UserUpdateRequest;
+import com.zagvladimir.dto.response.user.UserResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -9,19 +13,21 @@ import java.util.List;
 
 public interface UserService {
 
-  List<User> findAll();
+  List<UserResponse> findAll();
 
-  Page<User> findAll(Pageable page);
+  Page<UserResponse> findAll(Pageable page);
 
-  User create(User user) throws MessagingException;
+  UserResponse create(UserCreateRequest request) throws MessagingException;
 
-  User findById(Long userId);
+  UserResponse findById(Long userId);
 
-  User update(User userToUpdate);
+  UserResponse update(UserUpdateRequest userToUpdate, Long id);
+  UserResponse update(UserChangeCredentialsRequest userToUpdate, Long id);
+  UserResponse update(UserChangeAddressRequest userToUpdate, Long id);
 
   Long delete(Long id);
 
-  User findByLogin(String login);
+  UserResponse findByLogin(String login);
 
   boolean activateUser(String code);
 

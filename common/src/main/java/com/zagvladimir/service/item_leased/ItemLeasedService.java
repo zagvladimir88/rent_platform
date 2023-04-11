@@ -1,6 +1,8 @@
 package com.zagvladimir.service.item_leased;
 
 import com.zagvladimir.domain.ItemLeased;
+import com.zagvladimir.dto.requests.items_leased.ItemLeasedCreateRequest;
+import com.zagvladimir.dto.response.ItemLeasedResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -9,11 +11,11 @@ import java.util.List;
 
 public interface ItemLeasedService {
 
-    Page<ItemLeased> findAll(Pageable page);
+    Page<ItemLeasedResponse> findAll(Pageable page);
 
-    ItemLeased create(ItemLeased itemLeased, Long renterId);
+    ItemLeasedResponse create(ItemLeasedCreateRequest request);
 
-    ItemLeased findById(Long itemLeasedId);
+    ItemLeasedResponse findById(Long itemLeasedId);
 
     ItemLeased update(ItemLeased object);
 
@@ -21,6 +23,6 @@ public interface ItemLeasedService {
 
     String getRenterName(Long id);
 
-    List<ItemLeased> findAllByRenterId(Long useId);
+    List<ItemLeasedResponse> findAllByRenterId(Long useId);
 
 }

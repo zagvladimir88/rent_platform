@@ -4,6 +4,12 @@ import com.zagvladimir.domain.ItemLeased;
 import com.zagvladimir.domain.Role;
 import com.zagvladimir.domain.user.User;
 import com.zagvladimir.domain.enums.Status;
+import com.zagvladimir.dto.requests.users.UserChangeAddressRequest;
+import com.zagvladimir.dto.requests.users.UserChangeCredentialsRequest;
+import com.zagvladimir.dto.requests.users.UserCreateRequest;
+import com.zagvladimir.dto.requests.users.UserUpdateRequest;
+import com.zagvladimir.dto.response.user.UserResponse;
+import com.zagvladimir.mappers.UserMapper;
 import com.zagvladimir.repository.ItemLeasedRepository;
 import com.zagvladimir.repository.RoleRepository;
 import com.zagvladimir.repository.UserRepository;
@@ -28,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -42,21 +49,22 @@ public class UserServiceImpl implements UserService {
   private final MailSenderService mailSenderService;
   private final PDFService pdfService;
   private final ItemLeasedRepository itemLeasedRepository;
+  private final UserMapper userMapper;
 
   @Override
-  public List<User> findAll() {
-    return userRepository.findAll();
+  public List<UserResponse> findAll() {
+    return userRepository.findAll().stream().map(userMapper::toResponse).collect(Collectors.toList());
   }
 
   @Override
-  public Page<User> findAll(Pageable page) {
-    return userRepository.findAll(page);
+  public Page<UserResponse> findAll(Pageable page) {
+    return userRepository.findAll(page).map(userMapper::toResponse);
   }
 
   @Transactional
   @Override
-  public User create(User user) throws MessagingException {
-
+  public UserResponse create(UserCreateRequest request) throws MessagingException {
+    User user = userMapper.convertCreateRequest(request);
     addRole(user, roleRepository.findRoleByName("ROLE_USER"));
     user.setRegistrationDate(new Timestamp(new Date().getTime()));
     user.getCredentials()
@@ -69,13 +77,13 @@ public class UserServiceImpl implements UserService {
     if (userRepository.findUsersByCredentials_Email(user.getCredentials().getEmail()).isPresent()) {
       sendEmail(user);
     }
-    return userRepository.findById(user.getId()).orElseThrow(IllegalArgumentException::new);
+    return userRepository.findById(user.getId()).map(userMapper::toResponse).orElseThrow(IllegalArgumentException::new);
   }
 
   @Override
-  public User findById(Long userId) {
+  public UserResponse findById(Long userId) {
     return userRepository
-        .findById(userId)
+        .findById(userId).map(userMapper::toResponse)
         .orElseThrow(
             () ->
                 new EntityNotFoundException(
@@ -84,13 +92,50 @@ public class UserServiceImpl implements UserService {
 
   @Transactional
   @Override
-  public User update(User userToUpdate) {
-    userToUpdate.setModificationDate(new Timestamp(new Date().getTime()));
-    userToUpdate
+  public UserResponse update(UserUpdateRequest request,Long id) {
+    Optional<User> user = userRepository.findById(id);
+    User updatedUser = null;
+    if(user.isPresent()) {
+      updatedUser = userMapper.convertUpdateRequest(request, user.get());
+    } else throw new EntityNotFoundException("User with ID: " + id + " not found");
+    updatedUser.setModificationDate(new Timestamp(new Date().getTime()));
+    updatedUser
         .getCredentials()
-        .setUserPassword(passwordEncoder.encode(userToUpdate.getCredentials().getUserPassword()));
-    userRepository.save(userToUpdate);
-    return userRepository.findById(userToUpdate.getId()).orElseThrow(EntityNotFoundException::new);
+        .setUserPassword(passwordEncoder.encode(updatedUser.getCredentials().getUserPassword()));
+    userRepository.save(updatedUser);
+    return userRepository.findById(updatedUser.getId()).map(userMapper::toResponse).orElseThrow(EntityNotFoundException::new);
+  }
+
+  @Transactional
+  @Override
+  public UserResponse update(UserChangeCredentialsRequest request, Long id) {
+    Optional<User> user = userRepository.findById(id);
+    User updatedUser = null;
+    if(user.isPresent()) {
+      updatedUser = userMapper.convertUpdateRequest(request, user.get());
+    } else throw new EntityNotFoundException("User with ID: " + id + " not found");
+    updatedUser.setModificationDate(new Timestamp(new Date().getTime()));
+    updatedUser
+            .getCredentials()
+            .setUserPassword(passwordEncoder.encode(updatedUser.getCredentials().getUserPassword()));
+    userRepository.save(updatedUser);
+    return userRepository.findById(updatedUser.getId()).map(userMapper::toResponse).orElseThrow(EntityNotFoundException::new);
+  }
+
+  @Transactional
+  @Override
+  public UserResponse update(UserChangeAddressRequest request, Long id) {
+    Optional<User> user = userRepository.findById(id);
+    User updatedUser = null;
+    if(user.isPresent()) {
+      updatedUser = userMapper.convertUpdateRequest(request, user.get());
+    } else throw new EntityNotFoundException("User with ID: " + id + " not found");
+    updatedUser.setModificationDate(new Timestamp(new Date().getTime()));
+    updatedUser
+            .getCredentials()
+            .setUserPassword(passwordEncoder.encode(updatedUser.getCredentials().getUserPassword()));
+    userRepository.save(updatedUser);
+    return userRepository.findById(updatedUser.getId()).map(userMapper::toResponse).orElseThrow(EntityNotFoundException::new);
   }
 
   @Transactional
@@ -101,9 +146,10 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User findByLogin(String login) {
+  public UserResponse findByLogin(String login) {
     return userRepository
         .findByCredentialsUserLogin(login)
+            .map(userMapper::toResponse)
         .orElseThrow(
             () ->
                 new EntityNotFoundException(

@@ -2,6 +2,9 @@ package com.zagvladimir.service.category;
 
 import com.zagvladimir.domain.Category;
 import com.zagvladimir.domain.enums.Status;
+import com.zagvladimir.dto.requests.category.CategoryCreateRequest;
+import com.zagvladimir.dto.response.CategoryResponse;
+import com.zagvladimir.mappers.ItemCategoryMapper;
 import com.zagvladimir.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,10 +20,11 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
   private final CategoryRepository categoryRepository;
+  private final ItemCategoryMapper itemCategoryMapper;
 
   @Override
-  public Page<Category> findAll(Pageable pageable) {
-    return categoryRepository.findAll(pageable);
+  public Page<CategoryResponse> findAll(Pageable pageable) {
+    return categoryRepository.findAll(pageable).map(itemCategoryMapper::toResponse);
   }
 
   @Override
@@ -30,15 +34,17 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Transactional
   @Override
-  public Category create(Category category) {
-    return categoryRepository.save(category);
+  public CategoryResponse create(CategoryCreateRequest request) {
+    Category newCategory = itemCategoryMapper.convertCreateRequest(request);
+    return itemCategoryMapper.toResponse(categoryRepository.save(newCategory));
   }
 
   @Override
-  public Category findById(Long itemCategoryId) {
+  public CategoryResponse findById(Long itemCategoryId) {
 
     return categoryRepository
         .findById(itemCategoryId)
+            .map(itemCategoryMapper::toResponse)
         .orElseThrow(
             () ->
                 new EntityNotFoundException(

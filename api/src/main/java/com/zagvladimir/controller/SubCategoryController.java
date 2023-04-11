@@ -1,9 +1,7 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.controller.mappers.SubItemTypeMapper;
-import com.zagvladimir.controller.requests.sub_category.SubCategoryCreateRequest;
-import com.zagvladimir.controller.response.SubCategoryResponse;
-import com.zagvladimir.domain.SubCategory;
+import com.zagvladimir.dto.requests.sub_category.SubCategoryCreateRequest;
+import com.zagvladimir.dto.response.SubCategoryResponse;
 import com.zagvladimir.service.sub_category.SubCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,7 +14,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Collections;
 
 @Tag(name = "Sub categories controller")
 @RestController
@@ -39,7 +35,7 @@ import java.util.Collections;
 public class SubCategoryController {
 
   private final SubCategoryService subCategoryService;
-  private final SubItemTypeMapper subItemTypeMapper;
+
 
   @Operation(summary = "Gets all Sub Category")
   @ApiResponses(
@@ -56,9 +52,7 @@ public class SubCategoryController {
       })
   @GetMapping
   public ResponseEntity<Object> findAllISubCategories(@ParameterObject Pageable pageable) {
-    Page<SubCategoryResponse> subCategories =
-        subCategoryService.findAll(pageable).map(subItemTypeMapper::toResponse);
-    return new ResponseEntity<>(subCategories, HttpStatus.OK);
+    return new ResponseEntity<>( subCategoryService.findAll(pageable), HttpStatus.OK);
   }
 
   @Operation(summary = "Gets sub category by ID")
@@ -77,10 +71,7 @@ public class SubCategoryController {
   @GetMapping("/{id}")
   public ResponseEntity<Object> findSubCategoryById(@PathVariable String id) {
     long itemTypeCategoryId = Long.parseLong(id);
-    SubCategoryResponse subCategoryResponse =
-        subItemTypeMapper.toResponse(subCategoryService.findById(itemTypeCategoryId));
-    return new ResponseEntity<>(
-        Collections.singletonMap("subCategory", subCategoryResponse), HttpStatus.OK);
+    return new ResponseEntity<>(subCategoryService.findById(itemTypeCategoryId), HttpStatus.OK);
   }
 
   @Operation(
@@ -114,12 +105,7 @@ public class SubCategoryController {
   @Transactional
   public ResponseEntity<Object> createSubCategory(
       @Valid @RequestBody SubCategoryCreateRequest subCategoryCreateRequest) {
-    SubCategory subCategory = subItemTypeMapper.convertCreateRequest(subCategoryCreateRequest);
-    Long categoryId = subCategoryCreateRequest.getCategoryId();
-    SubCategory newSubCategory = subCategoryService.create(subCategory, categoryId);
-
-    return new ResponseEntity<>(
-        Collections.singletonMap("subCategory", subItemTypeMapper.toResponse(newSubCategory)),
+    return new ResponseEntity<>(subCategoryService.create(subCategoryCreateRequest),
         HttpStatus.CREATED);
   }
 }
