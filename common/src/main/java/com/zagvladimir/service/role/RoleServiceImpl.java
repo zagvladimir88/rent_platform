@@ -25,13 +25,17 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Page<RoleResponse> findAll(Pageable page) {
-        return roleRepository.findAll(page).map(roleMapper::toResponse);
+        return roleRepository.findAll(page)
+                .map(roleMapper::toResponse);
     }
 
     @Override
     public Optional<Role> findRoleByName(String name) {
-
-        return Optional.of(roleRepository.findRoleByName(name));
+        Optional<Role> roleByName = Optional.ofNullable(roleRepository.findRoleByName(name));
+        if (roleByName.isPresent()) {
+            return roleByName;
+        }
+        throw new EntityNotFoundException(String.format("The role with name: %s not found", name));
     }
 
     @Override
@@ -47,16 +51,14 @@ public class RoleServiceImpl implements RoleService {
         return roleRepository
                 .findById(roleId)
                 .map(roleMapper::toResponse)
-                .orElseThrow(
-                        () ->
-                                new EntityNotFoundException(
-                                        String.format("The role with id:%d not found", roleId)));
+                .orElseThrow(() -> new EntityNotFoundException(String.format("The role with id:%d not found", roleId)));
     }
 
     @Transactional
     @Override
     public RoleResponse create(RoleCreateRequest request) {
-        Role role = roleRepository.save(roleMapper.convertCreateRequest(request));
+        Role role = roleMapper.convertCreateRequest(request);
+        roleRepository.save(role);
         return roleMapper.toResponse(role);
     }
 
@@ -66,6 +68,5 @@ public class RoleServiceImpl implements RoleService {
         roleRepository.deleteById(id);
         return id;
     }
-
-
 }
+

@@ -12,15 +12,15 @@ import java.util.List;
 @Service
 public interface SubCategoryService {
 
-    Page<SubCategoryResponse> findAll(Pageable pageable);
+    Page<SubCategoryResponse> getAllSubCategories(Pageable pageable);
 
-    List<SubCategory> findAll();
+    List<SubCategory> getAllSubCategories();
 
-    SubCategoryResponse create(SubCategoryCreateRequest request);
+    SubCategoryResponse createSubCategory(SubCategoryCreateRequest request);
 
-    SubCategoryResponse findById(Long subItemTypeId);
+    SubCategoryResponse getSubCategoryById(Long subItemTypeId);
 
-    SubCategory update(SubCategory subCategory);
+    SubCategory updateSubCategory(SubCategory subCategory);
 
-    Long delete(Long subItemTypeId);
+    Long deleteSubCategory(Long subItemTypeId);
 }

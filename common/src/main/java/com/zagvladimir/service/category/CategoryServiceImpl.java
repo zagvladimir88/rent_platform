@@ -19,62 +19,59 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-  private final CategoryRepository categoryRepository;
-  private final ItemCategoryMapper itemCategoryMapper;
+    private final CategoryRepository categoryRepository;
+    private final ItemCategoryMapper itemCategoryMapper;
 
-  @Override
-  public Page<CategoryResponse> findAll(Pageable pageable) {
-    return categoryRepository.findAll(pageable).map(itemCategoryMapper::toResponse);
-  }
+    @Override
+    public Page<CategoryResponse> findAll(Pageable pageable) {
+        return categoryRepository.findAll(pageable).map(itemCategoryMapper::toResponse);
+    }
 
-  @Override
-  public List<Category> findAll() {
-    return categoryRepository.findAll();
-  }
+    @Override
+    public List<Category> findAll() {
+        return categoryRepository.findAll();
+    }
 
-  @Transactional
-  @Override
-  public CategoryResponse create(CategoryCreateRequest request) {
-    Category newCategory = itemCategoryMapper.convertCreateRequest(request);
-    return itemCategoryMapper.toResponse(categoryRepository.save(newCategory));
-  }
+    @Transactional
+    @Override
+    public CategoryResponse create(CategoryCreateRequest request) {
+        Category newCategory = itemCategoryMapper.convertCreateRequest(request);
+        return itemCategoryMapper.toResponse(categoryRepository.save(newCategory));
+    }
 
-  @Override
-  public CategoryResponse findById(Long itemCategoryId) {
+    @Override
+    public CategoryResponse findById(Long itemCategoryId) {
+        return categoryRepository
+                .findById(itemCategoryId)
+                .map(itemCategoryMapper::toResponse)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("The category with id:%d not found", itemCategoryId)));
+    }
 
-    return categoryRepository
-        .findById(itemCategoryId)
-            .map(itemCategoryMapper::toResponse)
-        .orElseThrow(
-            () ->
-                new EntityNotFoundException(
-                    String.format("The category with id:%d not found", itemCategoryId)));
-  }
+    @Transactional
+    @Override
+    public Category update(Category category) {
+        return categoryRepository.save(category);
+    }
 
-  @Transactional
-  @Override
-  public Category update(Category category) {
-    return categoryRepository.save(category);
-  }
+    @Transactional
+    @Override
+    public Long delete(Long itemCategoryId) {
+        categoryRepository.deleteById(itemCategoryId);
+        return itemCategoryId;
+    }
 
-  @Transactional
-  @Override
-  public Long delete(Long itemCategoryId) {
-    categoryRepository.deleteById(itemCategoryId);
-    return itemCategoryId;
-  }
+    @Override
+    public Long softDelete(Long categoryId) {
+        Category category = getCategoryById(categoryId);
+        category.setStatus(Status.DELETED);
+        categoryRepository.save(category);
+        return categoryId;
+    }
 
-  @Override
-  public Long softDelete(Long categoryId) {
-    Category toUpdate =
-            categoryRepository
-                    .findById(categoryId)
-                    .orElseThrow(
-                            () ->
-                                    new EntityNotFoundException(
-                                            String.format("The category with id: %d not found", categoryId)));
-    toUpdate.setStatus(Status.DELETED);
-    categoryRepository.save(toUpdate);
-    return categoryId;
-  }
+    private Category getCategoryById(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("The category with id: %d not found", categoryId)));
+    }
 }

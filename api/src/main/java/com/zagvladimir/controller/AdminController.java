@@ -75,7 +75,7 @@ public class AdminController {
     @DeleteMapping("/sub-categories/{id}")
     public ResponseEntity<Object> deleteSubCategoryById(@PathVariable String id) {
         Long subCategoryId = Long.parseLong(id);
-        subCategoryService.delete(subCategoryId);
+        subCategoryService.deleteSubCategory(subCategoryId);
         return new ResponseEntity<>(
                 Collections.singletonMap("The sub category was deleted, id:", subCategoryId), HttpStatus.OK);
     }

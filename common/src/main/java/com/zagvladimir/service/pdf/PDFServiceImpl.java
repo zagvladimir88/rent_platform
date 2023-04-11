@@ -25,6 +25,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class PDFServiceImpl implements PDFService {
+  //TODO: Figure out this code or burn it
   private static final String DEST = "common/target/orders/billing/";
   private static final String PATH_LOGO = "common/src/main/resources/logo.jpg";
   private final ItemService itemService;

@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,40 +26,38 @@ public class ItemLeasedServiceImpl implements ItemLeasedService {
   private final UserRepository userRepository;
   private final ItemLeasedMapper itemLeasedMapper;
 
-
   @Override
   public Page<ItemLeasedResponse> findAll(Pageable page) {
     return itemLeasedRepository.findAll(page).map(itemLeasedMapper::toResponse);
   }
 
-  @Override
   @Transactional
+  @Override
   public ItemLeasedResponse create(ItemLeasedCreateRequest request) {
+    User renter = userRepository.findById(request.getRenterId())
+            .orElseThrow(() -> new EntityNotFoundException(String.format("User with id: %d not found", request.getRenterId())));
+
     ItemLeased itemLeased = itemLeasedMapper.convertCreateRequest(request);
-    Long renterId = request.getRenterId();
-    Optional<User> optionalUser = userRepository.findById(renterId);
-    if(optionalUser.isPresent()) {
-      itemLeased.setRenter(optionalUser.get());
-      itemLeased.setStatus(Status.NOT_ACTIVE);
-    } else throw  new EntityNotFoundException("User with id: " + renterId + "not found");
-    return itemLeasedMapper.toResponse(itemLeasedRepository.save(itemLeased));
+    itemLeased.setRenter(renter);
+    itemLeased.setStatus(Status.NOT_ACTIVE);
+
+    ItemLeased savedItemLeased = itemLeasedRepository.save(itemLeased);
+
+    return itemLeasedMapper.toResponse(savedItemLeased);
   }
 
   @Override
   public ItemLeasedResponse findById(Long itemLeasedId) {
-    return itemLeasedRepository
-        .findById(itemLeasedId)
-            .map(itemLeasedMapper::toResponse)
-        .orElseThrow(
-            () ->
-                new EntityNotFoundException(
-                    String.format("The item leased with id:%d not found", itemLeasedId)));
+    ItemLeased itemLeased = itemLeasedRepository.findById(itemLeasedId)
+            .orElseThrow(() -> new EntityNotFoundException(String.format("The item leased with id:%d not found", itemLeasedId)));
+
+    return itemLeasedMapper.toResponse(itemLeased);
   }
 
   @Transactional
   @Override
-  public ItemLeased update(ItemLeased object) {
-    return itemLeasedRepository.save(object);
+  public ItemLeased update(ItemLeased itemLeased) {
+    return itemLeasedRepository.save(itemLeased);
   }
 
   @Transactional
@@ -77,8 +74,7 @@ public class ItemLeasedServiceImpl implements ItemLeasedService {
 
   @Override
   public List<ItemLeasedResponse> findAllByRenterId(Long userId) {
-    return itemLeasedRepository.findAllByRenterId(userId).stream()
-            .map(itemLeasedMapper::toResponse)
-            .collect(Collectors.toList());
+    List<ItemLeased> itemLeasedList = itemLeasedRepository.findAllByRenterId(userId);
+    return itemLeasedList.stream().map(itemLeasedMapper::toResponse).collect(Collectors.toList());
   }
 }

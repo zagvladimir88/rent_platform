@@ -38,7 +38,7 @@ public class SubCategoryController {
               @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SubCategoryResponse.class)))})})
   @GetMapping
   public ResponseEntity<Object> findAllISubCategories(@ParameterObject Pageable pageable) {
-    return new ResponseEntity<>( subCategoryService.findAll(pageable), HttpStatus.OK);
+    return new ResponseEntity<>( subCategoryService.getAllSubCategories(pageable), HttpStatus.OK);
   }
 
   @Operation(summary = "Gets sub category by ID")
@@ -48,7 +48,7 @@ public class SubCategoryController {
   @GetMapping("/{id}")
   public ResponseEntity<Object> findSubCategoryById(@PathVariable String id) {
     long itemTypeCategoryId = Long.parseLong(id);
-    return new ResponseEntity<>(subCategoryService.findById(itemTypeCategoryId), HttpStatus.OK);
+    return new ResponseEntity<>(subCategoryService.getSubCategoryById(itemTypeCategoryId), HttpStatus.OK);
   }
 
   @Operation(summary = "Create new sub category")
@@ -60,7 +60,7 @@ public class SubCategoryController {
   @PostMapping
   public ResponseEntity<Object> createSubCategory(
       @Valid @RequestBody SubCategoryCreateRequest subCategoryCreateRequest) {
-    return new ResponseEntity<>(subCategoryService.create(subCategoryCreateRequest),
+    return new ResponseEntity<>(subCategoryService.createSubCategory(subCategoryCreateRequest),
         HttpStatus.CREATED);
   }
 }

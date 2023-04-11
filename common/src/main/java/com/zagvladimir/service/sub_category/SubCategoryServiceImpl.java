@@ -1,5 +1,6 @@
 package com.zagvladimir.service.sub_category;
 
+import com.zagvladimir.domain.Category;
 import com.zagvladimir.domain.SubCategory;
 import com.zagvladimir.dto.requests.sub_category.SubCategoryCreateRequest;
 import com.zagvladimir.dto.response.SubCategoryResponse;
@@ -19,55 +20,46 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SubCategoryServiceImpl implements SubCategoryService {
 
-    private final SubCategoryRepository repository;
+    private final SubCategoryRepository subCategoryRepository;
     private final CategoryRepository categoryRepository;
     private final SubItemTypeMapper subItemTypeMapper;
 
-    @Override
-    public Page<SubCategoryResponse> findAll(Pageable pageable) {
-        return repository.findAll(pageable).map(subItemTypeMapper::toResponse);
+    public Page<SubCategoryResponse> getAllSubCategories(Pageable pageable) {
+        return subCategoryRepository.findAll(pageable)
+                .map(subItemTypeMapper::toResponse);
     }
 
-    @Override
-    public List<SubCategory> findAll() {
-        return repository.findAll();
+    public List<SubCategory> getAllSubCategories() {
+        return subCategoryRepository.findAll();
     }
 
     @Transactional
-    @Override
-    public SubCategoryResponse create(SubCategoryCreateRequest request) {
+    public SubCategoryResponse createSubCategory(SubCategoryCreateRequest request) {
         SubCategory subCategory = subItemTypeMapper.convertCreateRequest(request);
         Long categoryId = request.getCategoryId();
-        subCategory.setCategory(
-                categoryRepository.findById(categoryId).orElseThrow(EntityNotFoundException::new));
-        repository.save(subCategory);
-        return repository
-                .findById(subCategory.getId())
-                .map(subItemTypeMapper::toResponse)
-                .orElseThrow(() -> new EntityNotFoundException("Sub category not created"));
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Category with id:%d not found", categoryId)));
+        subCategory.setCategory(category);
+        SubCategory savedSubCategory = subCategoryRepository.save(subCategory);
+        return subItemTypeMapper.toResponse(savedSubCategory);
     }
 
-    @Override
-    public SubCategoryResponse findById(Long subItemTypeId) {
-        return repository
-                .findById(subItemTypeId)
-                .map(subItemTypeMapper::toResponse)
-                .orElseThrow(
-                        () ->
-                                new EntityNotFoundException(
-                                        String.format("Entity with id:%d not found", subItemTypeId)));
+    public SubCategoryResponse getSubCategoryById(Long subCategoryId) {
+        SubCategory subCategory = subCategoryRepository.findById(subCategoryId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Subcategory with id:%d not found", subCategoryId)));
+        return subItemTypeMapper.toResponse(subCategory);
     }
 
     @Transactional
-    @Override
-    public SubCategory update(SubCategory subCategory) {
-        return repository.save(subCategory);
+    public SubCategory updateSubCategory(SubCategory subCategory) {
+        return subCategoryRepository.save(subCategory);
     }
 
     @Transactional
-    @Override
-    public Long delete(Long subItemTypeId) {
-        repository.deleteById(subItemTypeId);
-        return subItemTypeId;
+    public Long deleteSubCategory(Long subCategoryId) {
+        subCategoryRepository.deleteById(subCategoryId);
+        return subCategoryId;
     }
 }
