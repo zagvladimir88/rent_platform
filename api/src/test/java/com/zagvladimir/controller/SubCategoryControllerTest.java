@@ -27,6 +27,9 @@ class SubCategoryControllerTest extends BaseIntegrationTest {
   @Autowired private ObjectMapper objectMapper;
 
   @Test
+  @WithMockUser(
+          username = "user",
+          roles = {"USER"})
   void findAllISubCategories() throws Exception {
     this.mockMvc
         .perform(get("/api/sub-categories/"))
@@ -36,6 +39,9 @@ class SubCategoryControllerTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(
+          username = "user",
+          roles = {"USER"})
   void findSubCategoryById() throws Exception {
     Long id = 1L;
     this.mockMvc

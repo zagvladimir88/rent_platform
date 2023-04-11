@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -21,10 +22,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 @Configuration
-@EnableGlobalMethodSecurity(
-
-    prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
+  private static final String ADMIN = "ADMIN";
+  private static final String USER = "USER";
+  private static final String MODERATOR = "MODERATOR";
+
   @Autowired
   UserDetailsServiceImpl userDetailsService;
 
@@ -64,10 +67,39 @@ public class WebSecurityConfig {
         .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
         .authorizeRequests().antMatchers("/api/auth/**").permitAll()
-        .antMatchers("/api/test/**").permitAll()
-        .antMatchers("/api/**").permitAll()
+//        .antMatchers("/api/test/**").permitAll()
         .antMatchers("/swagger-ui/**").permitAll()
         .antMatchers("/v3/api-docs/**").permitAll()
+
+        .antMatchers("/api/auth/**").permitAll()
+
+        .antMatchers("/api/admin/**").hasAnyRole(ADMIN)
+
+        .antMatchers(HttpMethod.GET,"/api/item-categories/**").permitAll()
+        .antMatchers(HttpMethod.POST,"/api/item-categories/**").hasAnyRole(ADMIN)
+        .antMatchers(HttpMethod.DELETE,"/api/item-categories/**").hasAnyRole(ADMIN, MODERATOR)
+
+        .antMatchers(HttpMethod.GET,"/api/grades/**").permitAll()
+        .antMatchers(HttpMethod.POST,"/api/grades/**").hasAnyRole(ADMIN,USER)
+        .antMatchers(HttpMethod.PATCH,"/api/grades/**").hasAnyRole(ADMIN,USER, MODERATOR)
+
+        .antMatchers(HttpMethod.GET,"/api/items/**").permitAll()
+        .antMatchers(HttpMethod.POST,"/api/items/**").hasAnyRole(ADMIN,USER,MODERATOR)
+
+        .antMatchers(HttpMethod.GET,"/api/items-leased/**").permitAll()
+        .antMatchers(HttpMethod.POST,"/api/items-leased/**").hasAnyRole(ADMIN,USER,MODERATOR)
+
+        .antMatchers(HttpMethod.GET,"/api/roles/**").hasAnyRole(ADMIN)
+        .antMatchers(HttpMethod.POST,"/api/roles/**").hasAnyRole(ADMIN)
+
+        .antMatchers(HttpMethod.GET,"/api/roles/**").permitAll()
+        .antMatchers(HttpMethod.POST,"/api/roles/**").hasAnyRole(ADMIN,MODERATOR)
+
+        .antMatchers(HttpMethod.GET,"/api/users/**").hasAnyRole(USER,ADMIN,MODERATOR)
+        .antMatchers(HttpMethod.POST,"/api/users/**").hasAnyRole(USER,ADMIN,MODERATOR)
+        .antMatchers(HttpMethod.PUT,"/api/users/**").hasAnyRole(USER,ADMIN,MODERATOR)
+        .antMatchers(HttpMethod.PATCH,"/api/users/**").hasAnyRole(USER,ADMIN,MODERATOR)
+
         .anyRequest().authenticated();
     
     http.authenticationProvider(authenticationProvider());

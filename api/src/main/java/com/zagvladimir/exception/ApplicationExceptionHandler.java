@@ -37,11 +37,10 @@ public class ApplicationExceptionHandler {
     ErrorContainer error =
         ErrorContainer.builder()
             .exceptionId(UUIDGenerator.generatedUI())
-            .errorCode(2)
             .errorMessage(e.getMessage())
             .e(e.getClass().toString())
             .build();
-    log.warn("error: {}, id: {}, error code: {}",error.getErrorMessage(), error.getExceptionId(),error.getErrorCode());
+    log.warn("error: {}, id: {}, error message {}",error.getErrorMessage(), error.getExceptionId(), error.getErrorMessage());
     return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.NOT_FOUND);
   }
 
@@ -51,7 +50,6 @@ public class ApplicationExceptionHandler {
     ErrorContainer error =
         ErrorContainer.builder()
             .exceptionId(UUIDGenerator.generatedUI())
-            .errorCode(3)
             .errorMessage(e.getMessage())
             .e(e.getClass().toString())
             .build();
@@ -65,7 +63,6 @@ public class ApplicationExceptionHandler {
     ErrorContainer error =
         ErrorContainer.builder()
             .exceptionId(UUIDGenerator.generatedUI())
-            .errorCode(1)
             .errorMessage(String.format("General error %s",e.getMessage()))
             .e(e.getClass().toString())
             .build();
@@ -80,7 +77,6 @@ public class ApplicationExceptionHandler {
     ErrorContainer error =
         ErrorContainer.builder()
             .exceptionId(UUIDGenerator.generatedUI())
-            .errorCode(1)
             .errorMessage("Data integrity violation")
             .e(e.getClass().toString())
             .build();
@@ -127,7 +123,6 @@ public class ApplicationExceptionHandler {
     ErrorContainer error =
             ErrorContainer.builder()
                     .exceptionId(UUIDGenerator.generatedUI())
-                    .errorCode(1)
                     .errorMessage(ex.getMessage())
                     .e(ex.getClass().toString())
                     .build();
