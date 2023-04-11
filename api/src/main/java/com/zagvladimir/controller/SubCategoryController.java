@@ -36,7 +36,6 @@ public class SubCategoryController {
 
   private final SubCategoryService subCategoryService;
 
-
   @Operation(summary = "Gets all Sub Category")
   @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Found the sub category", content = {

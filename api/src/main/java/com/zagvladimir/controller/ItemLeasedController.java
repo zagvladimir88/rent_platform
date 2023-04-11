@@ -1,9 +1,7 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.mappers.ItemLeasedMapper;
 import com.zagvladimir.dto.requests.items_leased.ItemLeasedCreateRequest;
 import com.zagvladimir.dto.response.ItemLeasedResponse;
-import com.zagvladimir.repository.ItemLeasedRepository;
 import com.zagvladimir.service.item_leased.ItemLeasedService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,8 +34,6 @@ import javax.validation.Valid;
 public class ItemLeasedController {
 
   private final ItemLeasedService itemLeasedService;
-  private final ItemLeasedRepository repository;
-  private final ItemLeasedMapper itemLeasedMapper;
 
   @Operation(summary = "Gets all itemsLeased")
   @ApiResponses(value = {

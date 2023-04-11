@@ -1,6 +1,6 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.mappers.UserMapper;
+
 import com.zagvladimir.dto.requests.users.UserChangeAddressRequest;
 import com.zagvladimir.dto.requests.users.UserChangeCredentialsRequest;
 import com.zagvladimir.dto.requests.users.UserUpdateRequest;
@@ -44,7 +44,6 @@ import java.util.Map;
 public class UserController {
 
   private final UserService userService;
-  private final UserMapper userMapper;
 
   @Operation(summary = "Gets all users with pagination")
   @ApiResponses(value = {

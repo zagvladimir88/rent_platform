@@ -1,6 +1,5 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.mappers.GradeMapper;
 import com.zagvladimir.dto.requests.grade.GradeCreateRequest;
 import com.zagvladimir.dto.response.GradeResponse;
 import com.zagvladimir.service.grade.GradeService;
@@ -38,7 +37,6 @@ import java.util.Collections;
 public class GradeController {
 
   private final GradeService gradeService;
-  private final GradeMapper gradeMapper;
 
   @Operation(summary = "Gets all grades")
   @ApiResponses(value = {
