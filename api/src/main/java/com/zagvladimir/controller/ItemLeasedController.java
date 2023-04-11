@@ -1,8 +1,8 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.controller.mappers.ItemLeasedMapper;
-import com.zagvladimir.controller.requests.items_leased.ItemLeasedCreateRequest;
-import com.zagvladimir.controller.response.ItemLeasedResponse;
+import com.zagvladimir.mappers.ItemLeasedMapper;
+import com.zagvladimir.dto.requests.items_leased.ItemLeasedCreateRequest;
+import com.zagvladimir.dto.response.ItemLeasedResponse;
 import com.zagvladimir.domain.ItemLeased;
 import com.zagvladimir.repository.ItemLeasedRepository;
 import com.zagvladimir.service.item_leased.ItemLeasedService;

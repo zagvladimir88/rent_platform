@@ -1,8 +1,8 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.controller.mappers.RoleMapper;
-import com.zagvladimir.controller.requests.role.RoleCreateRequest;
-import com.zagvladimir.controller.response.RoleResponse;
+import com.zagvladimir.mappers.RoleMapper;
+import com.zagvladimir.dto.requests.role.RoleCreateRequest;
+import com.zagvladimir.dto.response.RoleResponse;
 import com.zagvladimir.domain.Role;
 import com.zagvladimir.service.role.RoleService;
 import io.swagger.v3.oas.annotations.Operation;

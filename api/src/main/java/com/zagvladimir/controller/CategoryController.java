@@ -1,9 +1,8 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.controller.mappers.ItemCategoryMapper;
-import com.zagvladimir.controller.requests.category.CategoryCreateRequest;
-import com.zagvladimir.controller.response.CategoryResponse;
-import com.zagvladimir.domain.Category;
+import com.zagvladimir.mappers.ItemCategoryMapper;
+import com.zagvladimir.dto.requests.category.CategoryCreateRequest;
+import com.zagvladimir.dto.response.CategoryResponse;
 import com.zagvladimir.service.category.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,7 +14,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.Collections;
-import java.util.Map;
 
 @Tag(name = "Item Category controller")
 @RestController
@@ -56,12 +53,7 @@ public class CategoryController {
       })
   @GetMapping
   public ResponseEntity<Object> findAllItemCategories(@ParameterObject Pageable pageable) {
-
-    Page<CategoryResponse> categoryResponses =
-        categoryService.findAll(pageable).map(itemCategoryMapper::toResponse);
-
-    return new ResponseEntity<>(
-        Collections.singletonMap("result", categoryResponses), HttpStatus.OK);
+      return new ResponseEntity<>(categoryService.findAll(pageable), HttpStatus.OK);
   }
 
   @Operation(
@@ -77,10 +69,8 @@ public class CategoryController {
             })
       })
   @GetMapping("/{id}")
-  public ResponseEntity<Map<String, Object>> findItemCategoryById(@PathVariable Long id) {
-    CategoryResponse categoryResponse = itemCategoryMapper.toResponse(categoryService.findById(id));
-    return new ResponseEntity<>(
-        Collections.singletonMap("itemCategory", categoryResponse), HttpStatus.OK);
+  public ResponseEntity<Object> findItemCategoryById(@PathVariable Long id) {
+    return new ResponseEntity<>(categoryService.findById(id), HttpStatus.OK);
   }
 
   @Operation(
@@ -114,13 +104,7 @@ public class CategoryController {
   @Transactional
   public ResponseEntity<Object> createItemCategory(
       @RequestBody @Valid CategoryCreateRequest categoryCreateRequest) {
-
-    Category newCategory = itemCategoryMapper.convertCreateRequest(categoryCreateRequest);
-    CategoryResponse categoryResponse =
-        itemCategoryMapper.toResponse(categoryService.create(newCategory));
-
-    return new ResponseEntity<>(
-        Collections.singletonMap("category", categoryResponse), HttpStatus.CREATED);
+    return new ResponseEntity<>(categoryService.create(categoryCreateRequest), HttpStatus.CREATED);
   }
 
   @Operation(

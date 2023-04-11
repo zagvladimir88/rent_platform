@@ -2,8 +2,9 @@ package com.zagvladimir.service.item_leased;
 
 import com.zagvladimir.domain.ItemLeased;
 import com.zagvladimir.domain.enums.Status;
+import com.zagvladimir.domain.user.User;
 import com.zagvladimir.repository.ItemLeasedRepository;
-import com.zagvladimir.service.user.UserService;
+import com.zagvladimir.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,13 +13,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ItemLeasedServiceImpl implements ItemLeasedService {
 
   private final ItemLeasedRepository itemLeasedRepository;
-  private final UserService userService;
+  private final UserRepository userRepository;
 
 
   @Override
@@ -29,8 +31,11 @@ public class ItemLeasedServiceImpl implements ItemLeasedService {
   @Override
   @Transactional
   public ItemLeased create(ItemLeased itemLeased, Long renterId) {
-    itemLeased.setRenter(userService.findById(renterId));
-    itemLeased.setStatus(Status.NOT_ACTIVE);
+    Optional<User> optionalUser = userRepository.findById(renterId);
+    if(optionalUser.isPresent()) {
+      itemLeased.setRenter(optionalUser.get());
+      itemLeased.setStatus(Status.NOT_ACTIVE);
+    } else this new EntityNotFoundException("User with id: " + renterId + "not found");
     return itemLeasedRepository.save(itemLeased);
   }
 

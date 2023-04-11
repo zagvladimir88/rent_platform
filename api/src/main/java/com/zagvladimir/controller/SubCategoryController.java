@@ -1,8 +1,8 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.controller.mappers.SubItemTypeMapper;
-import com.zagvladimir.controller.requests.sub_category.SubCategoryCreateRequest;
-import com.zagvladimir.controller.response.SubCategoryResponse;
+import com.zagvladimir.mappers.SubItemTypeMapper;
+import com.zagvladimir.dto.requests.sub_category.SubCategoryCreateRequest;
+import com.zagvladimir.dto.response.SubCategoryResponse;
 import com.zagvladimir.domain.SubCategory;
 import com.zagvladimir.service.sub_category.SubCategoryService;
 import io.swagger.v3.oas.annotations.Operation;

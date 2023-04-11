@@ -2,7 +2,10 @@ package com.zagvladimir.service.grade;
 
 import com.zagvladimir.domain.Grade;
 import com.zagvladimir.domain.enums.Status;
+import com.zagvladimir.domain.user.User;
+import com.zagvladimir.mappers.UserMapper;
 import com.zagvladimir.repository.GradeRepository;
+import com.zagvladimir.repository.UserRepository;
 import com.zagvladimir.service.item.ItemService;
 import com.zagvladimir.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +24,8 @@ public class GradeServiceImpl implements GradeService {
   private final GradeRepository gradeRepository;
   private final ItemService itemService;
   private final UserService userService;
+  private final UserRepository userRepository;
+  private final UserMapper userMapper;
 
   @Override
   public Page<Grade> findAll(Pageable page) {
@@ -29,8 +35,11 @@ public class GradeServiceImpl implements GradeService {
   @Transactional
   @Override
   public Grade create(Grade grade, Long userId, Long itemId) {
-    grade.setUser(userService.findById(userId));
-    grade.setItem(itemService.findById(itemId));
+    Optional<User> optionalUser = userRepository.findById(userId);
+    if(optionalUser.isPresent()) {
+      grade.setUser(optionalUser.get());
+      grade.setItem(itemService.findById(itemId));
+    }else throw new EntityNotFoundException("User with id: " + userId + " not found");
     return gradeRepository.save(grade);
   }
 

@@ -1,8 +1,8 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.controller.mappers.ItemMapper;
-import com.zagvladimir.controller.requests.items.ItemCreateRequest;
-import com.zagvladimir.controller.response.ItemResponse;
+import com.zagvladimir.mappers.ItemMapper;
+import com.zagvladimir.dto.requests.items.ItemCreateRequest;
+import com.zagvladimir.dto.response.ItemResponse;
 import com.zagvladimir.domain.Item;
 import com.zagvladimir.exception.ErrorContainer;
 import com.zagvladimir.service.item.ItemService;

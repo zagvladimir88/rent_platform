@@ -1,8 +1,8 @@
 package com.zagvladimir.controller;
 
-import com.zagvladimir.controller.mappers.GradeMapper;
-import com.zagvladimir.controller.requests.grade.GradeCreateRequest;
-import com.zagvladimir.controller.response.GradeResponse;
+import com.zagvladimir.mappers.GradeMapper;
+import com.zagvladimir.dto.requests.grade.GradeCreateRequest;
+import com.zagvladimir.dto.response.GradeResponse;
 import com.zagvladimir.domain.Grade;
 import com.zagvladimir.service.grade.GradeService;
 import io.swagger.v3.oas.annotations.Operation;
