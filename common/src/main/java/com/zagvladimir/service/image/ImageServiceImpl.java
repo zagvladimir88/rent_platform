@@ -7,7 +7,7 @@ import com.google.cloud.storage.Storage;
 import com.zagvladimir.configuration.GoogleCSConfig;
 import com.zagvladimir.domain.Image;
 import com.zagvladimir.repository.ImageRepository;
-import com.zagvladimir.service.item.ItemService;
+import com.zagvladimir.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class ImageServiceImpl implements ImageService {
 
   private final GoogleCSConfig googleCSConfig;
 
-  private final ItemService itemService;
+  private final ItemRepository itemRepository;
 
   private final ImageRepository repository;
 
@@ -60,7 +60,7 @@ public class ImageServiceImpl implements ImageService {
   public void createImageInDB(String imageLink, Long itemId) {
     Image newImage = new Image();
     newImage.setLink(imageLink);
-    newImage.setItems(itemService.findById(itemId));
+    newImage.setItems(itemRepository.findById(itemId).get());
     repository.save(newImage);
   }
 }

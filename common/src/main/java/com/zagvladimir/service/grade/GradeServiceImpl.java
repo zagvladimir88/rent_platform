@@ -7,6 +7,7 @@ import com.zagvladimir.dto.requests.grade.GradeCreateRequest;
 import com.zagvladimir.dto.response.GradeResponse;
 import com.zagvladimir.mappers.GradeMapper;
 import com.zagvladimir.repository.GradeRepository;
+import com.zagvladimir.repository.ItemRepository;
 import com.zagvladimir.repository.UserRepository;
 import com.zagvladimir.service.item.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ public class GradeServiceImpl implements GradeService {
 
   private final GradeRepository gradeRepository;
   private final ItemService itemService;
+  private final ItemRepository itemRepository;
   private final UserRepository userRepository;
   private final GradeMapper gradeMapper;
 
@@ -41,7 +43,7 @@ public class GradeServiceImpl implements GradeService {
     Optional<User> optionalUser = userRepository.findById(userId);
     if(optionalUser.isPresent()) {
       newGrade.setUser(optionalUser.get());
-      newGrade.setItem(itemService.findById(itemId));
+      newGrade.setItem(itemRepository.findById(itemId).get());
     }else throw new EntityNotFoundException("User with id: " + userId + " not found");
 
         return gradeMapper.toResponse(gradeRepository.save(newGrade));

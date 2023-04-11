@@ -3,7 +3,6 @@ package com.zagvladimir.controller;
 import com.zagvladimir.mappers.ItemLeasedMapper;
 import com.zagvladimir.dto.requests.items_leased.ItemLeasedCreateRequest;
 import com.zagvladimir.dto.response.ItemLeasedResponse;
-import com.zagvladimir.domain.ItemLeased;
 import com.zagvladimir.repository.ItemLeasedRepository;
 import com.zagvladimir.service.item_leased.ItemLeasedService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +15,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.api.annotations.ParameterObject;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +27,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Tag(name = "Items Leased controller")
 @RestController
@@ -59,9 +53,7 @@ public class ItemLeasedController {
   @PreAuthorize("hasRole('ADMIN')")
   @GetMapping
   public ResponseEntity<Object> findAllItemsLeased(@ParameterObject Pageable page) {
-    Page<ItemLeasedResponse> itemLeasedResponses =
-        itemLeasedService.findAll(page).map(itemLeasedMapper::toResponse);
-    return new ResponseEntity<>(itemLeasedResponses, HttpStatus.OK);
+    return new ResponseEntity<>(itemLeasedService.findAll(page), HttpStatus.OK);
   }
 
   @Operation(
@@ -94,11 +86,7 @@ public class ItemLeasedController {
   @PostMapping
   public ResponseEntity<Object> createItemLeased(
       @Valid @RequestBody ItemLeasedCreateRequest createRequest) {
-    ItemLeased itemLeased = itemLeasedMapper.convertCreateRequest(createRequest);
-    Long renterId = createRequest.getRenterId();
-    ItemLeasedResponse itemLeasedResponse =
-        itemLeasedMapper.toResponse(itemLeasedService.create(itemLeased, renterId));
-    return new ResponseEntity<>(itemLeasedResponse, HttpStatus.CREATED);
+    return new ResponseEntity<>(itemLeasedService.create(createRequest), HttpStatus.CREATED);
   }
 
   @Operation(
@@ -123,12 +111,9 @@ public class ItemLeasedController {
   @PreAuthorize(
       "@itemLeasedServiceImpl.getRenterName(#id).equals(principal.username) or hasRole('ADMIN')")
   @GetMapping("/{id}")
-  public ResponseEntity<Map<String, Object>> findItemLeasedById(@PathVariable String id) {
+  public ResponseEntity<Object> findItemLeasedById(@PathVariable String id) {
     Long itemLeasedId = Long.parseLong(id);
-    ItemLeasedResponse itemLeasedResponse =
-        itemLeasedMapper.toResponse(itemLeasedService.findById(itemLeasedId));
-    return new ResponseEntity<>(
-        Collections.singletonMap("itemLeased", itemLeasedResponse), HttpStatus.OK);
+    return new ResponseEntity<>(itemLeasedService.findById(itemLeasedId), HttpStatus.OK);
   }
 
   @Operation(
@@ -155,10 +140,7 @@ public class ItemLeasedController {
   @GetMapping("/user/{id}")
   public ResponseEntity<Object> findAllItemsLeasedByUserId(@PathVariable String id) {
     Long userId = Long.parseLong(id);
-    List<ItemLeasedResponse> itemLeasedResponses =
-        itemLeasedService.findAllByRenterId(userId).stream()
-            .map(itemLeasedMapper::toResponse)
-            .collect(Collectors.toList());
-    return new ResponseEntity<>(itemLeasedResponses, HttpStatus.OK);
+
+    return new ResponseEntity<>(itemLeasedService.findAllByRenterId(userId), HttpStatus.OK);
   }
 }
