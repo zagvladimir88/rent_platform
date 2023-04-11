@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +26,12 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public Page<RoleResponse> findAll(Pageable page) {
         return roleRepository.findAll(page).map(roleMapper::toResponse);
+    }
+
+    @Override
+    public Optional<Role> findRoleByName(String name) {
+
+        return Optional.of(roleRepository.findRoleByName(name));
     }
 
     @Override
@@ -59,4 +66,6 @@ public class RoleServiceImpl implements RoleService {
         roleRepository.deleteById(id);
         return id;
     }
+
+
 }

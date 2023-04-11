@@ -6,7 +6,6 @@ import com.zagvladimir.security.services.UserDetailsImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.*;
@@ -21,16 +20,14 @@ public class JwtUtils {
   @Value("${app.jwtExpirationMs}")
   private int jwtExpirationMs;
 
-  public String generateJwtToken(Authentication authentication) {
+  public String generateJwtToken(UserDetailsImpl userPrincipal) {
+    return generateTokenFromUsername(userPrincipal.getUsername());
+  }
 
-    UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
-
-    return Jwts.builder()
-        .setSubject((userPrincipal.getUsername()))
-        .setIssuedAt(new Date())
-        .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-        .signWith(SignatureAlgorithm.HS512, jwtSecret)
-        .compact();
+  public String generateTokenFromUsername(String username) {
+    return Jwts.builder().setSubject(username).setIssuedAt(new Date())
+            .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs)).signWith(SignatureAlgorithm.HS512, jwtSecret)
+            .compact();
   }
 
   public String getUserNameFromJwtToken(String token) {
@@ -55,4 +52,5 @@ public class JwtUtils {
 
     return false;
   }
+
 }
