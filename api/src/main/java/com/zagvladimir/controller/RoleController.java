@@ -15,7 +15,6 @@ import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +38,6 @@ public class RoleController {
         @ApiResponse(responseCode = "200", description = "Found the roles", content = {
               @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RoleResponse.class)))})})
   @GetMapping
-  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Object> findAllRoles(@ParameterObject Pageable page) {
     return new ResponseEntity<>(roleService.findAll(page), HttpStatus.OK);
   }

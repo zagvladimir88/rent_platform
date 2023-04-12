@@ -91,9 +91,6 @@ public class WebSecurityConfig {
         .antMatchers(HttpMethod.GET,"/api/roles/**").hasRole(ADMIN)
         .antMatchers(HttpMethod.POST,"/api/roles/**").hasRole(ADMIN)
 
-        .antMatchers(HttpMethod.GET,"/api/roles/**").permitAll()
-        .antMatchers(HttpMethod.POST,"/api/roles/**").hasAnyRole(ADMIN,MODERATOR)
-
         .antMatchers(HttpMethod.GET,"/api/users/**").hasAnyRole(USER,ADMIN,MODERATOR)
         .antMatchers(HttpMethod.POST,"/api/users/**").hasAnyRole(USER,ADMIN,MODERATOR)
         .antMatchers(HttpMethod.PUT,"/api/users/**").hasAnyRole(USER,ADMIN,MODERATOR)
