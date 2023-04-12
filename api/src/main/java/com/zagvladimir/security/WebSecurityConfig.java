@@ -22,7 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig {
   private static final String ADMIN = "ADMIN";
   private static final String USER = "USER";
@@ -66,8 +66,7 @@ public class WebSecurityConfig {
     http.cors().and().csrf().disable()
         .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-        .authorizeRequests().antMatchers("/api/auth/**").permitAll()
-//        .antMatchers("/api/test/**").permitAll()
+        .authorizeRequests()
         .antMatchers("/swagger-ui/**").permitAll()
         .antMatchers("/v3/api-docs/**").permitAll()
 
@@ -89,8 +88,8 @@ public class WebSecurityConfig {
         .antMatchers(HttpMethod.GET,"/api/items-leased/**").permitAll()
         .antMatchers(HttpMethod.POST,"/api/items-leased/**").hasAnyRole(ADMIN,USER,MODERATOR)
 
-        .antMatchers(HttpMethod.GET,"/api/roles/**").hasAnyRole(ADMIN)
-        .antMatchers(HttpMethod.POST,"/api/roles/**").hasAnyRole(ADMIN)
+        .antMatchers(HttpMethod.GET,"/api/roles/**").hasRole(ADMIN)
+        .antMatchers(HttpMethod.POST,"/api/roles/**").hasRole(ADMIN)
 
         .antMatchers(HttpMethod.GET,"/api/roles/**").permitAll()
         .antMatchers(HttpMethod.POST,"/api/roles/**").hasAnyRole(ADMIN,MODERATOR)
