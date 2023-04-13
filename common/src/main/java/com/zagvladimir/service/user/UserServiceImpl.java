@@ -97,9 +97,11 @@ public class UserServiceImpl implements UserService {
   public UserResponse update(UserUpdateRequest request,Long id) {
     Optional<User> user = userRepository.findById(id);
     User updatedUser = null;
+
     if(user.isPresent()) {
       updatedUser = userMapper.convertUpdateRequest(request, user.get());
     } else throw new EntityNotFoundException("User with ID: " + id + " not found");
+
     updatedUser.setModificationDate(new Timestamp(new Date().getTime()));
     updatedUser
         .getCredentials()
