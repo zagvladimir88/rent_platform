@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @ControllerAdvice
 public class ApplicationExceptionHandler {
+  private static final String ERROR = "error";
 
   //TODO: add AccessDeniedException
 
@@ -32,7 +33,6 @@ public class ApplicationExceptionHandler {
     EntityNotFoundException.class
   })
   public ResponseEntity<Object> handlerEntityNotFoundException(Exception e) {
-
     ErrorContainer error =
         ErrorContainer.builder()
             .exceptionId(UUIDGenerator.generatedUI())
@@ -40,7 +40,8 @@ public class ApplicationExceptionHandler {
             .e(e.getClass().toString())
             .build();
     log.warn("error: {}, id: {}, error message {}",error.getErrorMessage(), error.getExceptionId(), error.getErrorMessage());
-    return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.NOT_FOUND);
+
+    return new ResponseEntity<>(Collections.singletonMap(ERROR, error), HttpStatus.NOT_FOUND);
   }
 
   @ExceptionHandler({NumberFormatException.class})
@@ -53,7 +54,7 @@ public class ApplicationExceptionHandler {
             .e(e.getClass().toString())
             .build();
 
-    return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.BAD_REQUEST);
+    return new ResponseEntity<>(Collections.singletonMap(ERROR, error), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(Exception.class)
@@ -67,7 +68,7 @@ public class ApplicationExceptionHandler {
             .build();
 
     return new ResponseEntity<>(
-        Collections.singletonMap("error", error), HttpStatus.INTERNAL_SERVER_ERROR);
+        Collections.singletonMap(ERROR, error), HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   @ExceptionHandler(DataIntegrityViolationException.class)
@@ -80,7 +81,7 @@ public class ApplicationExceptionHandler {
             .e(e.getClass().toString())
             .build();
 
-    return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.CONFLICT);
+    return new ResponseEntity<>(Collections.singletonMap(ERROR, error), HttpStatus.CONFLICT);
   }
 
   @ExceptionHandler(ConstraintViolationException.class)
@@ -101,7 +102,7 @@ public class ApplicationExceptionHandler {
             .collect(Collectors.toList()));
 
     return new ResponseEntity<>(
-        Collections.singletonMap("error", messages), HttpStatus.BAD_REQUEST);
+        Collections.singletonMap(ERROR, messages), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -113,7 +114,7 @@ public class ApplicationExceptionHandler {
       messages.put(fieldError.getField(), fieldError.getDefaultMessage());
     }
     return new ResponseEntity<>(
-        Collections.singletonMap("error", messages), HttpStatus.BAD_REQUEST);
+        Collections.singletonMap(ERROR, messages), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(value = TokenRefreshException.class)
@@ -125,6 +126,6 @@ public class ApplicationExceptionHandler {
                     .errorMessage(ex.getMessage())
                     .e(ex.getClass().toString())
                     .build();
-    return new ResponseEntity<>(Collections.singletonMap("error", error), HttpStatus.FORBIDDEN);
+    return new ResponseEntity<>(Collections.singletonMap(ERROR, error), HttpStatus.FORBIDDEN);
   }
 }

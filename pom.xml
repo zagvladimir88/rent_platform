@@ -181,7 +181,6 @@
                 <version>${flyway.version}</version>
             </dependency>
 
-
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt</artifactId>
