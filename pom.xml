@@ -19,6 +19,8 @@
     <modules>
         <module>common</module>
         <module>api</module>
+        <module>mail-service</module>
+        <module>common-utils</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -45,6 +47,7 @@
         <mapstruct.version>1.5.3.Final</mapstruct.version>
         <testcontainers.version>1.17.5</testcontainers.version>
         <testcontainers.postgresql.version>1.17.5</testcontainers.postgresql.version>
+        <hashid.version>1.0.1</hashid.version>
     </properties>
 
 
@@ -211,18 +214,17 @@
                 <version>${spring.version}</version>
             </dependency>
 
-<!--            <dependency>-->
-<!--                <groupId>org.springframework.security</groupId>-->
-<!--                <artifactId>spring-security-test</artifactId>-->
-<!--                <version>${spring-security-test.version}</version>-->
-<!--                <scope>test</scope>-->
-<!--            </dependency>-->
-
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-test</artifactId>
                 <version>${spring.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.hashids</groupId>
+                <artifactId>hashids</artifactId>
+                <version>${hashid.version}</version>
             </dependency>
 
         </dependencies>
