@@ -15,16 +15,18 @@ import com.zagvladimir.mappers.UserMapper;
 import com.zagvladimir.repository.ItemLeasedRepository;
 import com.zagvladimir.repository.RoleRepository;
 import com.zagvladimir.repository.UserRepository;
-import com.zagvladimir.service.mail.MailSenderService;
 import com.zagvladimir.service.pdf.PDFService;
 import com.zagvladimir.util.UUIDGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import zagvladimir.dto.MailParams;
 
 import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
@@ -43,12 +45,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+  private String mailServiceUri = "http://localhost:8086/mail/send";
   private static final String ACTIVATION_URL =
-      "http://localhost:8080/api/registration/activate/%s/";
+      "http://localhost:8080/api/auth/activate/%s/";
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
   private final BCryptPasswordEncoder passwordEncoder;
-  private final MailSenderService mailSenderService;
   private final PDFService pdfService;
   private final ItemLeasedRepository itemLeasedRepository;
   private final UserMapper userMapper;
@@ -77,7 +79,7 @@ public class UserServiceImpl implements UserService {
     userRepository.save(user);
 
     if (userRepository.findUsersByCredentials_Email(user.getCredentials().getEmail()).isPresent()) {
-      sendEmail(user);
+      sendRequestToMailService(user);
     }
     return userRepository.findById(user.getId()).map(userMapper::toResponse).orElseThrow(IllegalArgumentException::new);
   }
@@ -100,7 +102,7 @@ public class UserServiceImpl implements UserService {
 
     if(user.isPresent()) {
       updatedUser = userMapper.convertUpdateRequest(request, user.get());
-    } else throw new EntityNotFoundException("User with ID: " + id + " not found");
+    } else throw new EntityNotFoundException(String.format("User with ID: %d not found", id) );
 
     updatedUser.setModificationDate(new Timestamp(new Date().getTime()));
     updatedUser
@@ -196,8 +198,8 @@ public class UserServiceImpl implements UserService {
     templateModel.put("name", user.getFirstName());
     templateModel.put("item_name", "item name");
 
-    mailSenderService.sendConfirmBookingMail(
-        user.getCredentials().getEmail(), "Confirm Booking", pathToBilling, templateModel);
+//    mailSenderService.sendConfirmBookingMail(
+//        user.getCredentials().getEmail(), "Confirm Booking", pathToBilling, templateModel);
 
     for (ItemLeased leased : itemsLeasedSet) {
       leased.setStatus(Status.ACTIVE);
@@ -239,7 +241,7 @@ public class UserServiceImpl implements UserService {
     userRepository.save(user);
 
     if (userRepository.findUsersByCredentials_Email(user.getCredentials().getEmail()).isPresent()) {
-      sendEmail(user);
+      sendRequestToMailService(user);
     }
   }
 
@@ -250,13 +252,25 @@ public class UserServiceImpl implements UserService {
     role.getUsers().add(user);
   }
 
-  private void sendEmail(User user) throws MessagingException {
+  private ResponseEntity<String> sendRequestToMailService(User user) {
+    RestTemplate restTemplate = new RestTemplate();
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+
     Map<String, Object> templateModel = new HashMap<>();
     templateModel.put("recipientName", user.getFirstName());
     templateModel.put("email", user.getCredentials().getEmail());
     templateModel.put("url", String.format(ACTIVATION_URL, user.getActivationCode()));
 
-    mailSenderService.sendMessageUsingThymeleafTemplate(
-        user.getCredentials().getEmail(), "Activation link", templateModel);
+    MailParams mailParams = MailParams.builder()
+            .emailTo(user.getCredentials().getEmail())
+            .subject("Activation link")
+            .templateModel(templateModel)
+            .build();
+    var request = new HttpEntity<>(mailParams, headers);
+    return restTemplate.exchange(mailServiceUri,
+            HttpMethod.POST,
+            request,
+            String.class);
   }
 }
