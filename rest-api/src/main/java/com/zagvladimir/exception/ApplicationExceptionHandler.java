@@ -1,9 +1,8 @@
 package com.zagvladimir.exception;
 
 import com.zagvladimir.security.exception.TokenRefreshException;
-import com.zagvladimir.util.UUIDGenerator;
+import zagvladimir.utils.UUIDGenerator;
 import lombok.extern.slf4j.Slf4j;
-import org.springdoc.api.ErrorMessage;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;

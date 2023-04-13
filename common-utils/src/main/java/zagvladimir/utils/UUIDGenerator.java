@@ -1,4 +1,4 @@
-package com.zagvladimir.util;
+package zagvladimir.utils;
 
 import java.util.UUID;
 

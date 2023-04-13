@@ -16,7 +16,7 @@ import com.zagvladimir.repository.ItemLeasedRepository;
 import com.zagvladimir.repository.RoleRepository;
 import com.zagvladimir.repository.UserRepository;
 import com.zagvladimir.service.pdf.PDFService;
-import com.zagvladimir.util.UUIDGenerator;
+import zagvladimir.utils.UUIDGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
