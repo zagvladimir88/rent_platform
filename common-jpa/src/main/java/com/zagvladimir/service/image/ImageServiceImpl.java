@@ -6,6 +6,7 @@ import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.zagvladimir.configuration.GoogleCSConfig;
 import com.zagvladimir.domain.Image;
+import com.zagvladimir.domain.Item;
 import com.zagvladimir.repository.ImageRepository;
 import com.zagvladimir.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -60,7 +62,12 @@ public class ImageServiceImpl implements ImageService {
   public void createImageInDB(String imageLink, Long itemId) {
     Image newImage = new Image();
     newImage.setLink(imageLink);
-    newImage.setItems(itemRepository.findById(itemId).get());
+
+    Optional<Item> item = itemRepository.findById(itemId);
+    if(item.isPresent()) {
+      newImage.setItems(item.get());
+    }
+
     repository.save(newImage);
   }
 }

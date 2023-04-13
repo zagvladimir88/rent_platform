@@ -1,20 +1,21 @@
 package com.zagvladimir.filter;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.servlet.*;
 import javax.servlet.annotation.*;
 import java.io.IOException;
 
+@Slf4j
 @WebFilter(filterName = "CharsetFilter")
 public class CharsetFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
     }
 
     @Override
     public void destroy() {
-
     }
 
     /**
@@ -31,7 +32,7 @@ public class CharsetFilter implements Filter {
     public void doFilter(ServletRequest request,
                          ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
-        System.out.println("In charset filter!");
+        log.warn("In charset filter!");
         request.setCharacterEncoding("utf-8");
         response.setCharacterEncoding("utf-8");
 
