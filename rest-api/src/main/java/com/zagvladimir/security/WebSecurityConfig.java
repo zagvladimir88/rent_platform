@@ -82,6 +82,9 @@ public class WebSecurityConfig {
         .antMatchers(HttpMethod.POST,"/api/grades/**").hasAnyRole(ADMIN,USER)
         .antMatchers(HttpMethod.PATCH,"/api/grades/**").hasAnyRole(ADMIN,USER, MODERATOR)
 
+        .antMatchers(HttpMethod.GET,"/api/images/**").permitAll()
+        .antMatchers(HttpMethod.POST,"/api/images/**").hasAnyRole(ADMIN,USER,MODERATOR)
+
         .antMatchers(HttpMethod.GET,"/api/items/**").permitAll()
         .antMatchers(HttpMethod.POST,"/api/items/**").hasAnyRole(ADMIN,USER,MODERATOR)
 
