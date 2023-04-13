@@ -15,7 +15,6 @@ spring:
 ---
 server:
   port: 8080
-
 ---
 
 app:
@@ -25,5 +24,5 @@ app:
 ---
 gcs:
   images:
-    pathToGCSJsonCredentials: C:\Users\strjk\IdeaProjects\rent_platform\common\src\main\resources\rent-platform-storage-395e699267fc.json
+    pathToGCSJsonCredentials: C:\Users\strjk\IdeaProjects\rent_platform\common-jpa\src\main\resources\rent-platform-storage-395e699267fc.json
     bucket: rentimages

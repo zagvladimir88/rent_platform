@@ -26,3 +26,5 @@ hs_err_pid*
 /common/src/main/resources/rent-platform-storage-395e699267fc.json
 /api/src/test/resources/rent-platform-storage-395e699267fc.json
 /mail-service/src/main/resources/mail.properties
+/common-jpa/src/main/resources/mail.properties
+/common-jpa/src/main/resources/rent-platform-storage-395e699267fc.json
