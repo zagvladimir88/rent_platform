@@ -23,34 +23,33 @@ import java.io.File;
 public class MailSenderServiceImpl implements MailSenderService {
 
     @Value("${spring.mail.username}")
-    private String noreplyAddress;
+    private String noReplyAddress;
 
     private final JavaMailSender emailSender;
 
     private final SpringTemplateEngine thymeleafTemplateEngine;
 
+    public static final String EMAIL_ACTIVATE_TEMPLATE = "email-template.html";
+    public static final String EMAIL_CONFIRM_TEMPLATE = "confirm-email-template.html";
+
     public void sendMessageUsingThymeleafTemplate(MailParams mailParams) throws MessagingException {
         log.info("Method sendMessageUsingThymeleafTemplate in MailSenderServiceImpl start");
-        Context thymeleafContext = new Context();
-        thymeleafContext.setVariables(mailParams.getTemplateModel());
-        String htmlBody = thymeleafTemplateEngine.process("email-template.html", thymeleafContext);
-        send(mailParams, htmlBody);
+        sendMail(mailParams, EMAIL_ACTIVATE_TEMPLATE);
         log.info("Method sendMessageUsingThymeleafTemplate in MailSenderServiceImpl finish");
     }
 
     public void sendConfirmBookingMail(MailParams mailParams) throws MessagingException {
-        Context thymeleafContext = new Context();
-        thymeleafContext.setVariables(mailParams.getTemplateModel());
-        String htmlBody =
-                thymeleafTemplateEngine.process("confirm-email-template.html", thymeleafContext);
-        send(mailParams, htmlBody);
+        sendMail(mailParams, EMAIL_CONFIRM_TEMPLATE);
     }
 
-    private void send(MailParams mailParams, String htmlBody) throws MessagingException {
-        log.info("Method send in MailSenderServiceImpl start");
+    private void sendMail(MailParams mailParams, String template) throws MessagingException {
+        Context thymeleafContext = new Context();
+        thymeleafContext.setVariables(mailParams.getTemplateModel());
+        String htmlBody = thymeleafTemplateEngine.process(template, thymeleafContext);
+
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-        helper.setFrom(noreplyAddress);
+        helper.setFrom(noReplyAddress);
         helper.setTo(mailParams.getEmailTo());
         helper.setSubject(mailParams.getSubject());
         helper.setText(htmlBody, true);
