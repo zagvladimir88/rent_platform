@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import zagvladimir.dto.ImageParams;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -41,11 +42,11 @@ public class ImagesController {
   @PostMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
   public ResponseEntity<Map<Object, Object>> uploadImage(
       @PathVariable String id, @RequestPart("file") MultipartFile file) throws IOException {
-    String fileExtension = StringUtils.getFilenameExtension(file.getOriginalFilename());
-    Long itemId = Long.parseLong(id);
-    byte[] imageBytes = file.getBytes();
-    String imageUrl = imageService.uploadFile(imageBytes, itemId, fileExtension);
-
+    String imageUrl = imageService.uploadFile(ImageParams.builder()
+            .itemId(Long.parseLong(id))
+            .fileExtension(StringUtils.getFilenameExtension(file.getOriginalFilename()))
+            .imageBytes(file.getBytes())
+            .build());
     return new ResponseEntity<>(Collections.singletonMap("imageUrl", imageUrl), HttpStatus.CREATED);
   }
 

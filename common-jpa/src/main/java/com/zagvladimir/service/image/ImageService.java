@@ -1,11 +1,13 @@
 package com.zagvladimir.service.image;
 
+import zagvladimir.dto.ImageParams;
+
 import java.net.URL;
 import java.util.List;
 
 public interface ImageService {
 
-    public String uploadFile(byte[] imageBytes, Long itemId, String fileExt);
+    String uploadFile(ImageParams imageParams);
 
-    public List<URL> getUrls(Long itemId);
+    List<URL> getUrls(Long itemId);
 }

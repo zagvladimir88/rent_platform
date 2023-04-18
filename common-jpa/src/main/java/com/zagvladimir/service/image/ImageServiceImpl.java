@@ -12,7 +12,9 @@ import com.zagvladimir.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import zagvladimir.dto.ImageParams;
 
+import javax.persistence.EntityNotFoundException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
 
-    private final Storage storage;
+    private final Storage googleCloudStorageService;
 
     private final GoogleCSConfig googleCSConfig;
 
@@ -33,27 +35,32 @@ public class ImageServiceImpl implements ImageService {
     private final ImageRepository imageRepository;
 
     @Override
-    public String uploadFile(byte[] imageBytes, Long itemId, String fileExt) {
-    //TODO:creat image param DTO
-        String imageNameUUID = String.format("%S.%s", UUID.randomUUID(), fileExt);
-        BlobId blobId = BlobId.of(googleCSConfig.getBucket(), imageNameUUID);
-        BlobInfo blobInfo =
-                BlobInfo.newBuilder(blobId)
-                        .setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE)
-                        .build();
-        Blob blob = storage.create(blobInfo, imageBytes);
-        createLinkToImageInDB(imageNameUUID, itemId);
+    public String uploadFile(ImageParams imageParams) {
+        String imageNameUUID = generateImageName(imageParams.getFileExtension());
+        Blob blob = createBlob(imageNameUUID, imageParams.getImageBytes());
+        createLinkToImageInDB(imageNameUUID, imageParams.getItemId());
         return blob.signUrl(5L, TimeUnit.MINUTES).toString();
     }
 
     @Override
     public List<URL> getUrls(Long itemId) {
-        List<Image> images = imageRepository.findImageByItemsId(itemId);
-        return images.stream()
-                .map(image -> storage.signUrl(
+        return imageRepository.findImageByItemsId(itemId).stream()
+                .map(image -> googleCloudStorageService.signUrl(
                         BlobInfo.newBuilder(googleCSConfig.getBucket(), image.getLink()).build(),
                         5, TimeUnit.MINUTES))
                 .collect(Collectors.toList());
+    }
+
+    private String generateImageName(String fileExtension) {
+        return String.format("%S.%s", UUID.randomUUID(), fileExtension);
+    }
+
+    private Blob createBlob(String imageName, byte[] imageBytes) {
+        BlobId blobId = BlobId.of(googleCSConfig.getBucket(), imageName);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId)
+                .setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                .build();
+        return googleCloudStorageService.create(blobInfo, imageBytes);
     }
 
     private void createLinkToImageInDB(String imageLink, Long itemId) {
@@ -63,6 +70,6 @@ public class ImageServiceImpl implements ImageService {
             newImage.setLink(imageLink);
             newImage.setItems(item.get());
             imageRepository.save(newImage);
-        }
+        } else throw new EntityNotFoundException(String.format("item with id:%d not found", itemId));
     }
 }
