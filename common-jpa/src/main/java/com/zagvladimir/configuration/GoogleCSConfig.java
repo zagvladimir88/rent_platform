@@ -28,24 +28,11 @@ public class GoogleCSConfig {
   private String bucket;
 
   @Bean
-  public Storage getStorage() {
-    FileInputStream googleJsonCredentials = null;
-    try {
-      googleJsonCredentials = new FileInputStream(pathToGCSJsonCredentials);
-    } catch (FileNotFoundException e) {
-      throw new RuntimeException(e);
-    }
+  public Storage getStorage() throws IOException {
     log.info("Reading credentials in GoogleCloudStorageConfig.java was successful");
-
-    Credentials credentials = null;
-    try {
-      credentials = GoogleCredentials.fromStream(googleJsonCredentials);
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-
-    Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
-
-    return storage;
+    return StorageOptions.newBuilder()
+            .setCredentials(GoogleCredentials.fromStream(new FileInputStream(pathToGCSJsonCredentials)))
+            .build()
+            .getService();
   }
 }

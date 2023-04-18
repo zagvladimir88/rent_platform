@@ -24,50 +24,45 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
 
-  private final Storage storage;
+    private final Storage storage;
 
-  private final GoogleCSConfig googleCSConfig;
+    private final GoogleCSConfig googleCSConfig;
 
-  private final ItemRepository itemRepository;
+    private final ItemRepository itemRepository;
 
-  private final ImageRepository repository;
+    private final ImageRepository imageRepository;
 
-  @Override
-  public String uploadFile(byte[] imageBytes, Long itemId, String fileExt) {
-
-    String imageNameUUID = String.format("%S.%s", UUID.randomUUID(), fileExt);
-    BlobId blobId = BlobId.of(googleCSConfig.getBucket(), imageNameUUID);
-    BlobInfo blobInfo =
-        BlobInfo.newBuilder(blobId)
-            .setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE)
-            .build();
-    Blob blob = storage.create(blobInfo, imageBytes);
-    createImageInDB(imageNameUUID, itemId);
-    return blob.signUrl(5L, TimeUnit.MINUTES).toString();
-  }
-
-  @Override
-  public List<URL> getUrls(Long itemId) {
-    List<Image> images = repository.findImageByItemsId(itemId);
-    return images.stream()
-        .map(
-            image ->
-                storage.signUrl(
-                    BlobInfo.newBuilder(googleCSConfig.getBucket(), image.getLink()).build(),
-                    5,
-                    TimeUnit.MINUTES))
-        .collect(Collectors.toList());
-  }
-
-  public void createImageInDB(String imageLink, Long itemId) {
-    Image newImage = new Image();
-    newImage.setLink(imageLink);
-
-    Optional<Item> item = itemRepository.findById(itemId);
-    if(item.isPresent()) {
-      newImage.setItems(item.get());
+    @Override
+    public String uploadFile(byte[] imageBytes, Long itemId, String fileExt) {
+    //TODO:creat image param DTO
+        String imageNameUUID = String.format("%S.%s", UUID.randomUUID(), fileExt);
+        BlobId blobId = BlobId.of(googleCSConfig.getBucket(), imageNameUUID);
+        BlobInfo blobInfo =
+                BlobInfo.newBuilder(blobId)
+                        .setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE)
+                        .build();
+        Blob blob = storage.create(blobInfo, imageBytes);
+        createLinkToImageInDB(imageNameUUID, itemId);
+        return blob.signUrl(5L, TimeUnit.MINUTES).toString();
     }
 
-    repository.save(newImage);
-  }
+    @Override
+    public List<URL> getUrls(Long itemId) {
+        List<Image> images = imageRepository.findImageByItemsId(itemId);
+        return images.stream()
+                .map(image -> storage.signUrl(
+                        BlobInfo.newBuilder(googleCSConfig.getBucket(), image.getLink()).build(),
+                        5, TimeUnit.MINUTES))
+                .collect(Collectors.toList());
+    }
+
+    private void createLinkToImageInDB(String imageLink, Long itemId) {
+        Optional<Item> item = itemRepository.findById(itemId);
+        if (item.isPresent()) {
+            Image newImage = new Image();
+            newImage.setLink(imageLink);
+            newImage.setItems(item.get());
+            imageRepository.save(newImage);
+        }
+    }
 }
