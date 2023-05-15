@@ -11,7 +11,7 @@ public abstract class BaseIntegrationTest {
       new PostgreSQLContainer<>("postgres:14.1");
 
   @BeforeAll
-  static void ruContainer() {
+  static void runContainer() {
     container.start();
   }
 
