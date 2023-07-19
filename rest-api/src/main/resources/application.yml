@@ -37,3 +37,10 @@ gcs:
   images:
     pathToGCSJsonCredentials: "common-jpa/src/main/resources/rent-platform-storage-395e699267fc.json"
     bucket: rentimages
+
+
+spring:
+  kafka:
+    bootstrap-servers: "localhost:9092"
+    consumer:
+      group-id: "myGroup"
