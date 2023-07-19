@@ -1,4 +1,4 @@
-package zagvladimir.controller;
+package zagvladimir.kafka;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.annotation.KafkaListener;
